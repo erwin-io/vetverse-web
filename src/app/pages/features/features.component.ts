@@ -60,6 +60,7 @@ export class FeaturesComponent implements OnDestroy {
               displayName,
               disabled,
               iconName,
+              isParent,
               route,
             } = element;
             this.menu.push({
@@ -68,11 +69,12 @@ export class FeaturesComponent implements OnDestroy {
               iconName,
               route,
               children: childPages,
-              isParent: false
+              isParent
             });
           }
         }
         else if(pageAccess.some(x=> !element.isParent && x === element.displayName)){
+          console.log(element)
           this.menu.push(element);
         }
       });

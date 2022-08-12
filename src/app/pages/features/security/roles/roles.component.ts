@@ -40,6 +40,7 @@ export class RolesComponent implements OnInit {
       .subscribe(async res => {
         if(res.success){
           this.dataSource = res.data;
+          console.log(res.data);
           this.isLoading = false;
         }
         else{
