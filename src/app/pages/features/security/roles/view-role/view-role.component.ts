@@ -1,0 +1,148 @@
+import { Component, OnInit } from '@angular/core';
+import { Role } from '../../../../../core/model/role.model';
+import { RoleService } from '../../../../../../app/core/services/role.service';
+import { NavItem } from '../../../ui/model/nav-item';
+import { Snackbar } from '../../../../../../app/core/ui/snackbar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { menu } from '../../../ui/model/menu';
+import { AlertDialogModel } from '../../../../../../app/shared/alert-dialog/alert-dialog-model';
+import { AlertDialogComponent } from '../../../../../../app/shared/alert-dialog/alert-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-view-role',
+  templateUrl: './view-role.component.html',
+  styleUrls: ['./view-role.component.scss']
+})
+export class ViewRoleComponent implements OnInit {
+
+  error:string;
+  role:Role = new Role();
+  pageAccess: NavItem[] = [];
+  isLoading = false;
+  isProcessing = false;
+  constructor(private roleService: RoleService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog,
+    private snackBar: Snackbar) {
+    }
+
+  ngOnInit(): void {
+    const roleId = this.route.snapshot.paramMap.get("roleId");
+    this.getRole(roleId);
+  }
+
+  async getRole(roleId:string){
+    this.isLoading = true;
+    try{
+      await this.roleService.getById(roleId)
+      .subscribe(async res => {
+        if(res.success){
+          this.role = res.data;
+          const access = this.role.access !== undefined || this.role.access !== null ? this.role.access.split(",") : [];
+          this.initPageAccess(access);
+          this.isLoading = false;
+        }
+        else{
+          this.isLoading = false;
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.snackbarError(this.error);
+          this.router.navigate(['/security/roles/']);
+        }
+      }, async (err) => {
+        this.isLoading = false;
+        this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+        this.snackBar.snackbarError(this.error);
+        this.router.navigate(['/security/roles/']);
+      });
+    }catch (e){
+      this.isLoading = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      this.router.navigate(['/security/roles/']);
+    }
+  }
+
+  async initPageAccess(access:string[]){
+    this.pageAccess = [];
+    menu.forEach(m => {
+      if(m.isParent && m.children.length > 0){
+        m.children.forEach(p=>{
+          if(access.some(x=>x === p.displayName)){
+            this.pageAccess.push(p);
+          }
+        })
+
+      }else if(!m.isParent && access.some(x=>x === m.displayName)) {
+        this.pageAccess.push(m);
+      }
+    });
+  }
+
+  onDelete(roleId:string){
+    const dialogData = new AlertDialogModel();
+    dialogData.title = 'Confirm';
+    dialogData.message = 'Delete role?';
+    dialogData.confirmButton = {
+      visible: true,
+      text: 'yes',
+      color:'primary'
+    }
+    dialogData.dismissButton = {
+      visible: true,
+      text: 'cancel'
+    }
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+        maxWidth: '400px',
+        closeOnNavigation: true
+    })
+    dialogRef.componentInstance.alertDialogConfig = dialogData;
+
+    try{
+
+      dialogRef.componentInstance.conFirm.subscribe((data: any) => {
+        this.isProcessing = true;
+        dialogRef.componentInstance.isProcessing = this.isProcessing;
+        dialogRef.componentInstance.alertDialogConfig.message = 'Deleting please wait...';
+        this.roleService.delete(roleId)
+          .subscribe(async res => {
+            if (res.success) {
+              this.snackBar.snackbarSuccess('Deleted!');
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+              this.router.navigate(['/security/roles/']);
+              dialogRef.close();
+            } else {
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+              this.snackBar.snackbarError(this.error);
+              dialogRef.close();
+              if(this.error.toLowerCase().includes("not found")){
+                this.router.navigate(['/security/roles/']);
+              }
+            }
+          }, async (err) => {
+            this.isProcessing = false;
+            dialogRef.componentInstance.isProcessing = this.isProcessing;
+            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+            this.snackBar.snackbarError(this.error);
+            if(this.error.toLowerCase().includes("not found")){
+              this.router.navigate(['/security/roles/']);
+            }
+          });
+    });
+    } catch (e){
+      this.isProcessing = false;
+      dialogRef.componentInstance.isProcessing = this.isProcessing;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      if(this.error.toLowerCase().includes("not found")){
+        this.router.navigate(['/security/roles/']);
+      }
+    }
+  }
+
+
+}

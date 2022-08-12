@@ -1,0 +1,48 @@
+<div class="page-view-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>Role details</mat-card-subtitle>
+      <div fxFlex></div>
+      <button mat-icon-button matTooltip="Edit" routerLink="/security/roles/edit/{{role.roleId}}" >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete" (click)="onDelete(role.roleId)">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+    </mat-card-header>
+
+    <mat-card-content fxLayout="column" >
+      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+        <h1 class="name" *ngIf="!isLoading; else elseLoadingName">{{role.name}}</h1>
+        <ng-template #elseLoadingName>
+          <ngx-skeleton-loader fxFlex [theme]="{ height: '30px', width: '20%'}"></ngx-skeleton-loader>
+        </ng-template>
+      </div>
+      <br/>
+      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+        <div fxFlex="100" fxLayoutAlign="start">
+          <h4 class="group-info-text"><b>Page Access</b></h4>
+        </div>
+        <div fxFlex="100" *ngIf="!isLoading; else elseLoadingName">
+          <div *ngIf="pageAccess.length > 0; else noAccessTemp" fxLayout="column" class="group-info" fxLayoutAlign="start">
+            <div *ngFor="let row of pageAccess" fxLayout="row" class="group-info">
+              <mat-icon>{{row.iconName}}</mat-icon>
+              <h3 class="group-info-text">{{row.displayName}}</h3>
+            </div>
+          </div>
+          <ng-template #noAccessTemp>
+            No page access
+          </ng-template>
+        </div>
+        <ng-template #elseLoadingAccess>
+          <div fxFlex="100">
+            <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+          </div>
+        </ng-template>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-stroked-button matTooltip="Back to list" routerLink="/security/roles" color="primary">Back</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

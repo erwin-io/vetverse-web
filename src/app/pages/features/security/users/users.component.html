@@ -1,0 +1,98 @@
+<div class="page-view-container">
+  <mat-card *ngIf="!isLoading; else elseLoadingTemp">
+    <mat-card-header>
+      <mat-card-subtitle>User</mat-card-subtitle>
+      <div fxFlex></div>
+      <button mat-icon-button matTooltip="Add" routerLink="/security/users/add" [disabled]="isProcessing">
+        <mat-icon>person_add</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" >
+      <table mat-table [dataSource]="dataSource" *ngIf="dataSource.length > 0; else elseNoData">
+
+        <!-- Id Column -->
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell *matHeaderCellDef> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.user.userId}} </td>
+        </ng-container>
+
+        <!-- Username Column -->
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef> Username </th>
+          <td mat-cell *matCellDef="let element"> {{element.user.username}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="fullName">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.fullName}} </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <!-- Mobile number Column -->
+        <ng-container matColumnDef="mobileNumber">
+          <th mat-header-cell *matHeaderCellDef> Mobile number </th>
+          <td mat-cell *matCellDef="let element"> {{element.mobileNumber}} </td>
+        </ng-container>
+
+        <!-- Controls Column -->
+        <ng-container matColumnDef="controls">
+          <th mat-header-cell *matHeaderCellDef>  </th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button  mat-menu-item routerLink="/security/users/details/{{element.user.userId}}">Details</button>
+              <button  mat-menu-item (click)="toggleEnable(element.user.userId, element.user.enable)">{{element.user.enable ? 'Disable user' : 'Enable user'}}</button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      <ng-template #elseNoData>
+        <div class="table-no-data">
+          <span>No users available</span>
+        </div>
+      </ng-template>
+
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                     showFirstLastButtons
+                     aria-label="Select page of periodic elements">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <ng-template #elseLoadingTemp>
+    <mat-card >
+
+      <table class="mat-table" role="table" >
+        <thead role="rowgroup">
+          <tr role="row" class="mat-header-row">
+             <th role="columnheader" class="mat-header-cell"> Id </th>
+             <th role="columnheader" class="mat-header-cell"> Username </th>
+             <th role="columnheader" class="mat-header-cell"> Name </th>
+             <th role="columnheader" class="mat-header-cell"> Email </th>
+             <th role="columnheader" class="mat-header-cell"> Mobile number </th>
+             <th role="columnheader" class="mat-header-cell"> </th>
+          </tr>
+       </thead>
+        <tbody>
+           <tr class="mat-row " *ngFor="let row of loaderData">
+              <td role="cell" *ngFor="let col of displayedColumns" class="mat-cell mat-column-'{{col}}'"><ngx-skeleton-loader [theme]="{ height: '30px'}"></ngx-skeleton-loader></td>
+           </tr>
+        </tbody>
+     </table>
+    </mat-card >
+
+  </ng-template>
+
+</div>

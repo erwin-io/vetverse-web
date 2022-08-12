@@ -1,0 +1,79 @@
+
+ table{
+  width: 100%;
+ }
+ mat-table {
+  thead {
+   th {
+    .mat-cell {
+     word-wrap: break-word !important;
+     white-space: unset !important;
+     overflow-wrap: break-word;
+     word-wrap: break-word;
+     word-break: break-word;
+     -ms-hyphens: auto;
+     -moz-hyphens: auto;
+     -webkit-hyphens: auto;
+     hyphens: auto;
+    }
+   }
+  }
+
+  tbody {
+    td {
+     .mat-cell {
+      word-wrap: break-word !important;
+      white-space: unset !important;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+     }
+    }
+   }
+ }
+
+
+ .mat-column-userId {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+ }
+
+ .mat-column-username {
+   flex: 0 0 20% !important;
+   width: 20% !important;
+ }
+
+ .mat-column-fullName {
+   flex: 0 0 25% !important;
+   width: 25% !important;
+ }
+
+ .mat-column-email {
+   flex: 0 0 15% !important;
+   width: 15% !important;
+ }
+
+ .mat-column-mobileNumber {
+   flex: 0 0 15% !important;
+   width: 15% !important;
+ }
+
+ .mat-column-controls {
+   flex: 0 0 1% !important;
+   width: 1% !important;
+   padding-right: 0!important;
+ }
+
+.table-no-data {
+  background-color: #ECEFF1;
+  padding: 20px;
+  color: #424242 !important;
+  span {
+    text-align: left;
+    font-size: 15px!important;
+  }
+}

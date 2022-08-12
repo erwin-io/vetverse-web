@@ -1,0 +1,83 @@
+<div class="page-view-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>Edit Role</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content fxLayout="column" >
+      <div fxFlex="100">
+        <!-- <mat-short-vertical-login></mat-short-vertical-login> -->
+        <form [formGroup]="roleForm" id="roleForm" (ngSubmit)="onSubmit()" fxLayout="column" fxLayoutAlign="center" >
+          <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+            <div fxFlex="100" fxLayout="row" >
+              <mat-form-field *ngIf="!isLoading; else elseLoadingName" appearance="outline" fxFlex="40%" fxFlex.lt-md="100%" fxLayout="column" >
+                <mat-label>Name</mat-label>
+                <input
+                  matInput
+                  placeholder="Name"
+                  formControlName="name"
+                  [(ngModel)]="role.name">
+                  <mat-error *ngIf="getError('name') !== (null || undefined)">{{
+                    (getError('name') && getError('name').required ? 'Please enter Role name' : '')
+                  }}</mat-error>
+              </mat-form-field>
+              <ng-template #elseLoadingName>
+                <div fxFlex="40%" fxFlex.lt-md="100%" fxLayout="column">
+                  <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                </div>
+              </ng-template>
+            </div>
+            <mat-error class="form-error" fxLayoutAlign="center" *ngIf="error !== null || error !== undefined">{{ error }}</mat-error>
+          </fieldset>
+        </form>
+      </div>
+      <div fxFlex="100"  fxLayout="column" >
+        <h3>Page access</h3>
+        <div fxFlex="100" fxflex *ngIf="!isLoading; else elseLoadingPageAccess">
+          <table mat-table [dataSource]="menuTableSource" *ngIf="menuTableSource.data.length > 0; else elseNoData">
+
+            <ng-container matColumnDef="enabled">
+              <th mat-header-cell *matHeaderCellDef> Id </th>
+              <td mat-cell *matCellDef="let element">
+                <mat-checkbox [disabled]="isProcessing" [checked]="isEnable(element.page)" (change)="enable($event.checked, element.page)" ></mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="module">
+              <th mat-header-cell *matHeaderCellDef> Module </th>
+              <td mat-cell *matCellDef="let element"> {{element.module}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="page">
+              <th mat-header-cell *matHeaderCellDef> Page </th>
+              <td mat-cell *matCellDef="let element"> {{element.page}} </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <ng-template #elseNoData>
+            <div class="table-no-data">
+              <span>No menu available</span>
+            </div>
+          </ng-template>
+
+          <mat-paginator #paginator [pageSizeOptions]="[5, 10, 100]"
+                         showFirstLastButtons
+                         aria-label="Select page of periodic elements">
+          </mat-paginator>
+        </div>
+        <ng-template #elseLoadingPageAccess>
+          <div fxFlex="100" fxLayout="column">
+            <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+          </div>
+        </ng-template>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button matTooltip="Back to list" mat-stroked-button routerLink="/security/roles" [disabled]="isProcessing" color="primary">Back</button>
+      <button matTooltip="Save" mat-raised-button color="primary" form="roleForm" type="submit" [disabled]="isProcessing || !roleForm.valid || selectedPage.length === 0">Save</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -1,0 +1,22 @@
+mat-card {
+  margin-bottom: 20px;
+  mat-card-content {
+    .group-info {
+      align-items: center;
+      column-gap: 10px;
+      mat-icon {
+
+      }
+      .group-info-text {
+        margin: 0!important;
+      }
+    }
+    .name {
+      margin: 0!important;
+    }
+    .disable-label {
+      font-size: 15px!important;
+      color: #f44336!important;
+    }
+  }
+}
