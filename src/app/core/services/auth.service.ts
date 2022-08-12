@@ -8,8 +8,8 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class AuthService {
 
-  // apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/auth/';
-  apiUrl = 'http://localhost:3000/api/v1/auth/';
+  apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/auth/';
+  // apiUrl = 'http://localhost:3000/api/v1/auth/';
   isLoggedIn = false;
   redirectUrl: string;
 

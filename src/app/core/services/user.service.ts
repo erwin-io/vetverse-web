@@ -11,8 +11,8 @@ import { Client } from '../model/client.model';
 })
 export class UserService {
 
-  // apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/users/';
-  apiUrl = 'http://localhost:3000/api/v1/users';
+  apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/users';
+  // apiUrl = 'http://localhost:3000/api/v1/users';
 
   constructor(private http: HttpClient) { }
 

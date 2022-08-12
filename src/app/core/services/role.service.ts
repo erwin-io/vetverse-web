@@ -9,8 +9,8 @@ import { Role } from '../model/role.model';
 })
 export class RoleService {
 
-  // apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/users/';
-  apiUrl = 'http://localhost:3000/api/v1/roles';
+  apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/users';
+  // apiUrl = 'http://localhost:3000/api/v1/roles';
 
   constructor(private http: HttpClient) { }
 
