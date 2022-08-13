@@ -125,7 +125,7 @@ export class RegisterComponent {
       this.isProcessing = true;
       this.stepper.animationDuration = '0s';
       this.stepper.selectedIndex = 3;
-      this.authService.registerClient(this.formData)
+      this.authService.registerStaff(this.formData)
       .subscribe(async res => {
         if (res.success) {
           this.isProcessing = false;
