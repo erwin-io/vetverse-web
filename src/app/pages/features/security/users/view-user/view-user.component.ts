@@ -77,7 +77,7 @@ export class ViewUserComponent implements OnInit {
       .subscribe(async res => {
         if (res.success) {
           this.staffUser = res.data;
-          this.selectedRoles = this.staffUser.user.roleIds !== (null || undefined) ? this.staffUser.user.roleIds.split(",") : [];
+          this.selectedRoles = this.staffUser.user.roleIds ? this.staffUser.user.roleIds.split(",") : [];
           this.isLoading = false;
         } else {
           this.isLoading = false;
