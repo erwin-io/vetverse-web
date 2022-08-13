@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Role } from '../../../../../app/core/model/role.model';
 import { RoleService } from '../../../../../app/core/services/role.service';
@@ -6,6 +6,8 @@ import { Snackbar } from '../../../../../app/core/ui/snackbar';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../../../../app/shared/alert-dialog/alert-dialog.component';
 import { AlertDialogModel } from '../../../../../app/shared/alert-dialog/alert-dialog-model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-roles',
@@ -16,11 +18,14 @@ export class RolesComponent implements OnInit {
 
   error:string;
   userTypeId:string = '1';
-  dataSource:Role[] = [];
+  dataSource = new MatTableDataSource<Role>();
   displayedColumns = [];
   isLoading = false;
   loaderData =[];
   isProcessing = false;
+  @ViewChild('paginator', {static: false}) paginator: MatPaginator;
+  pageSize = 5;
+
   constructor(
     private roleService: RoleService,
     private snackBar: Snackbar,
@@ -28,8 +33,8 @@ export class RolesComponent implements OnInit {
     public router: Router) { }
 
   ngOnInit(): void {
-    this.generateLoaderData(10);
     this.getRoles();
+    this.generateLoaderData(this.pageSize);
   }
 
   getRoles(){
@@ -39,8 +44,8 @@ export class RolesComponent implements OnInit {
       this.roleService.get()
       .subscribe(async res => {
         if(res.success){
-          this.dataSource = res.data;
-          console.log(res.data);
+          this.dataSource.data = res.data;
+          this.dataSource.paginator = this.paginator;
           this.isLoading = false;
         }
         else{

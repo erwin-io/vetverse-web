@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { Snackbar } from '../../../../app/core/ui/snackbar';
 import { AuthService } from '../../../../app/core/services/auth.service';
 import { MyErrorStateMatcher } from '../../../core/form-validation/error-state.matcher';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -26,19 +27,25 @@ export class RegisterComponent {
   @ViewChild('stepper', { static: false}) stepper : MatStepper;
   isProcessing = false;
   isSuccessful = false;
+  userTypeId:number;
   error;
 
   constructor(
     private _formBuilder: FormBuilder,
     private media: MediaObserver,
     private authService: AuthService,
+    private route: ActivatedRoute,
+    private router: Router,
     private snackBar: Snackbar
     ) {
-    this.mediaWatcher = this.media.asObservable().subscribe((change) => {
-      change.forEach((item) => {
-        this.handleMediaChange(item);
-      });
-    })
+      this.userTypeId = this.router.url.toLowerCase().includes("auth/admin/signup") ? 1 : 2;
+      console.log(this.router)
+      console.log(this.userTypeId);
+      this.mediaWatcher = this.media.asObservable().subscribe((change) => {
+        change.forEach((item) => {
+          this.handleMediaChange(item);
+        });
+      })
   }
   ngOnInit(): void {
     this.formCreateAccount = this._formBuilder.group({
@@ -62,7 +69,7 @@ export class RegisterComponent {
 
     this.formPersonalInfo = this._formBuilder.group({
       address: ['', Validators.required],
-      birthDate: ['', Validators.required],
+      birthDate: this.userTypeId === 1 ? [] :  ['', Validators.required],
       genderId: ['', Validators.required],
     });
 
@@ -125,7 +132,7 @@ export class RegisterComponent {
       this.isProcessing = true;
       this.stepper.animationDuration = '0s';
       this.stepper.selectedIndex = 3;
-      this.authService.registerStaff(this.formData)
+      this.authService.register(this.formData, this.userTypeId)
       .subscribe(async res => {
         if (res.success) {
           this.isProcessing = false;

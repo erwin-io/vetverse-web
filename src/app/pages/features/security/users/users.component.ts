@@ -1,11 +1,14 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Snackbar } from '../../../../../app/core/ui/snackbar';
 import { UserService } from '../../../../../app/core/services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertDialogComponent } from '../../../../../app/shared/alert-dialog/alert-dialog.component';
 import { AlertDialogModel } from '../../../../../app/shared/alert-dialog/alert-dialog-model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { Staff } from 'src/app/core/model/staff.model';
 
 @Component({
   selector: 'app-users',
@@ -23,31 +26,36 @@ export class UsersComponent implements OnInit {
 
   error:string;
   userTypeId:string = '1';
-  dataSource = [];
+  dataSource = new MatTableDataSource<Staff>();
   displayedColumns = [];
   isLoading = false;
   loaderData =[];
   isProcessing = false;
+  @ViewChild('paginator', {static: false}) paginator: MatPaginator;
+  pageSize = 10;
 
   constructor(
     private userService: UserService,
     private snackBar: Snackbar,
     private dialog: MatDialog,
-    public router: Router) { }
+    public router: Router) {
+      this.getUsers();}
 
   ngOnInit(): void {
-    this.generateLoaderData(10);
-    this.getUsers();
+    this.generateLoaderData(this.pageSize);
   }
 
-  getUsers(){
+
+
+  async getUsers(){
     this.displayedColumns = ['userId', 'username', 'fullName', 'email', 'mobileNumber', 'controls'];
     try{
       this.isLoading = true;
-      this.userService.get(this.userTypeId)
+      await this.userService.get(this.userTypeId)
       .subscribe(async res => {
         if(res.success){
-          this.dataSource = res.data;
+          this.dataSource.data = res.data;
+          this.dataSource.paginator = this.paginator;
           this.isLoading = false;
         }
         else{
@@ -67,6 +75,7 @@ export class UsersComponent implements OnInit {
     }
 
   }
+
 
   toggleEnable(userId:string, enable: boolean){
     const newValue = enable ? false : true;

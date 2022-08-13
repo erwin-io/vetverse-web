@@ -148,7 +148,7 @@
             </mat-form-field>
 
             <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-              <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+              <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="this.userTypeId === 2">
                 <mat-label>Birthdate</mat-label>
                 <input
                   matInput

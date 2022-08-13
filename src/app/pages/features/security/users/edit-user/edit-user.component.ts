@@ -79,6 +79,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     this.changeDetectorRef.detectChanges();
   }
   ngOnInit(): void {
+
   }
 
   async initUser(userId:string){

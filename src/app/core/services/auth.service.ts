@@ -31,6 +31,15 @@ export class AuthService {
     );
   }
 
+  register(data: any, userType: number){
+    if(userType === 1){
+      return this.registerStaff(data);
+    }
+    else{
+      return this.registerClient(data);
+    }
+  }
+
   registerClient(data: any): Observable<any> {
     return this.http.post<any>(this.apiUrl + 'register/client', data)
     .pipe(

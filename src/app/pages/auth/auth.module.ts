@@ -16,6 +16,10 @@ export const routes: Routes = [
     path: 'signup',
     component: RegisterComponent
   },
+  {
+    path: 'admin/signup',
+    component: RegisterComponent
+  },
 
 ];
 
