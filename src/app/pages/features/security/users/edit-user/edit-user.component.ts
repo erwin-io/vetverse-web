@@ -90,7 +90,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       .subscribe(async res => {
         if (res.success) {
           this.staffUser = res.data;
-          this.staffUserRoleIds = this.staffUser.user.roleIds.split(",");
+          this.selectedRoles = this.staffUser.user.roleIds !== (null || undefined) ? this.staffUser.user.roleIds.split(",") : [];
           this.isLoading = false;
           this.isProcessing = false;
           this.initRoles();
