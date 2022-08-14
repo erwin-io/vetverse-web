@@ -48,9 +48,9 @@ export class AddUserComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: Snackbar) {
       this.userForm = this.formBuilder.group({
-        firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9_]*$")]],
-        middleName: ['', Validators.pattern("^[a-zA-Z]+$")],
-        lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9_]*$")]],
+        firstName: ['', [Validators.required]],
+        middleName: [''],
+        lastName: ['', [Validators.required]],
         birthDate: ['', Validators.required],
         genderId: ['', Validators.required],
         email: ['',

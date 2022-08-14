@@ -56,9 +56,9 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     ) {
     const userId = this.route.snapshot.paramMap.get("userId");
     this.userForm = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9_]*$")]],
-      middleName: ['', Validators.pattern("^[a-zA-Z]+$")],
-      lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9_]*$")]],
+      firstName: ['', [Validators.required]],
+      middleName: [''],
+      lastName: ['', [Validators.required]],
       genderId: ['', Validators.required],
       email: ['',
       Validators.compose(
