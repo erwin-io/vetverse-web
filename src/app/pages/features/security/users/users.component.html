@@ -28,6 +28,12 @@
           <td mat-cell *matCellDef="let element"> {{element.fullName}} </td>
         </ng-container>
 
+        <!-- Name Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef> Role </th>
+          <td mat-cell *matCellDef="let element"> {{element.user.role.name}} </td>
+        </ng-container>
+
         <!-- Email Column -->
         <ng-container matColumnDef="email">
           <th mat-header-cell *matHeaderCellDef> Email </th>
@@ -77,6 +83,7 @@
            <th role="columnheader" class="mat-header-cell"> Id </th>
            <th role="columnheader" class="mat-header-cell"> Username </th>
            <th role="columnheader" class="mat-header-cell"> Name </th>
+           <th role="columnheader" class="mat-header-cell"> Role </th>
            <th role="columnheader" class="mat-header-cell"> Email </th>
            <th role="columnheader" class="mat-header-cell"> Mobile number </th>
            <th role="columnheader" class="mat-header-cell"> </th>

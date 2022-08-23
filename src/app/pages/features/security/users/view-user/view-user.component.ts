@@ -26,10 +26,8 @@ export class ViewUserComponent implements OnInit {
   isLoadingRoles = false;
   //roles
   roles:Role[] = [];
-  selectedRoles:string[] = [];
   error;
   //access
-  allowedAccess:string[] = [];
   constructor(
     private userService: UserService,
     private roleService: RoleService,
@@ -77,7 +75,6 @@ export class ViewUserComponent implements OnInit {
       .subscribe(async res => {
         if (res.success) {
           this.staffUser = res.data;
-          this.selectedRoles = this.staffUser.user.roleIds ? this.staffUser.user.roleIds.split(",") : [];
           this.isLoading = false;
         } else {
           this.isLoading = false;
@@ -106,25 +103,10 @@ export class ViewUserComponent implements OnInit {
     }
   }
 
-  get rolesToDisplay():string[] {
-    const roles = [];
-    this.roles.forEach(r=>{
-      if(this.selectedRoles.some(x=> x === r.roleId)){
-        roles.push(r.name);
-      }
-    });
-    return roles;
-  }
-
   get accessToDisplay():NavItem[] {
     const access: NavItem[] = [];
-    const selectedAccess = [];
-    this.roles.forEach(r=>{
-      if(this.selectedRoles.some(x=> x === r.roleId)){
-        const roleAccess = r.access.split(",");
-        roleAccess.forEach(ra => { selectedAccess.push(ra); });
-      }
-    });
+    const selectedRole = this.roles.filter(x=>x.roleId === this.staffUser.user.role.roleId);
+    const selectedAccess = selectedRole !== undefined && selectedRole[0] !== undefined && selectedRole[0].access ? selectedRole[0].access.split(",") : [];
     if(selectedAccess.length === 0) {return []};
     menu.forEach(element => {
       if(element.isParent && element.children.length > 0) {

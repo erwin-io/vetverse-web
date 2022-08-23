@@ -39,8 +39,6 @@ export class RegisterComponent {
     private snackBar: Snackbar
     ) {
       this.userTypeId = this.router.url.toLowerCase().includes("auth/admin/signup") ? 1 : 2;
-      console.log(this.router)
-      console.log(this.userTypeId);
       this.mediaWatcher = this.media.asObservable().subscribe((change) => {
         change.forEach((item) => {
           this.handleMediaChange(item);

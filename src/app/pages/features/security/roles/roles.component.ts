@@ -38,7 +38,7 @@ export class RolesComponent implements OnInit {
   }
 
   getRoles(){
-    this.displayedColumns = ['roleId', 'name', 'access', 'controls'];
+    this.displayedColumns = ['name', 'access', 'controls'];
     try{
       this.isLoading = true;
       this.roleService.get()
@@ -64,63 +64,6 @@ export class RolesComponent implements OnInit {
       this.snackBar.snackbarError(this.error);
     }
 
-  }
-
-  onDelete(roleId:string){
-    const dialogData = new AlertDialogModel();
-    dialogData.title = 'Confirm';
-    dialogData.message = 'Delete role?';
-    dialogData.confirmButton = {
-      visible: true,
-      text: 'yes',
-      color:'primary'
-    }
-    dialogData.dismissButton = {
-      visible: true,
-      text: 'cancel'
-    }
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-        maxWidth: '400px',
-        closeOnNavigation: true
-    })
-    dialogRef.componentInstance.alertDialogConfig = dialogData;
-
-    try{
-
-      dialogRef.componentInstance.conFirm.subscribe((data: any) => {
-        this.isProcessing = true;
-        dialogRef.componentInstance.isProcessing = this.isProcessing;
-        dialogRef.componentInstance.alertDialogConfig.message = 'Deleting please wait...';
-        this.roleService.delete(roleId)
-          .subscribe(async res => {
-            if (res.success) {
-              this.snackBar.snackbarSuccess('Deleted!');
-              this.getRoles();
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              dialogRef.close();
-            } else {
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-              this.snackBar.snackbarError(this.error);
-              dialogRef.close();
-            }
-          }, async (err) => {
-            this.isProcessing = false;
-            dialogRef.componentInstance.isProcessing = this.isProcessing;
-            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
-            this.snackBar.snackbarError(this.error);
-            dialogRef.close();
-          });
-    });
-    } catch (e){
-      this.isProcessing = false;
-      dialogRef.componentInstance.isProcessing = this.isProcessing;
-      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-      this.snackBar.snackbarError(this.error);
-      dialogRef.close();
-    }
   }
 
   generateLoaderData(length: number){

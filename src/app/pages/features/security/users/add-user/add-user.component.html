@@ -50,20 +50,6 @@
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
-                  <mat-label>Birthdate</mat-label>
-                  <input
-                    matInput
-                    [max]="'2003-12-31'"
-                    placeholder="Birthdate"
-                    formControlName="birthDate"
-                    [matDatepicker]="picker">
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                    <mat-error *ngIf="getError('birthDate') !== (null || undefined)">{{
-                      (getError('birthDate') && getError('birthDate').required ? 'Please enter your birthdate' : '')
-                    }}</mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
                   <mat-label>Select Gender</mat-label>
                   <mat-select
                     formControlName="genderId">
@@ -176,7 +162,7 @@
                 <h3>User Roles  </h3>
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <mat-form-field class="example-chip-list" appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
+                <!-- <mat-form-field class="example-chip-list" appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
                   <mat-label>Roles</mat-label>
                   <mat-chip-list #chipList aria-label="Select Roles">
                     <mat-chip
@@ -202,6 +188,15 @@
                       </mat-option>
                     </ng-container>
                   </mat-autocomplete>
+                </mat-form-field> -->
+
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
+                  <mat-label>Select Role</mat-label>
+                  <mat-select
+                    formControlName="roleId">
+                    <mat-option [value]="role.roleId"
+                    *ngFor="let role of roles">{{role.name}}</mat-option>
+                  </mat-select>
                 </mat-form-field>
                 <ng-template #elseLoadingRoles>
                   <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">

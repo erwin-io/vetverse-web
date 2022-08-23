@@ -5,19 +5,18 @@ import { catchError, tap } from 'rxjs/operators';
 import { Staff } from '../model/staff.model';
 import { ApiResponse } from '../model/api-response.model';
 import { Client } from '../model/client.model';
+import { environment } from '../../../environments/environment';
+import { IServices } from './interface/iservices';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
-
-  apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/users';
-  // apiUrl = 'http://localhost:3000/api/v1/users';
+export class UserService implements IServices {
 
   constructor(private http: HttpClient) { }
 
   get(userTypeId: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + '?userTypeId=' + userTypeId)
+    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.user.get + userTypeId)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -25,7 +24,7 @@ export class UserService {
   }
 
   getById(userId: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + "/" + userId)
+    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.user.getById + userId)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -33,7 +32,7 @@ export class UserService {
   }
 
   createStaff(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.post<any>(this.apiUrl + '/staff', data)
+    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.user.createStaff, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -41,7 +40,7 @@ export class UserService {
   }
 
   udpdateClient(data: any): Observable<ApiResponse<Client>> {
-    return this.http.put<any>(this.apiUrl + '/client', data)
+    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.udpdateClient, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -49,7 +48,7 @@ export class UserService {
   }
 
   udpdateStaff(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.put<any>(this.apiUrl + '/staff', data)
+    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.udpdateStaff, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -57,21 +56,21 @@ export class UserService {
   }
 
   toggleEnable(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.put<any>(this.apiUrl + '/toggleEnable', data)
+    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.toggleEnable, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
     );
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
+  handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(`${operation} failed: ${Array.isArray(error.error.message) ? error.error.message[0] : error.error.message}`);
       return of(error.error as T);
     };
   }
 
-  private log(message: string) {
+  log(message: string) {
     console.log(message);
   }
 }

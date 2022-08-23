@@ -56,9 +56,9 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     ) {
     const userId = this.route.snapshot.paramMap.get("userId");
     this.userForm = this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      middleName: [''],
-      lastName: ['', [Validators.required]],
+      firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+      middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
+      lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
       genderId: ['', Validators.required],
       email: ['',
       Validators.compose(
@@ -66,13 +66,9 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       mobileNumber: ['',
           [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
       address: ['', Validators.required],
-      roleIds : [''],
+      roleId : ['', Validators.required],
     });
     this.initUser(userId);
-    this.filteredRoles = this.userForm.controls['roleIds'].valueChanges.pipe(
-      startWith(null),
-      map((role: string | null) => (role ? this._filter(role) : this.roleArray.slice())),
-    );
   }
 
   ngAfterViewChecked(): void {
@@ -91,7 +87,6 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       .subscribe(async res => {
         if (res.success) {
           this.staffUser = res.data;
-          this.selectedRoles = this.staffUser.user.roleIds ? this.staffUser.user.roleIds.split(",") : [];
           this.isLoading = false;
           this.isProcessing = false;
           this.initRoles();
@@ -136,9 +131,6 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
         if (res.success) {
           this.roles = res.data;
           this.isLoadingRoles = false;
-          this.selectedRoles = res.data.map(r=> {
-            return this.staffUserRoleIds.some(x=> r.roleId ===x) ? r.name : null;
-          }).filter(x=>x !==null);
         } else {
           this.isLoadingRoles = false;
           this.error = Array.isArray(res.message) ? res.message[0] : res.message;
@@ -157,27 +149,12 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   }
 
   get f() { return this.userForm.controls; }
-  get formIsValid() { return this.userForm.valid && this.selectedRoles.length > 0; }
-  get formData() {
-    return {
-      userId: this.staffUser.user.userId,
-      ...this.userForm.value,
-      roleIds: this.newStaffRoleIds.toString()
-    }
-   }
-  get newStaffRoleIds() {
-    return this.roles.length > 0 ? this.roles.filter((r)=> this.selectedRoles.some(x=>x === r.name) ).map(r=>{ return r.roleId }) : [] }
-  get roleArray() { return this.roles.length > 0 ? this.roles.map((r)=> { return r.name }) : [] }
-
+  get formIsValid() { return this.userForm.valid }
+  get formData() { return { ...this.userForm.value, userId: this.staffUser.user.userId }  }
   get accessToDisplay():NavItem[] {
     const access: NavItem[] = [];
-    const selectedAccess = [];
-    this.roles.forEach(r=>{
-      if(this.selectedRoles.some(x=> x === r.name)){
-        const roleAccess = r.access.split(",");
-        roleAccess.forEach(ra => { selectedAccess.push(ra); });
-      }
-    });
+    const selectedRole = this.roles.filter(x=>x.roleId === this.formData.roleId);
+    const selectedAccess = selectedRole !== undefined && selectedRole[0] !== undefined && selectedRole[0].access ? selectedRole[0].access.split(",") : [];
     if(selectedAccess.length === 0) {return []};
     menu.forEach(element => {
       if(element.isParent && element.children.length > 0) {
@@ -256,24 +233,5 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   }
   getError(key:string){
     return this.f[key].errors;
-  }
-  removeRole(role: string): void {
-    const index = this.selectedRoles.indexOf(role);
-
-    if (index >= 0) {
-      this.selectedRoles.splice(index, 1);
-    }
-  }
-
-  selectedRole(event: MatAutocompleteSelectedEvent): void {
-    this.selectedRoles.push(event.option.viewValue);
-    this.roleInput.nativeElement.value = '';
-    this.f['roleIds'].setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.roleArray.filter((r) => r.toLowerCase().includes(filterValue));
   }
 }

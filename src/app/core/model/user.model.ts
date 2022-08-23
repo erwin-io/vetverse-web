@@ -1,9 +1,10 @@
+import { Role } from "./role.model";
 import { UserType } from "./usertype.model";
 
   export class User {
       userId: string;
       username: string;
       userType: UserType;
-      roleIds: string;
+      role: Role;
       enable:boolean;
   }

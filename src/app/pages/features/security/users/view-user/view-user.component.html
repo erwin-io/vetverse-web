@@ -77,8 +77,8 @@
         <div fxLayout="column" class="group-info" fxLayoutAlign="start">
           <div fxLayout="row" class="group-info">
             <mat-icon>supervisor_account</mat-icon>
-            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingRoleIds">{{ rolesToDisplay.toString() }}</h3>
-            <ng-template #elseLoadingRoleIds>
+            <h3 class="group-info-text" *ngIf="!isLoading; else isLoadingRoles">{{ staffUser.user.role.name }}</h3>
+            <ng-template #isLoadingRoles>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
           </div>

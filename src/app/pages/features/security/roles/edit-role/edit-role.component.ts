@@ -19,7 +19,6 @@ import { Role } from '../../../../../../app/core/model/role.model';
 })
 export class EditRoleComponent implements OnInit {
 
-  roleForm: FormGroup;
   role:Role = new Role();
   loading = false;
   error: string;
@@ -40,9 +39,6 @@ export class EditRoleComponent implements OnInit {
     private snackBar: Snackbar) { }
 
   ngOnInit(): void {
-    this.roleForm = this.formBuilder.group({
-      name: ['', Validators.required],
-    });
     this.displayedColumns = ['enabled', 'module', 'page'];
     const roleId = this.route.snapshot.paramMap.get("roleId");;
 
@@ -59,7 +55,7 @@ export class EditRoleComponent implements OnInit {
       .subscribe(async res => {
         if(res.success){
           this.role = res.data;
-          this.selectedPage = this.role.access !== undefined || this.role.access !== null ? this.role.access.split(",") : [];
+          this.selectedPage = this.role.access ? this.role.access.split(",") : [];
 
           this.initMenuTable()
           this.isLoading = false;
@@ -120,13 +116,9 @@ export class EditRoleComponent implements OnInit {
     }
   }
 
-  get f() { return this.roleForm.controls; }
-  get formData() { return this.roleForm.value; }
+  get formData() { return { roleId: this.role.roleId, access: this.selectedPage.toString() }}
 
   onSubmit(){
-    if (this.roleForm.invalid) {
-        return;
-    }
 
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
@@ -149,8 +141,6 @@ export class EditRoleComponent implements OnInit {
     dialogRef.componentInstance.conFirm.subscribe(() => {
       this.isProcessing = true;
       dialogRef.componentInstance.isProcessing = this.isProcessing;
-      this.formData.access = this.selectedPage.toString();
-      this.formData.roleId = this.role.roleId;
       try{
         this.isProcessing = true;
         this.roleService.udpdate(this.formData)
@@ -186,10 +176,6 @@ export class EditRoleComponent implements OnInit {
   }
   isEnable(page:string){
     return this.selectedPage.some(x=>x === page);
-  }
-
-  getError(key:string){
-    return this.f[key].errors;
   }
 
 }

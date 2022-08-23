@@ -1,4 +1,5 @@
 import { Gender } from './gender.model';
+import { Role } from './role.model';
 import { UserType } from './usertype.model';
 
 export class LoginResult {
@@ -13,5 +14,5 @@ export class LoginResult {
   mobileNumber: string;
   address: string;
   gender: Gender;
-  access:string[]
+  role:Role
 }

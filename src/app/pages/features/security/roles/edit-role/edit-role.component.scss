@@ -51,6 +51,12 @@ table{
   width: 40% !important;
  }
 
+ @media only screen and (max-width: 414px) {
+  .mat-column-module {
+    display: none!important;
+   }
+ }
+
  .table-no-data {
   background-color: #ECEFF1;
   padding: 20px;

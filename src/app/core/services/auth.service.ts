@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
 import { catchError, tap } from 'rxjs/operators';
+import { IServices } from './interface/iservices';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements IServices {
 
-  apiUrl = 'https://vetverse-api.herokuapp.com/api/v1/auth/';
-  // apiUrl = 'http://localhost:3000/api/v1/auth/';
   isLoggedIn = false;
   redirectUrl: string;
 
   constructor(private http: HttpClient) { }
 
   login(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl + 'login', data)
+    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.login, data)
     .pipe(
       tap(_ => this.isLoggedIn = true),
       catchError(this.handleError('login', []))
@@ -24,7 +25,7 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.get<any>(this.apiUrl + 'logout')
+    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.logout)
     .pipe(
       tap(_ => this.isLoggedIn = false),
       catchError(this.handleError('logout', []))
@@ -41,7 +42,7 @@ export class AuthService {
   }
 
   registerClient(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl + 'register/client', data)
+    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.register.client, data)
     .pipe(
       tap(_ => this.log('register')),
       catchError(this.handleError('register', []))
@@ -49,7 +50,7 @@ export class AuthService {
   }
 
   registerStaff(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl + 'register/staff', data)
+    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.register.staff, data)
     .pipe(
       tap(_ => this.log('register')),
       catchError(this.handleError('register', []))
@@ -57,7 +58,7 @@ export class AuthService {
   }
 
   findByUsername(username: string): Observable<any> {
-    return this.http.get<any>(this.apiUrl + 'findByUsername/'+ username)
+    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.findByUsername + username)
     .pipe(
       tap(_ => this.log('findByUsername')),
       catchError(this.handleError('findByUsername', []))
@@ -65,21 +66,21 @@ export class AuthService {
   }
 
   refreshToken(data: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl + 'refresh-token', data)
+    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.refreshToken, data)
     .pipe(
       tap(_ => this.log('refresh token')),
       catchError(this.handleError('refresh token', []))
     );
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
+  handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(`${operation} failed: ${Array.isArray(error.error.message) ? error.error.message[0] : error.error.message}`);
       return of(error.error as T);
     };
   }
 
-  private log(message: string) {
+  log(message: string) {
     console.log(message);
   }
 }

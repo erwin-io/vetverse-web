@@ -114,33 +114,21 @@
                 <h3>User Roles  </h3>
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <mat-form-field class="example-chip-list" appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingGridCol3" >
-                  <mat-label>Roles</mat-label>
-                  <mat-chip-list #chipList aria-label="Select Roles">
-                    <mat-chip
-                      *ngFor="let role of selectedRoles"
-                      (removed)="removeRole(role)">
-                      {{role}}
-                      <button matChipRemove>
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip>
-                    <input
-                      placeholder="Search Role..."
-                      #roleInput
-                      formControlName="roleIds"
-                      [matAutocomplete]="auto"
-                      [matChipInputFor]="chipList"
-                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
-                  </mat-chip-list>
-                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedRole($event)">
-                    <ng-container *ngFor="let role of filteredRoles | async">
-                      <mat-option *ngIf="!selectedRoles.includes(role)" [value]="role">
-                        {{role}}
-                      </mat-option>
-                    </ng-container>
-                  </mat-autocomplete>
+
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
+                  <mat-label>Select Role</mat-label>
+                  <mat-select
+                    formControlName="roleId"
+                    [(ngModel)]="staffUser.user.role.roleId">
+                    <mat-option [value]="role.roleId"
+                    *ngFor="let role of roles">{{role.name}}</mat-option>
+                  </mat-select>
                 </mat-form-field>
+                <ng-template #elseLoadingRoles>
+                  <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                  </div>
+                </ng-template>
               </div>
               <div fxFlex="100" fxLayout="column">
                 <h3>Access </h3>

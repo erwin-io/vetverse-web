@@ -48,7 +48,7 @@ export class UsersComponent implements OnInit {
 
 
   async getUsers(){
-    this.displayedColumns = ['userId', 'username', 'fullName', 'email', 'mobileNumber', 'controls'];
+    this.displayedColumns = ['userId', 'username', 'fullName', 'role', 'email', 'mobileNumber', 'controls'];
     try{
       this.isLoading = true;
       await this.userService.get(this.userTypeId)

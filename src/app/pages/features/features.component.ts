@@ -46,7 +46,8 @@ export class FeaturesComponent implements OnDestroy {
     }
 
     initMenu(){
-      const pageAccess = this.storageService.getLoginUser().access;
+      const access = this.storageService.getLoginUser().role.access;
+      const pageAccess = access !== undefined || access !== "" ? access.split(",") : [];
       menu.forEach((element:NavItem) => {
         if(element.isParent && element.children.length > 0) {
           const childPages = [];
@@ -74,7 +75,6 @@ export class FeaturesComponent implements OnDestroy {
           }
         }
         else if(pageAccess.some(x=> !element.isParent && x === element.displayName)){
-          console.log(element)
           this.menu.push(element);
         }
       });

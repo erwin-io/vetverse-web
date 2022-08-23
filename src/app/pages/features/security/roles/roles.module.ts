@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { AddRoleComponent } from './add-role/add-role.component';
 import { EditRoleComponent } from './edit-role/edit-role.component';
 import { ViewRoleComponent } from './view-role/view-role.component';
 import { RolesComponent } from './roles.component';
@@ -13,10 +12,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export const routes: Routes = [
   {
-    path: 'roles/add',
-    component: AddRoleComponent
-  },
-  {
     path: 'roles/details/:roleId',
     component: ViewRoleComponent
   },
@@ -27,7 +22,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [RolesComponent,AddRoleComponent,ViewRoleComponent,EditRoleComponent],
+  declarations: [RolesComponent,ViewRoleComponent,EditRoleComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,

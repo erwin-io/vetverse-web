@@ -29,14 +29,7 @@ export class AddUserComponent implements OnInit {
   isLoadingRoles = false;
   //roles
   roles:Role[] = [];
-  selectedRoles:string[] = [];
   error;
-  //auto complete chips
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredRoles: Observable<string[]>;
-  //end
-  //access
-  allowedAccess:string[] = [];
 
   @ViewChild('roleInput', {static:false}) roleInput: ElementRef<HTMLInputElement>;
 
@@ -48,10 +41,9 @@ export class AddUserComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: Snackbar) {
       this.userForm = this.formBuilder.group({
-        firstName: ['', [Validators.required]],
-        middleName: [''],
-        lastName: ['', [Validators.required]],
-        birthDate: ['', Validators.required],
+        firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+        middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
+        lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
         genderId: ['', Validators.required],
         email: ['',
         Validators.compose(
@@ -62,12 +54,8 @@ export class AddUserComponent implements OnInit {
         username: ['', [Validators.required, Validators.minLength(3), Validators.pattern("^[a-z0-9_]*$")]],
         password: ['',[Validators.minLength(6), Validators.maxLength(16), Validators.required]],
         confirmPassword : '',
-        roleIds : '',
+        roleId : ['', Validators.required],
       }, { validators: this.checkPasswords });
-      this.filteredRoles = this.userForm.controls['roleIds'].valueChanges.pipe(
-        startWith(null),
-        map((role: string | null) => (role ? this._filter(role) : this.roleArray.slice())),
-      );
     }
 
   ngOnInit(): void {
@@ -105,27 +93,13 @@ export class AddUserComponent implements OnInit {
   }
 
   get f() { return this.userForm.controls; }
-  get formIsValid() { return this.userForm.valid && this.selectedRoles.length > 0; }
-  // get formData() { return this.userForm.value }
-  get formData() {
-    return {
-      ...this.userForm.value,
-      roleIds: this.staffRoleIds.toString()
-    }
-   }
-   get staffRoleIds() {
-     return this.roles.length > 0 ? this.roles.filter((r)=> this.selectedRoles.some(x=>x === r.name) ).map(r=>{ return r.roleId }) : [] }
-  get roleArray() { return this.roles.map((r)=> { return r.name }) }
+  get formIsValid() { return this.userForm.valid }
+  get formData() { return this.userForm.value }
 
   get accessToDisplay():NavItem[] {
     const access: NavItem[] = [];
-    const selectedAccess = [];
-    this.roles.forEach(r=>{
-      if(this.selectedRoles.some(x=> x === r.name)){
-        const roleAccess = r.access.split(",");
-        roleAccess.forEach(ra => { selectedAccess.push(ra); });
-      }
-    });
+    const selectedRole = this.roles.filter(x=>x.roleId === this.formData.roleId);
+    const selectedAccess = selectedRole !== undefined && selectedRole[0] !== undefined && selectedRole[0].access ? selectedRole[0].access.split(",") : [];
     if(selectedAccess.length === 0) {return []};
     menu.forEach(element => {
       if(element.isParent && element.children.length > 0) {
@@ -206,25 +180,5 @@ export class AddUserComponent implements OnInit {
       this.formData.confirmPassword !== this.formData.password ? this.f[key].setErrors({notMatched:true}) : this.f[key].setErrors(null);
     }
     return this.f[key].errors;
-  }
-
-  removeRole(role: string): void {
-    const index = this.selectedRoles.indexOf(role);
-
-    if (index >= 0) {
-      this.selectedRoles.splice(index, 1);
-    }
-  }
-
-  selectedRole(event: MatAutocompleteSelectedEvent): void {
-    this.selectedRoles.push(event.option.viewValue);
-    this.roleInput.nativeElement.value = '';
-    this.f['roleIds'].setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.roleArray.filter((r) => r.toLowerCase().includes(filterValue));
   }
 }

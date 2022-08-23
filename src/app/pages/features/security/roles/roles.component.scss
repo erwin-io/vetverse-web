@@ -36,19 +36,14 @@ table{
    }
  }
 
- .mat-column-roleId {
-  flex: 0 0 10% !important;
-  width: 10% !important;
+ .mat-column-name {
+  flex: 0 0 20% !important;
+  width: 20% !important;
  }
 
- .mat-column-name {
-  flex: 0 0 40% !important;
-  width: 40% !important;
- }
-
- .mat-column-name {
-  flex: 0 0 40% !important;
-  width: 40% !important;
+ .mat-column-access {
+  flex: 0 0 80% !important;
+  width: 80% !important;
  }
 
 
@@ -56,6 +51,12 @@ table{
    flex: 0 0 1% !important;
    width: 1% !important;
    padding-right: 0!important;
+ }
+
+ @media only screen and (max-width: 414px) {
+  .mat-column-access {
+    display: none!important;
+   }
  }
 
  .table-no-data {

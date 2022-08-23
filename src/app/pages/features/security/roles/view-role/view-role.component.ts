@@ -40,7 +40,9 @@ export class ViewRoleComponent implements OnInit {
       .subscribe(async res => {
         if(res.success){
           this.role = res.data;
-          const access = this.role.access !== undefined || this.role.access !== null ? this.role.access.split(",") : [];
+          console.log(this.role);
+          console.log(this.role.access);
+          const access = this.role.access ? this.role.access.split(",") : [];
           this.initPageAccess(access);
           this.isLoading = false;
         }
@@ -78,70 +80,6 @@ export class ViewRoleComponent implements OnInit {
         this.pageAccess.push(m);
       }
     });
-  }
-
-  onDelete(roleId:string){
-    const dialogData = new AlertDialogModel();
-    dialogData.title = 'Confirm';
-    dialogData.message = 'Delete role?';
-    dialogData.confirmButton = {
-      visible: true,
-      text: 'yes',
-      color:'primary'
-    }
-    dialogData.dismissButton = {
-      visible: true,
-      text: 'cancel'
-    }
-    const dialogRef = this.dialog.open(AlertDialogComponent, {
-        maxWidth: '400px',
-        closeOnNavigation: true
-    })
-    dialogRef.componentInstance.alertDialogConfig = dialogData;
-
-    try{
-
-      dialogRef.componentInstance.conFirm.subscribe((data: any) => {
-        this.isProcessing = true;
-        dialogRef.componentInstance.isProcessing = this.isProcessing;
-        dialogRef.componentInstance.alertDialogConfig.message = 'Deleting please wait...';
-        this.roleService.delete(roleId)
-          .subscribe(async res => {
-            if (res.success) {
-              this.snackBar.snackbarSuccess('Deleted!');
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              this.router.navigate(['/security/roles/']);
-              dialogRef.close();
-            } else {
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-              this.snackBar.snackbarError(this.error);
-              dialogRef.close();
-              if(this.error.toLowerCase().includes("not found")){
-                this.router.navigate(['/security/roles/']);
-              }
-            }
-          }, async (err) => {
-            this.isProcessing = false;
-            dialogRef.componentInstance.isProcessing = this.isProcessing;
-            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
-            this.snackBar.snackbarError(this.error);
-            if(this.error.toLowerCase().includes("not found")){
-              this.router.navigate(['/security/roles/']);
-            }
-          });
-    });
-    } catch (e){
-      this.isProcessing = false;
-      dialogRef.componentInstance.isProcessing = this.isProcessing;
-      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-      this.snackBar.snackbarError(this.error);
-      if(this.error.toLowerCase().includes("not found")){
-        this.router.navigate(['/security/roles/']);
-      }
-    }
   }
 
 

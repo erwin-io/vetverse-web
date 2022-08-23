@@ -43,8 +43,8 @@
  }
 
  .mat-column-username {
-   flex: 0 0 20% !important;
-   width: 20% !important;
+   flex: 0 0 10% !important;
+   width: 10% !important;
  }
 
  .mat-column-fullName {
@@ -52,9 +52,14 @@
    width: 25% !important;
  }
 
+ .mat-column-role {
+  flex: 0 10% !important;
+  width: 10% !important;
+ }
+
  .mat-column-email {
-   flex: 0 0 15% !important;
-   width: 15% !important;
+   flex: 0 0 20% !important;
+   width: 20% !important;
  }
 
  .mat-column-mobileNumber {
@@ -66,6 +71,21 @@
    flex: 0 0 1% !important;
    width: 1% !important;
    padding-right: 0!important;
+ }
+
+ @media only screen and (max-width: 768px) {
+  .mat-column-mobileNumber {
+    display: none!important;
+   }
+   .mat-column-role {
+    display: none!important;
+   }
+ }
+
+ @media only screen and (max-width: 414px) {
+  .mat-column-email {
+    display: none!important;
+   }
  }
 
 .table-no-data {
