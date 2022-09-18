@@ -6,7 +6,7 @@
     <form [formGroup]="petForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petForm" fxLayoutAlign="center" >
       <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
 
-        <mat-form-field *ngIf="!isLoadingLookup; else " appearance="outline" appearance="outline" fxFlex="100">
+        <mat-form-field *ngIf="!isLoadingLookup; else elseLoadingLookup" appearance="outline" appearance="outline" fxFlex="100">
           <mat-label>Select type</mat-label>
           <mat-select formControlName="petType">
             <mat-option *ngFor="let item of petTypeLookup" [value]="item">{{item.name}}</mat-option>
