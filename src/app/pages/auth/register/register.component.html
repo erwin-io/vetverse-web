@@ -148,20 +148,6 @@
             </mat-form-field>
 
             <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-              <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="this.userTypeId === 2">
-                <mat-label>Birthdate</mat-label>
-                <input
-                  matInput
-                  [max]="'2003-12-31'"
-                  placeholder="Birthdate"
-                  formControlName="birthDate"
-                  [matDatepicker]="picker">
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker></mat-datepicker>
-                  <mat-error *ngIf="getError(formPersonalInfo, 'birthDate') !== (null || undefined)">{{
-                    (getError(formPersonalInfo, 'birthDate') && getError(formPersonalInfo, 'birthDate').required ? 'Please enter your birthdate' : '')
-                  }}</mat-error>
-              </mat-form-field>
 
               <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
                 <mat-label>Select Gender</mat-label>

@@ -27,7 +27,6 @@ export class RegisterComponent {
   @ViewChild('stepper', { static: false}) stepper : MatStepper;
   isProcessing = false;
   isSuccessful = false;
-  userTypeId:number;
   error;
 
   constructor(
@@ -38,7 +37,6 @@ export class RegisterComponent {
     private router: Router,
     private snackBar: Snackbar
     ) {
-      this.userTypeId = this.router.url.toLowerCase().includes("auth/admin/signup") ? 1 : 2;
       this.mediaWatcher = this.media.asObservable().subscribe((change) => {
         change.forEach((item) => {
           this.handleMediaChange(item);
@@ -67,7 +65,6 @@ export class RegisterComponent {
 
     this.formPersonalInfo = this._formBuilder.group({
       address: ['', Validators.required],
-      birthDate: this.userTypeId === 1 ? [] :  ['', Validators.required],
       genderId: ['', Validators.required],
     });
 
@@ -130,7 +127,7 @@ export class RegisterComponent {
       this.isProcessing = true;
       this.stepper.animationDuration = '0s';
       this.stepper.selectedIndex = 3;
-      this.authService.register(this.formData, this.userTypeId)
+      this.authService.registerStaff(this.formData)
       .subscribe(async res => {
         if (res.success) {
           this.isProcessing = false;
