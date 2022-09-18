@@ -1,0 +1,65 @@
+<mat-progress-bar mode="query" *ngIf="isProcessing"></mat-progress-bar>
+<h4 mat-dialog-title>Reschedule</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" fxLayout="column">
+    <mat-form-field appearance="outline" fxFlex="100"
+    (click)="picker.open()">
+      <mat-label>Payment date</mat-label>
+      <input
+        matInput
+        placeholder="Payment date"
+        [formControl]="paymentDate"
+        autocomplete="new-paymentDate"
+        [matDatepicker]="picker"
+        [disabled]="isProcessing"
+        (keydown)="$event.key === 'Enter' ? onSubmit() : true"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="picker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error
+        *ngIf="paymentDate.errors !== (null || undefined)"
+        >{{
+          paymentDate.errors &&
+          paymentDate.errors.required
+            ? "Please enter Payment date"
+            : ""
+        }}</mat-error
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" appearance="outline" fxFlex="100">
+      <mat-label>Select Payment type</mat-label>
+      <mat-select
+        [formControl]="paymentTypeId">
+        <mat-option *ngFor="let item of paymentTypeLookup" [value]="item.paymentTypeId">{{item.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || !formValid"
+      color="primary"
+      form="scheduleForm"
+      type="submit"
+      (click)="onSubmit()"
+    >
+      Save
+    </button>
+  </div>
+</div>

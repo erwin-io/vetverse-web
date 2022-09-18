@@ -4,6 +4,7 @@ import { Observable, tap, catchError, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../model/api-response.model';
 import { Role } from '../model/role.model';
+import { AppConfigService } from './app-config.service';
 import { IServices } from './interface/iservices';
 
 @Injectable({
@@ -11,10 +12,10 @@ import { IServices } from './interface/iservices';
 })
 export class RoleService implements IServices {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
   get(): Observable<ApiResponse<Role[]>> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.role)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.role)
     .pipe(
       tap(_ => this.log('role')),
       catchError(this.handleError('role', []))
@@ -22,7 +23,7 @@ export class RoleService implements IServices {
   }
 
   getById(roleId: string): Observable<ApiResponse<Role>> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.role + roleId)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.role + roleId)
     .pipe(
       tap(_ => this.log('role')),
       catchError(this.handleError('role', []))
@@ -30,7 +31,7 @@ export class RoleService implements IServices {
   }
 
   udpdate(data: any): Observable<ApiResponse<Role>> {
-    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.role, data)
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.role, data)
     .pipe(
       tap(_ => this.log('role')),
       catchError(this.handleError('role', []))

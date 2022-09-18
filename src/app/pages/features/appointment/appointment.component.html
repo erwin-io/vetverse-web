@@ -1,0 +1,270 @@
+<div class="page-view-container">
+  <div fxLayout="column" fxFlex="100">
+    <div fxFlex="100" fxLayout="column" *ngIf="isAdvanceSearch">
+      <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row">
+        <h3>Advance search</h3>
+      </div>
+      <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row">
+        <mat-form-field style="width: 100%;" appearance="outline" fxFlex.gt-xs="30%" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>Status</mat-label>
+          <mat-chip-list #statusList>
+            <mat-chip
+              *ngFor="let status of selectedStatus"
+              (removed)="remove('status', status)">
+              {{status}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+              placeholder="Search status..."
+              #filterSearchStatusInput
+              [formControl]="filterSearchStatusCtrl"
+              [matAutocomplete]="statusAutocomplete"
+              [matChipInputFor]="statusList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+          </mat-chip-list>
+          <mat-autocomplete #statusAutocomplete="matAutocomplete" (optionSelected)="selected('status', $event)">
+            <ng-container *ngFor="let status of filteredStatus | async">
+              <mat-option *ngIf="!selectedStatus.includes(status)" [value]="status">
+                {{status}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field style="width: 100%;" appearance="outline" fxFlex.gt-xs="30%" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>Consultation type</mat-label>
+          <mat-chip-list #consultationList>
+            <mat-chip
+              *ngFor="let consultation of selectedConsultation"
+              (removed)="remove('consultation', consultation)">
+              {{consultation}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+              placeholder="Search consultation..."
+              #filterSearchConsultationInput
+              [formControl]="filterSearchConsultationCtrl"
+              [matAutocomplete]="consultationAutocomplete"
+              [matChipInputFor]="consultationList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+          </mat-chip-list>
+          <mat-autocomplete #consultationAutocomplete="matAutocomplete" (optionSelected)="selected('consultation', $event)">
+            <ng-container *ngFor="let consultation of filteredConsultation | async">
+              <mat-option *ngIf="!selectedConsultation.includes(consultation)" [value]="consultation">
+                {{consultation}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field style="width: 100%;" appearance="outline" fxFlex.gt-xs="40%" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>Service type</mat-label>
+          <mat-chip-list #serviceList>
+            <mat-chip
+              *ngFor="let service of selectedServices"
+              (removed)="remove('service', service)">
+              {{service}}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <input
+              placeholder="Search service..."
+              #filterSearchServiceInput
+              [formControl]="filterSearchServiceCtrl"
+              [matAutocomplete]="serviceAutocomplete"
+              [matChipInputFor]="serviceList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+          </mat-chip-list>
+          <mat-autocomplete #serviceAutocomplete="matAutocomplete" (optionSelected)="selected('service', $event)">
+            <ng-container *ngFor="let service of filteredServices | async">
+              <mat-option *ngIf="!selectedServices.includes(service)" [value]="service">
+                {{service}}
+              </mat-option>
+            </ng-container>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row">
+
+        <mat-form-field style="width: 100%;" appearance="outline" [fxFlex.gt-xs]="allowedAction.payment ? '30%' : '60%'" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>Client name</mat-label>
+          <input
+            #search
+            matInput
+            [formControl]="clientNameCtrl"
+            type="search"
+            placeholder="Search">
+            <mat-checkbox [(ngModel)]="isWalkIn" style="
+            margin-top: 20px;">Walk in</mat-checkbox>
+        </mat-form-field>
+        <mat-form-field style="width: 100%;" appearance="outline" [ngStyle]="{'display': allowedAction.payment ? 'block' : 'none' }" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>Vet name</mat-label>
+          <input
+            matInput
+            placeholder="Vet name"
+            [formControl]="vetNameCtrl">
+        </mat-form-field>
+        <mat-form-field (click)="fromPicker.open()" style="width: 100%;" appearance="outline" fxFlex.gt-xs="20%" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>From</mat-label>
+          <input
+            matInput
+            placeholder="From"
+            [formControl]="appointmentDateFromCtrl"
+            [matDatepicker]="fromPicker">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field (click)="toPicker.open()" style="width: 100%;" appearance="outline" fxFlex.gt-xs="20%" class="cell" [ngClass.gt-xs]="{'isLargeScreen': true}">
+          <mat-label>To</mat-label>
+          <input
+            matInput
+            placeholder="To"
+            [formControl]="appointmentDateToCtrl"
+            [matDatepicker]="toPicker">
+            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+        <div fxFlex.gt-sm="12.5%" class="cell" [ngStyle.lt-sm]="{ 'margin-bottom': '10px;' }" [ngStyle.gt-sm]="{ 'margin-right': '10px;' }" [ngClass.gt-sm]="{'isLargeScreen': true}">
+          <button fxFlex="100" mat-raised-button color="primary" (click)="getAppointments()">Apply filter</button>
+        </div>
+        <div fxFlex.gt-sm="12.5%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+          <button fxFlex="100" mat-stroked-button (click)="isAdvanceSearch = !isAdvanceSearch">Close filter</button>
+        </div>
+      </div>
+      <br/>
+    </div>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-subtitle>Appointments</mat-card-subtitle>
+        <div fxFlex></div>
+        <button mat-icon-button matTooltip="Advance search" [disabled]="isProcessing" (click)="isAdvanceSearch = !isAdvanceSearch"  *ngIf="!isAdvanceSearch">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Add" [disabled]="isProcessing" *ngIf="allowedAction.add" routerLink="/appointments/create">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content fxLayout="column">
+        <div fxFlex="100" *ngIf="!isAdvanceSearch">
+          <div fxFlex="20" fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="40" fxLayout="column">
+            <mat-form-field appearance="outline">
+              <mat-label>Search</mat-label>
+              <input
+                #search
+                matInput
+                [formControl]="keywordCtrl"
+                type="search"
+                placeholder="Search"
+                (keydown)="$event.key === 'Enter' ? getAppointments() : true">
+                <button mat-icon-button matSuffix matTooltip="Search" #searchButton [disabled]="isProcessing" (click)="getAppointments()">
+                  <mat-icon>search</mat-icon>
+                </button>
+            </mat-form-field>
+          </div>
+        </div>
+        <div fxFlex="100" [ngClass]="{ 'hidden': isLoading }">
+          <table class="table-appointment" mat-table matSort [dataSource]="dataSource" >
+
+            <ng-container matColumnDef="appointmentId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+              <td mat-cell *matCellDef="let element"> {{element.appointmentId}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="appointmentDate">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+              <!-- <td mat-cell *matCellDef="let element"> {{formatDate(element.appointmentDate, "MM/DD/YYYY")}} from {{formatDate(element.appointmentDate + " " + element.timeStart, "h:mm: a")}} to {{formatDate(element.appointmentDate + " " + element.timeEnd, "h:mm: a")}}</td> -->
+              <td mat-cell *matCellDef="let element"> {{ element.appointmentDate | date:"MMMM dd, YYYY" }} <br/>({{ element.appointmentDate + " " + element.timeStart | date:"h:mm: a" }} - {{element.appointmentDate + " " + element.timeEnd | date:"h:mm: a"}})</td>
+            </ng-container>
+
+            <ng-container matColumnDef="client">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Client </th>
+              <td mat-cell *matCellDef="let element"> {{element.isWalkIn ? 'Walk in: ' + element.client : element.client}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="consultaionType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Consultaion type </th>
+              <td mat-cell *matCellDef="let element"> {{element.consultaionType}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="service">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Service type</th>
+              <td mat-cell *matCellDef="let element"> {{element.service}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="vet">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Vet </th>
+              <td mat-cell *matCellDef="let element"> {{ element.vet}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amountToPay">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount to pay </th>
+              <td mat-cell *matCellDef="let element"> <span [ngStyle]="{ 'color': element.isPaid ? '#00BFA5' : '#f44336' }">₱{{element.amountToPay}}{{element.isPaid ? '(Paid)' : ''}}</span> </td>
+            </ng-container>
+
+            <!-- Mobile number Column -->
+            <ng-container matColumnDef="appointmentStatus">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+              <td mat-cell *matCellDef="let element"> {{element.appointmentStatus}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="controls">
+              <th mat-header-cell *matHeaderCellDef>  </th>
+              <td mat-cell *matCellDef="let element">
+                <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" xPosition="before">
+                  <!-- <button  mat-menu-item routerLink="/security/users/details/{{element.user.userId}}">Details</button> -->
+                  <button  mat-menu-item routerLink="/appointments/details/{{element.appointmentId}}" >Details</button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+          <div class="table-no-data" *ngIf="dataSource.data.length === 0">
+            <span>No appoinments available</span>
+          </div>
+
+          <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                         showFirstLastButtons
+                         aria-label="Select page of periodic elements">
+          </mat-paginator>
+        </div>
+        <div *ngIf="isLoading">
+          <table class="mat-table" role="table">
+            <thead role="rowgroup">
+              <tr role="row" class="mat-header-row">
+                 <th role="columnheader" class="mat-header-cell" *ngFor="let row of loaderData"> {{col}} </th>
+                 <!-- <th role="columnheader" class="mat-header-cell"> Date </th>
+                 <th role="columnheader" class="mat-header-cell"> Client </th>
+                 <th role="columnheader" class="mat-header-cell"> Consultaion type </th>
+                 <th role="columnheader" class="mat-header-cell"> Service type </th>
+                 <th role="columnheader" class="mat-header-cell" [ngStyle]="{ 'display': allowedAction.payment ? 'block' : 'none!important' }"> Vet </th>
+                 <th role="columnheader" class="mat-header-cell" [ngStyle]="{ 'display': allowedAction.payment ? 'block' : 'none!important' }"> Amount to pay </th>
+                 <th role="columnheader" class="mat-header-cell"> Status </th>
+                 <th role="columnheader" class="mat-header-cell"> </th> -->
+              </tr>
+           </thead>
+            <tbody>
+               <tr class="mat-row " *ngFor="let row of loaderData">
+                  <td role="cell" *ngFor="let col of displayedColumns" class="mat-cell mat-column-'{{col}}'"><ngx-skeleton-loader [theme]="{ height: '30px'}"></ngx-skeleton-loader></td>
+               </tr>
+            </tbody>
+         </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- <ng-template #elseLoadingTemp>
+
+  </ng-template> -->
+
+</div>

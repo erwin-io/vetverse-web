@@ -7,16 +7,58 @@ import { ApiResponse } from '../model/api-response.model';
 import { Client } from '../model/client.model';
 import { environment } from '../../../environments/environment';
 import { IServices } from './interface/iservices';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService implements IServices {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
-  get(userTypeId: string): Observable<any> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.user.get + userTypeId)
+  getStaffByAdvanceSearch(params:{
+    isAdvance: boolean,
+    keyword: string,
+    userId: string,
+    roles: string,
+    email: string,
+    mobileNumber: number,
+    name: string,
+  }): Observable<ApiResponse<Staff[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getStaffByAdvanceSearch,
+      {params})
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  getClientByAdvanceSearch(params:{
+    isAdvance: boolean,
+    keyword: string,
+    userId: string,
+    email: string,
+    mobileNumber: number,
+    name: string,
+  }): Observable<ApiResponse<Client[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getClientByAdvanceSearch,
+      {params})
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  getStaff(): Observable<ApiResponse<Staff[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.get + 1)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  getClients(): Observable<ApiResponse<Client[]>> {
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.get + 2)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -24,7 +66,15 @@ export class UserService implements IServices {
   }
 
   getById(userId: string): Observable<any> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.user.getById + userId)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getById + userId)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  createClient(data: any): Observable<ApiResponse<Staff>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.createClient, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -32,7 +82,7 @@ export class UserService implements IServices {
   }
 
   createStaff(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.user.createStaff, data)
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.createStaff, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -40,7 +90,7 @@ export class UserService implements IServices {
   }
 
   udpdateClient(data: any): Observable<ApiResponse<Client>> {
-    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.udpdateClient, data)
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.udpdateClient, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -48,7 +98,7 @@ export class UserService implements IServices {
   }
 
   udpdateStaff(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.udpdateStaff, data)
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.udpdateStaff, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))
@@ -56,7 +106,7 @@ export class UserService implements IServices {
   }
 
   toggleEnable(data: any): Observable<ApiResponse<Staff>> {
-    return this.http.put<any>(environment.apiBaseUrl + environment.apiEndPoints.user.toggleEnable, data)
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.toggleEnable, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

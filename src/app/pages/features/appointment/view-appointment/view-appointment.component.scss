@@ -1,0 +1,52 @@
+.page-view-container {
+  .action-section {
+    mat-divider {
+      margin: 10px 0!important;
+    }
+    .action-header-text {
+      margin: 0!important;
+    }
+    .action-menu {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      &:first-child {
+        li {
+          &:first-child {
+            margin-top: 0;
+          }
+        }
+
+      }
+      li {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 10px;
+        &:first-child {
+          margin-top: 10px;
+        }
+        button {
+          .button-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            span {
+              flex-grow: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.schedule-dialog {
+  max-width: 500px!important;
+  width: 500px!important;
+}
+
+
+.payment-dialog {
+  max-width: 500px!important;
+  width: 500px!important;
+}

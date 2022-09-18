@@ -1,14 +1,14 @@
 import { Component, OnDestroy } from '@angular/core';
-import { NavItem } from './ui/model/nav-item';
 import { MediaChange, MediaObserver } from "@angular/flex-layout";
 import { Subscription } from 'rxjs';
-import { menu } from './ui/model/menu';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { StorageService } from 'src/app/core/storage/storage.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { AlertDialogComponent } from '../../../app/shared/alert-dialog/alert-dialog.component';
 import { AlertDialogModel } from '../../../app/shared/alert-dialog/alert-dialog-model';
+import { NavItem } from 'src/app/core/model/nav-item';
+import { menu } from 'src/app/core/model/menu';
 
 @Component({
   selector: 'app-features',
@@ -46,8 +46,16 @@ export class FeaturesComponent implements OnDestroy {
     }
 
     initMenu(){
-      const access = this.storageService.getLoginUser().role.access;
-      const pageAccess = access !== undefined || access !== "" ? access.split(",") : [];
+      const user = this.storageService.getLoginUser();
+      if(!user || !user.role){
+        this.authService.logout();
+        this.storageService.saveAccessToken(null);
+        this.storageService.saveRefreshToken(null);
+        this.storageService.saveLoginUser(null);
+        this.router.navigate(['auth/login'], { replaceUrl: true });
+      }
+      const access = user.role.access;
+      const pageAccess =  access !== null && access !== undefined && access !== "" ? access.split(",") : [];
       menu.forEach((element:NavItem) => {
         if(element.isParent && element.children.length > 0) {
           const childPages = [];

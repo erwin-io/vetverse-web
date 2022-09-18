@@ -13,6 +13,14 @@ export const routes: Routes = [
     component: UsersComponent
   },
   {
+    path: 'users/staff',
+    component: UsersComponent
+  },
+  {
+    path: 'users/clients',
+    component: UsersComponent
+  },
+  {
     path: 'roles',
     component: RolesComponent
   },

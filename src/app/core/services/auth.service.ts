@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 
 import { catchError, tap } from 'rxjs/operators';
 import { IServices } from './interface/iservices';
+import { AppConfigService } from './app-config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +15,10 @@ export class AuthService implements IServices {
   isLoggedIn = false;
   redirectUrl: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private appconfig: AppConfigService) { }
 
   login(data: any): Observable<any> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.login, data)
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.login, data)
     .pipe(
       tap(_ => this.isLoggedIn = true),
       catchError(this.handleError('login', []))
@@ -25,7 +26,7 @@ export class AuthService implements IServices {
   }
 
   logout(): Observable<any> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.logout)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.logout)
     .pipe(
       tap(_ => this.isLoggedIn = false),
       catchError(this.handleError('logout', []))
@@ -42,7 +43,7 @@ export class AuthService implements IServices {
   }
 
   registerClient(data: any): Observable<any> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.register.client, data)
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.register.client, data)
     .pipe(
       tap(_ => this.log('register')),
       catchError(this.handleError('register', []))
@@ -50,7 +51,7 @@ export class AuthService implements IServices {
   }
 
   registerStaff(data: any): Observable<any> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.register.staff, data)
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.register.staff, data)
     .pipe(
       tap(_ => this.log('register')),
       catchError(this.handleError('register', []))
@@ -58,7 +59,7 @@ export class AuthService implements IServices {
   }
 
   findByUsername(username: string): Observable<any> {
-    return this.http.get<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.findByUsername + username)
+    return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.findByUsername + username)
     .pipe(
       tap(_ => this.log('findByUsername')),
       catchError(this.handleError('findByUsername', []))
@@ -66,7 +67,7 @@ export class AuthService implements IServices {
   }
 
   refreshToken(data: any): Observable<any> {
-    return this.http.post<any>(environment.apiBaseUrl + environment.apiEndPoints.auth.refreshToken, data)
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.refreshToken, data)
     .pipe(
       tap(_ => this.log('refresh token')),
       catchError(this.handleError('refresh token', []))

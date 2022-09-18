@@ -13,7 +13,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export const routes: Routes = [
   {
-    path: 'users/add',
+    path: 'users/add/staff',
+    component: AddUserComponent
+  },
+  {
+    path: 'users/add/clients',
     component: AddUserComponent
   },
   {

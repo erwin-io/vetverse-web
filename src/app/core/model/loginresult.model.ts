@@ -14,5 +14,6 @@ export class LoginResult {
   mobileNumber: string;
   address: string;
   gender: Gender;
-  role:Role
+  role:Role;
+  userTypeIdentityId:string;
 }

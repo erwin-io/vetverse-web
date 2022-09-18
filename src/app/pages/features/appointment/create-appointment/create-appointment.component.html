@@ -1,0 +1,205 @@
+<div class="page-view-container">
+  <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="20px">
+    <div fxFlex.gt-sm="65%" fxFlex.gt-md="80%" fxLayout="column" fxLayoutGap="20px">
+      <mat-card fxFlex="100">
+        <mat-card-header>
+          <mat-card-subtitle><strong>Create Appointment</strong></mat-card-subtitle>
+          <div fxFlex></div>
+        </mat-card-header>
+
+        <mat-card-content fxLayout="column">
+          <div fxFlex="100">
+            <mat-checkbox [(ngModel)]="isWalkIn" style="
+            margin-bottom: 20px;">Walk in</mat-checkbox>
+          </div>
+          <div fxFlex="100" fxLayout="column">
+            <h4>Appointment</h4>
+            <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap.gt-xs="20px">
+              <div fxflex="100" fxFlex.gt-xs="50%" fxLayout="column" class="cell">
+                <mat-form-field appearance="outline" fxFlex="100" style="cursor: pointer"
+                (click)="picker.open()">
+                  <mat-label>Appointment date</mat-label>
+                  <input
+                    matInput
+                    placeholder="Appointment date"
+                    [formControl]="appointmentDate"
+                    autocomplete="new-appointmentDate"
+                    [matDatepicker]="picker"
+                    [disabled]="isProcessing"
+                    readonly="true"
+                    (keydown)="$event.key === 'Enter' ? true : true"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  <mat-error
+                    *ngIf="appointmentDate.errors !== (null || undefined)"
+                    >{{
+                      appointmentDate.errors &&
+                      appointmentDate.errors.required
+                        ? "Please enter Payment date"
+                        : ""
+                    }}</mat-error
+                  >
+                </mat-form-field>
+              </div>
+              <div fxflex="100" fxFlex.gt-xs="50%" fxLayout="column" class="cell">
+                <mat-form-field appearance="outline" fxFlex="100" style="cursor: pointer"
+                (click)="t4.showDialog()">
+                  <mat-label>Time</mat-label>
+                  <input
+                    matTimepicker
+                    #t4="matTimepicker"
+                    #time4="ngModel"
+                    id="timepicker-example-4"
+                    mode="12h"
+                    [(ngModel)]="time"
+                    placeholder="Please select time..."
+                    name="time-4"
+                    autocomplete="new-time"
+                    [disableDialogOpenOnClick]="true"
+                    readonly="true"
+                  />
+                  <mat-icon matSuffix>access_time</mat-icon>
+                  <mat-error *ngIf="time4.touched && time4.invalid"
+                    >Invalid Date</mat-error
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" ngStyle.gt-sm="gap: 20px">
+            <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
+              <h4>Client detals</h4>
+              <div fxFlex="100" fxLayout="column">
+                <mat-form-field [style]="{ 'cursor': isWalkIn ? 'default!important': 'pointer!important' }" appearance="outline" fxFlex="100" (click)="isWalkIn? false: openSearchClient()"  >
+                  <mat-label>{{isWalkIn ? "Enter client name" : "Click to select client"}}</mat-label>
+                  <input
+                    matInput
+                    [formControl]="clientName"
+                    [placeholder]="isWalkIn ? 'Enter Client name' : 'Click to select client'"
+                    [readonly]="!isWalkIn">
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
+              <h4>Pet detals</h4>
+              <div fxFlex="100" fxLayout="column">
+                <mat-form-field *ngIf="isWalkIn" appearance="outline" fxFlex="100" >
+                  <mat-label>Enter Pet name</mat-label>
+                  <input
+                    matInput
+                    [formControl]="petName"
+                    placeholder="Enter Pet name">
+                </mat-form-field>
+
+                <div *ngIf="!isLoadingPet; else elseLoadingPets">
+                  <mat-form-field *ngIf="!isWalkIn" appearance="outline" style="cursor:pointer!important" appearance="outline" fxFlex="100">
+                    <mat-label>Select Pet</mat-label>
+                    <mat-select [disabled]="!clientId || clientId === ''"
+                      [formControl]="petId">
+                      <mat-option *ngFor="let pet of peTypeLookup" [value]="pet.petId">{{pet.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <ng-template #elseLoadingPets>
+                  <div fxFlex="100">
+                    <ngx-skeleton-loader
+                      fxFlex
+                      [theme]="{ height: '55px', width: '100%' }"
+                    ></ngx-skeleton-loader>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+          <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" ngStyle.gt-sm="gap: 20px">
+            <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
+              <h4>Service type</h4>
+              <div fxFlex="100" fxLayout="column">
+                <mat-form-field appearance="outline" fxFlex="33.33%">
+                  <mat-label>Service type</mat-label>
+                  <mat-select
+                    [formControl]="serviceType">
+                    <mat-option *ngFor="let item of serviceTypeLookup" [value]="item">{{item.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex fxFlex.gt-sm="50%"></div>
+          </div>
+          <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" ngStyle.gt-sm="gap: 20px">
+            <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
+              <h4>Veterinarian</h4>
+              <div fxFlex="100" fxLayout="column">
+                <mat-form-field style="cursor:pointer!important" appearance="outline" fxFlex="100" (click)="openSearchVet()"  >
+                  <mat-label>Click to select Veterinarian</mat-label>
+                  <input
+                    matInput
+                    [formControl]="veterinarian"
+                    readonly="true"
+                    placeholder="Click to select Veterinarian">
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex fxFlex.gt-sm="50%"></div>
+          </div>
+          <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" ngStyle.gt-sm="gap: 20px">
+            <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
+              <h4>Comments/Notes</h4>
+              <div fxFlex="100" fxLayout="column">
+                <mat-form-field appearance="outline" fxFlex="100" >
+                  <mat-label>Enter Comments/Notes</mat-label>
+                  <input
+                    matInput
+                    [formControl]="comments"
+                    placeholder="Enter Comments/Notes">
+                </mat-form-field>
+              </div>
+            </div>
+            <div fxFlex fxFlex.gt-sm="50%"></div>
+          </div>
+          <br />
+        </mat-card-content>
+        <mat-card-actions>
+          <button matTooltip="Back to list" mat-stroked-button routerLink="/appointments" [disabled]="isProcessing" color="primary">Back</button>
+          <button matTooltip="Save" mat-raised-button color="primary" type="submit" [disabled]="isLoading || isProcessing || !formIsValid" (click)="onSubmit()">Save</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div fxFlex class="action-section">
+      <div fxFlex="100" fxLayout="column" >
+        <div *ngIf="allowedAction.payment" >
+          <div fxFlex="100">
+            <h4 class="action-header-text">Payments</h4>
+            <p class="action-header-text">Status: <strong [ngStyle]="{ 'color' : isPaid ? '#00BFA5;': '#f44336;' }">{{isPaid? 'Paid' : 'Unpaid'}}</strong></p>
+            <p *ngIf="isPaid" class="action-header-text">Payment type: <strong>{{ selectedPaymentType.name }}</strong></p>
+            <p class="action-header-text">Amount to pay: <strong>₱{{!isPaid && serviceType.value !== null ? serviceType.value?.price : 0}}</strong></p>
+            <p class="action-header-text">Total payment: <strong>₱{{isPaid ? payment.amount : 0}}</strong></p>
+            <ul fxLayout="column" class="action-menu">
+              <li>
+                <button mat-flat-button [disabled]="!appointmentDate.value || serviceType.value === null" color="primary" *ngIf="!isPaid && !payment" (click)="pay()">
+                  <div class="button-wrapper">
+                    <mat-icon>check</mat-icon>
+                    <span>Pay</span>
+                  </div>
+                </button>
+              </li>
+              <li>
+                <button mat-stroked-button color="warn" *ngIf="isPaid" (click)="cancelPayment()">
+                  <div class="button-wrapper">
+                    <mat-icon>close</mat-icon>
+                    <span>Cancel</span>
+                  </div>
+                </button>
+              </li>
+            </ul>
+            <mat-divider></mat-divider>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

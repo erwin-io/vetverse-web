@@ -1,11 +1,11 @@
 import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
-import { NavItem } from '../model/nav-item';
 import { Router } from '@angular/router';
-import { NavService } from '../service/nav.service';
 import { MatDialog } from '@angular/material/dialog';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AuthService } from '../../../../../app/core/services/auth.service';
 import { StorageService } from '../../../../../app/core/storage/storage.service';
+import { NavItem } from 'src/app/core/model/nav-item';
+import { NavService } from 'src/app/core/ui/nav.service';
 
 
 @Component({

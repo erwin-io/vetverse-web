@@ -37,6 +37,25 @@
  }
 
 
+ ::ng-deep .table-users {
+  tr.mat-header-row {
+    .mat-header-cell {
+      padding-right: 20px!important;
+      &:last-child {
+        padding-right: 0!important;
+      }
+    }
+  }
+  tr.mat-row {
+    .mat-cell {
+      padding-right: 20px!important;
+      &:last-child {
+        padding-right: 0!important;
+      }
+    }
+  }
+}
+
  .mat-column-userId {
   flex: 0 0 10% !important;
   width: 10% !important;

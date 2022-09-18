@@ -1,0 +1,103 @@
+<div class="page-view-container">
+  <mat-card [ngClass]="{ 'hidden': isLoading }">
+    <mat-card-header>
+      <mat-card-subtitle>Health Records</mat-card-subtitle>
+      <div fxFlex></div>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" >
+      <!-- <div fxFlex="100">
+        <div fxFlex="20" fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="40" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input
+              #search
+              matInput
+              [formControl]="keywordCtrl"
+              type="search"
+              placeholder="Search"
+              (keydown)="$event.key === 'Enter' ? filter() : true">
+              <button mat-icon-button matSuffix matTooltip="Search" #searchButton [disabled]="isProcessing" (click)="filter()">
+                <mat-icon>search</mat-icon>
+              </button>
+          </mat-form-field>
+        </div>
+      </div> -->
+      <table mat-table class="health-record" [dataSource]="dataSource" mat-table matSort [ngClass]="{ 'hidden': dataSource.data.length === 0}">
+        <ng-container matColumnDef="petId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.petId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+          <td mat-cell *matCellDef="let element"> {{element.petCategory.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="owner">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Owner </th>
+          <td mat-cell *matCellDef="let element"> {{element.client.fullName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+          <td mat-cell *matCellDef="let element"> {{element.client.email}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mobileNumber">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Mobile Number </th>
+          <td mat-cell *matCellDef="let element"> {{element.client.mobileNumber }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="controls">
+          <th mat-header-cell *matHeaderCellDef>  </th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button matTooltip="View records" (click)="view(element.petId)" mat-menu-item >View records</button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="table-no-data" *ngIf="dataSource.data.length === 0">
+        <span>No pets available</span>
+      </div>
+      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                     showFirstLastButtons
+                     aria-label="Select page of periodic elements">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="isLoading">
+    <table class="mat-table" role="table" >
+      <thead role="rowgroup">
+        <tr role="row" class="mat-header-row">
+           <th role="columnheader" class="mat-header-cell"> Id </th>
+           <th role="columnheader" class="mat-header-cell"> Name </th>
+           <th role="columnheader" class="mat-header-cell"> Category </th>
+           <th role="columnheader" class="mat-header-cell"> Owner </th>
+           <th role="columnheader" class="mat-header-cell"> Email </th>
+           <th role="columnheader" class="mat-header-cell"> Mobile Number </th>
+           <th role="columnheader" class="mat-header-cell"> </th>
+        </tr>
+     </thead>
+      <tbody>
+         <tr class="mat-row " *ngFor="let row of loaderData">
+            <td role="cell" *ngFor="let col of displayedColumns" class="mat-cell mat-column-'{{col}}'"><ngx-skeleton-loader [theme]="{ height: '30px'}"></ngx-skeleton-loader></td>
+         </tr>
+      </tbody>
+   </table>
+  </mat-card >
+</div>

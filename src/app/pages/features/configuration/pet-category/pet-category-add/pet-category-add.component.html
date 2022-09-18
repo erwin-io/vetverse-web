@@ -1,0 +1,61 @@
+<mat-progress-bar mode="query" *ngIf="isProcessing || isLoading"></mat-progress-bar>
+<h4 mat-dialog-title>Add Category</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" fxLayout="column">
+    <form [formGroup]="petCategoryForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petCategoryForm" fxLayoutAlign="center" >
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+
+        <mat-form-field *ngIf="!isLoadingLookup; else " appearance="outline" appearance="outline" fxFlex="100">
+          <mat-label>Select type</mat-label>
+          <mat-select formControlName="petTypeId">
+            <mat-option *ngFor="let item of petTypeLookup" [value]="item.petTypeId">{{item.name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="getError('petTypeId') !== (null || undefined)">{{
+            (getError('petTypeId') && getError('petTypeId').required ? 'Please select pet type' : '')
+          }}</mat-error>
+        </mat-form-field>
+
+        <ng-template #elseLoadingLookup>
+          <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+            <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+          </div>
+        </ng-template>
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            placeholder="Name"
+            formControlName="name">
+            <mat-error *ngIf="getError('name') !== (null || undefined)">{{
+              (getError('name') && getError('name').required ? 'Please enter pet category name' : '')
+            }}</mat-error>
+        </mat-form-field>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || !petCategoryForm.valid"
+      color="primary"
+      form="petCategoryForm"
+      type="submit"
+    >
+      Save
+    </button>
+  </div>
+</div>

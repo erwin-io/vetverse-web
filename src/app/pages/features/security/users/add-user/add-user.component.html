@@ -1,11 +1,11 @@
 <div class="page-view-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-subtitle>Add User</mat-card-subtitle>
+      <mat-card-subtitle>Add {{userTypeId === 1 ? 'Staff': 'Client'}} User</mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content fxLayout="column" >
-      <div fxFlex="100" class="content-inner">
+      <div fxFlex="100" class="content-inner" fxLayout="column">
         <!-- <mat-short-vertical-login></mat-short-vertical-login> -->
         <form [formGroup]="userForm" fxLayout="row wrap" id="userForm" (ngSubmit)="onSubmit()">
             <fieldset fxFlex="100" fxLayout="row wrap" [disabled]="isProcessing">
@@ -48,7 +48,22 @@
                     }}</mat-error>
                 </mat-form-field>
               </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" style="row-gap: 20px;">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="this.userTypeId === 2" (click)="picker.open()">
+                  <mat-label>Birthdate</mat-label>
+                  <input
+                    matInput
+                    [max]="'2003-12-31'"
+                    placeholder="Birthdate"
+                    formControlName="birthDate"
+                    [matDatepicker]="picker">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="getError('birthDate') !== (null || undefined)">{{
+                      (getError('birthDate') && getError('birthDate').required ? 'Please enter your birthdate' : '')
+                    }}</mat-error>
+                </mat-form-field>
+
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
                   <mat-label>Select Gender</mat-label>
                   <mat-select
@@ -59,10 +74,10 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div fxFlex="100" fxLayout="column">
+              <div fxFlex="100" fxLayout="column" >
                 <h3>Contact</h3>
               </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" style="row-gap: 20px;">
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
                   <mat-label>Email</mat-label>
                   <input
@@ -92,7 +107,7 @@
                 <h3>Addres</h3>
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <mat-form-field appearance="outline" fxFlex="100" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                <mat-form-field appearance="outline" fxFlex="100" class="cell" >
                   <mat-label>Address</mat-label>
                   <textarea
                     matInput
@@ -139,7 +154,7 @@
                       (getError('password') && getError('password').maxlength ? 'Only maximum of 16 characters are allowed' : '')
                     }}</mat-error>
                 </mat-form-field>
-                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" >
                   <mat-label>Confirm password</mat-label>
                   <input
                     matInput
@@ -158,68 +173,104 @@
                     }}</mat-error>
                 </mat-form-field>
               </div>
-              <div fxFlex="100" fxLayout="column">
-                <h3>User Roles  </h3>
-              </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <!-- <mat-form-field class="example-chip-list" appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
-                  <mat-label>Roles</mat-label>
-                  <mat-chip-list #chipList aria-label="Select Roles">
-                    <mat-chip
-                      *ngFor="let role of selectedRoles"
-                      (removed)="removeRole(role)">
-                      {{role}}
-                      <button matChipRemove>
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip>
-                    <input
-                      placeholder="Search Role..."
-                      #roleInput
-                      formControlName="roleIds"
-                      [matAutocomplete]="auto"
-                      [matChipInputFor]="chipList"
-                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
-                  </mat-chip-list>
-                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedRole($event)">
-                    <ng-container *ngFor="let role of filteredRoles | async">
-                      <mat-option *ngIf="!selectedRoles.includes(role)" [value]="role">
-                        {{role}}
-                      </mat-option>
-                    </ng-container>
-                  </mat-autocomplete>
-                </mat-form-field> -->
-
-                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
-                  <mat-label>Select Role</mat-label>
-                  <mat-select
-                    formControlName="roleId">
-                    <mat-option [value]="role.roleId"
-                    *ngFor="let role of roles">{{role.name}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <ng-template #elseLoadingRoles>
-                  <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
-                    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
-                  </div>
-                </ng-template>
-              </div>
-              <div fxFlex="100" fxLayout="column">
-                <h3>Access </h3>
-              </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <div *ngIf="accessToDisplay.length > 0; else noAccessTemp" fxLayout="column" class="group-info" fxLayoutAlign="start">
-                  <div *ngFor="let row of accessToDisplay" fxLayout="row" class="group-info">
-                    <mat-icon>{{row.iconName}}</mat-icon>
-                    <h3 class="group-info-text">{{row.displayName}}</h3>
-                  </div>
+              <div fxFlex="100" fxLayout="column" *ngIf="userTypeId===1">
+                <div fxFlex="100" fxLayout="column">
+                  <h3>User Roles  </h3>
                 </div>
-                <ng-template #noAccessTemp>
-                  No page access
-                </ng-template>
+                <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+                  <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
+                    <mat-label>Select Role</mat-label>
+                    <mat-select
+                      formControlName="roleId">
+                      <mat-option [value]="role.roleId"
+                      *ngFor="let role of roles">{{role.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <ng-template #elseLoadingRoles>
+                    <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                      <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                    </div>
+                  </ng-template>
+                </div>
+                <div fxFlex="100" fxLayout="column">
+                  <h3>Access </h3>
+                </div>
+                <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+                  <div *ngIf="accessToDisplay.length > 0; else noAccessTemp" fxLayout="column" class="group-info" fxLayoutAlign="start">
+                    <div *ngFor="let row of accessToDisplay" fxLayout="row" class="group-info">
+                      <mat-icon>{{row.iconName}}</mat-icon>
+                      <h3 class="group-info-text">{{row.displayName}}</h3>
+                    </div>
+                  </div>
+                  <ng-template #noAccessTemp>
+                    No page access
+                  </ng-template>
+                </div>
               </div>
             </fieldset>
-          </form>
+        </form>
+
+        <div fxFlex="100" fxLayout="column" *ngIf="userTypeId===2">
+          <div fxFlex="100" fxLayout="row" style="margin: 10px 0;">
+            <h3>Pets  </h3>
+            <div fxFlex></div>
+            <button mat-stroked-button matTooltip="Add" (click)="addPet()" [disabled]="isProcessing">
+              <mat-icon>add</mat-icon>
+              Add pet
+            </button>
+          </div>
+
+          <div fxFlex="100" fxLayout="column" fxLayout="column">
+            <table mat-table [dataSource]="petsDataSource" mat-table [ngClass]="{ 'hidden': petsDataSource.data.length === 0}">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef> Name </th>
+                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="petCategory">
+                <th mat-header-cell *matHeaderCellDef> Cetegory </th>
+                <td mat-cell *matCellDef="let element"> {{element.petCategory.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="birthDate">
+                <th mat-header-cell *matHeaderCellDef> Birthdate </th>
+                <td mat-cell *matCellDef="let element"> {{element.birthDate | date: 'yyyy-MM-dd'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="weight">
+                <th mat-header-cell *matHeaderCellDef> Weights </th>
+                <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="gender">
+                <th mat-header-cell *matHeaderCellDef> Gender </th>
+                <td mat-cell *matCellDef="let element"> {{element.gender.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="controls">
+                <th mat-header-cell *matHeaderCellDef>  </th>
+                <td mat-cell *matCellDef="let element">
+                  <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button matTooltip="Edit" (click)="editPet(element)" mat-menu-item >Edit</button>
+                    <button matTooltip="Delete" (click)="removePet(element.petId)" mat-menu-item >Delete</button>
+                  </mat-menu>
+                </td>
+              </ng-container>
+
+
+              <tr mat-header-row *matHeaderRowDef="displayedPetsColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedPetsColumns;"></tr>
+            </table>
+
+            <div class="table-no-data" *ngIf="petsDataSource.data.length === 0">
+              <span>No pets available</span>
+            </div>
+          </div>
+        </div>
       </div>
     </mat-card-content>
     <mat-card-actions>

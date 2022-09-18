@@ -3,7 +3,7 @@
     <mat-card-header>
       <mat-card-subtitle>User information</mat-card-subtitle>
       <div fxFlex></div>
-      <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" *ngIf="!isLoading" >
+      <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" *ngIf="!isLoading" [ngClass]="{ 'hidden': currentUserId === staffUser.user.userId }" >
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before" >
@@ -14,10 +14,13 @@
 
     <mat-card-content fxLayout="column" >
       <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <h1 class="name" *ngIf="!isLoading; else elseLoadinguFullName">{{staffUser.fullName}}<span class="disable-label" *ngIf="!staffUser.user.enable">(Disabled)</span></h1>
-        <ng-template #elseLoadinguFullName>
-          <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
-        </ng-template>
+        <div fxFlex="100" fxLayout="row" class="group-info">
+          <mat-icon>person</mat-icon>
+          <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguFullName">{{staffUser.fullName}}</h3>
+          <ng-template #elseLoadinguFullName>
+            <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
+          </ng-template>
+        </div>
         <div fxFlex="100" fxLayout="row" class="group-info">
           <mat-icon>alternate_email</mat-icon>
           <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguUsername">{{staffUser.user.username}}</h3>

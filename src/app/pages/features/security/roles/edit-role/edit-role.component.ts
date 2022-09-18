@@ -5,12 +5,12 @@ import { StorageService } from '../../../../../../app/core/storage/storage.servi
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoleService } from '../../../../../../app/core/services/role.service';
 import { MatDialog } from '@angular/material/dialog';
-import { menu } from '../../../ui/model/menu';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { AlertDialogComponent } from '../../../../../../app/shared/alert-dialog/alert-dialog.component';
 import { AlertDialogModel } from '../../../../../../app/shared/alert-dialog/alert-dialog-model';
 import { Role } from '../../../../../../app/core/model/role.model';
+import { menu } from 'src/app/core/model/menu';
 
 @Component({
   selector: 'app-edit-role',

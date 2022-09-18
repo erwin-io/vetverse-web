@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Role } from '../../../../../core/model/role.model';
 import { RoleService } from '../../../../../../app/core/services/role.service';
-import { NavItem } from '../../../ui/model/nav-item';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { menu } from '../../../ui/model/menu';
 import { AlertDialogModel } from '../../../../../../app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from '../../../../../../app/shared/alert-dialog/alert-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NavItem } from 'src/app/core/model/nav-item';
+import { menu } from 'src/app/core/model/menu';
 
 @Component({
   selector: 'app-view-role',

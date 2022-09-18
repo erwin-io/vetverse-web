@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NavItem } from '../../../ui/model/nav-item';
-import { menu } from '../../..//ui/model/menu';
 import { Role } from 'src/app/core/model/role.model';
 import { Subscription } from 'rxjs';
 import { RoleService } from '../../../../../../app/core/services/role.service';
@@ -11,6 +9,9 @@ import { UserService } from '../../../../../../app/core/services/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
 import { Staff } from '../../../../../../app/core/model/staff.model';
+import { StorageService } from '../../../../../../app/core/storage/storage.service';
+import { NavItem } from 'src/app/core/model/nav-item';
+import { menu } from 'src/app/core/model/menu';
 
 @Component({
   selector: 'app-view-user',
@@ -19,6 +20,7 @@ import { Staff } from '../../../../../../app/core/model/staff.model';
 })
 export class ViewUserComponent implements OnInit {
 
+  currentUserId:string;
   staffUser:Staff;
   mediaWatcher: Subscription;
   isLoading = false;
@@ -34,11 +36,13 @@ export class ViewUserComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
+    private storageService: StorageService,
     private snackBar: Snackbar) {
       this.initRoles();
      }
 
   ngOnInit(): void {
+    this.currentUserId = this.storageService.getLoginUser().userId;
     const userId = this.route.snapshot.paramMap.get("userId");
     this.initUser(userId);
   }

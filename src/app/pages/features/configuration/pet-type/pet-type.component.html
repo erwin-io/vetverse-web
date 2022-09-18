@@ -1,0 +1,84 @@
+<div class="page-view-container">
+  <mat-card [ngClass]="{ 'hidden': isLoading }">
+    <mat-card-header>
+      <mat-card-subtitle>Pet Type</mat-card-subtitle>
+      <div fxFlex></div>
+      <button mat-icon-button matTooltip="Add" (click)="add()" [disabled]="isProcessing">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-header>
+    <mat-card-content fxLayout="column" >
+      <div fxFlex="100">
+        <div fxFlex="20" fxFlex.xs="100" fxFlex.sm="40" fxFlex.md="40" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Search</mat-label>
+            <input
+              #search
+              matInput
+              [formControl]="keywordCtrl"
+              type="search"
+              placeholder="Search"
+              (keydown)="$event.key === 'Enter' ? filter() : true">
+              <button mat-icon-button matSuffix matTooltip="Search" #searchButton [disabled]="isProcessing" (click)="filter()">
+                <mat-icon>search</mat-icon>
+              </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <table mat-table [dataSource]="dataSource" [ngClass]="{ 'hidden': dataSource.data.length === 0}">
+
+        <ng-container matColumnDef="petTypeId">
+          <th mat-header-cell *matHeaderCellDef> Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.petTypeId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="controls">
+          <th mat-header-cell *matHeaderCellDef>  </th>
+          <td mat-cell *matCellDef="let element">
+            <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button matTooltip="Edit" (click)="edit(element.petTypeId)" mat-menu-item >Edit</button>
+              <button matTooltip="Delete" (click)="remove(element.petTypeId)" mat-menu-item >Delete</button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="table-no-data" *ngIf="dataSource.data.length === 0">
+        <span>No pet type available</span>
+      </div>
+      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                     showFirstLastButtons
+                     aria-label="Select page of periodic elements">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="isLoading">
+    <table class="mat-table" role="table" >
+      <thead role="rowgroup">
+        <tr role="row" class="mat-header-row">
+           <th role="columnheader" class="mat-header-cell"> Id </th>
+           <th role="columnheader" class="mat-header-cell"> Name </th>
+           <th role="columnheader" class="mat-header-cell"> </th>
+        </tr>
+     </thead>
+      <tbody>
+         <tr class="mat-row " *ngFor="let row of loaderData">
+            <td role="cell" *ngFor="let col of displayedColumns" class="mat-cell mat-column-'{{col}}'"><ngx-skeleton-loader [theme]="{ height: '30px'}"></ngx-skeleton-loader></td>
+         </tr>
+      </tbody>
+   </table>
+  </mat-card >
+</div>

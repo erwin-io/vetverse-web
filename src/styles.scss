@@ -476,3 +476,35 @@ app-features {
 .hidden {
   display: none!important;
 }
+
+::ng-deep tr.mat-row,
+::ng-deep tr.mat-footer-row {
+ }
+ ::ng-deep tr.mat-row {
+   .mat-cell {
+     height: 48px;
+     padding-right: 20px!important;
+     &:last-child {
+       padding-right: 0!important;
+     }
+   }
+ }
+ ::ng-deep tr.mat-header-row {
+   .mat-header-cell {
+     padding-right: 20px!important;
+     &:last-child {
+       padding-right: 0!important;
+     }
+   }
+ }
+
+ .cdk-overlay-pane {
+  margin: 20px!important;
+ }
+
+
+ .mat-dialog-actions {
+  button {
+    text-transform: uppercase!important;
+  }
+}

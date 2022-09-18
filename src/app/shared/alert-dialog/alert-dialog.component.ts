@@ -16,11 +16,11 @@ export class AlertDialogComponent {
   }
 
   onConfirm(): void {
-    this.conFirm.emit();
+    this.conFirm.emit(true);
   }
 
   onDismiss(): void {
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
 
 }

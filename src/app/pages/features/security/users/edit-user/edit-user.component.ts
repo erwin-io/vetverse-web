@@ -13,9 +13,11 @@ import { RoleService } from '../../../../../../app/core/services/role.service';
 import {COMMA, ENTER, N} from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import {map, startWith} from 'rxjs/operators';
-import { NavItem } from '../../../ui/model/nav-item';
-import { menu } from '../../../ui/model/menu';
 import { Staff } from '../../../../../../app/core/model/staff.model';
+import { StorageService } from '../../../../../../app/core/storage/storage.service';
+import { NavItem } from 'src/app/core/model/nav-item';
+import { menu } from 'src/app/core/model/menu';
+
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -23,6 +25,7 @@ import { Staff } from '../../../../../../app/core/model/staff.model';
 })
 export class EditUserComponent implements OnInit, AfterViewChecked  {
 
+  currentUserId:string;
   staffUser:Staff;
   staffUserRoleIds:string[] = [];
   userForm: FormGroup;
@@ -52,23 +55,29 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: Snackbar,
+    private storageService: StorageService,
     private readonly changeDetectorRef: ChangeDetectorRef
     ) {
-    const userId = this.route.snapshot.paramMap.get("userId");
-    this.userForm = this.formBuilder.group({
-      firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
-      middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
-      lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
-      genderId: ['', Validators.required],
-      email: ['',
-      Validators.compose(
-          [Validators.email, Validators.required])],
-      mobileNumber: ['',
-          [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
-      address: ['', Validators.required],
-      roleId : ['', Validators.required],
-    });
-    this.initUser(userId);
+      this.currentUserId = this.storageService.getLoginUser().userId;
+      const userId = this.route.snapshot.paramMap.get("userId");
+      if(this.currentUserId === userId){
+        this.snackBar.snackbarError("Invalid user, Cannot edit this user!");
+        this.router.navigate(['/security/users/']);
+      }
+      this.userForm = this.formBuilder.group({
+        firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+        middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
+        lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+        genderId: ['', Validators.required],
+        email: ['',
+        Validators.compose(
+            [Validators.email, Validators.required])],
+        mobileNumber: ['',
+            [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
+        address: ['', Validators.required],
+        roleId : ['', Validators.required],
+      });
+      this.initUser(userId);
   }
 
   ngAfterViewChecked(): void {

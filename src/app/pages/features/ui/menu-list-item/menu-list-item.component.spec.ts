@@ -2,7 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NavItem } from '../model/nav-item';
+import { NavItem } from 'src/app/core/model/nav-item';
 
 import { MenuListItemComponent } from './menu-list-item.component';
 
