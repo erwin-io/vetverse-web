@@ -3,12 +3,12 @@
     <mat-card-header>
       <mat-card-subtitle>User information</mat-card-subtitle>
       <div fxFlex></div>
-      <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" *ngIf="!isLoading" [ngClass]="{ 'hidden': currentUserId === staffUser.user.userId }" >
+      <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" *ngIf="!isLoading" [ngClass]="{ 'hidden': currentUserId === userData.user.userId }" >
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu" xPosition="before" >
-        <button mat-menu-item routerLink="/security/users/edit/{{staffUser.user.userId}}" *ngIf="!isLoading" >Edit</button>
-        <button mat-menu-item *ngIf="!isLoading" (click)="toggleEnable(staffUser.user.userId)">{{staffUser.user.enable ? 'Disable user' : 'Enable user'}}</button>
+        <button mat-menu-item routerLink="/security/users/edit/{{userData.user.userId}}" *ngIf="!isLoading" >Edit</button>
+        <button mat-menu-item *ngIf="!isLoading" (click)="toggleEnable(userData.user.userId)">{{userData.user.enable ? 'Disable user' : 'Enable user'}}</button>
       </mat-menu>
     </mat-card-header>
 
@@ -16,14 +16,14 @@
       <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
         <div fxFlex="100" fxLayout="row" class="group-info">
           <mat-icon>person</mat-icon>
-          <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguFullName">{{staffUser.fullName}}</h3>
+          <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguFullName">{{userData.fullName}}</h3>
           <ng-template #elseLoadinguFullName>
             <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
           </ng-template>
         </div>
         <div fxFlex="100" fxLayout="row" class="group-info">
           <mat-icon>alternate_email</mat-icon>
-          <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguUsername">{{staffUser.user.username}}</h3>
+          <h3 class="group-info-text"*ngIf="!isLoading; else elseLoadinguUsername">{{userData.user.username}}</h3>
           <ng-template #elseLoadinguUsername>
             <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
           </ng-template>
@@ -37,14 +37,14 @@
         <div fxLayout="column" class="group-info" fxLayoutAlign="start">
           <div fxLayout="row" class="group-info">
             <mat-icon>phone</mat-icon>
-            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingMobileNumber">{{staffUser.mobileNumber}}</h3>
+            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingMobileNumber">{{userData.mobileNumber}}</h3>
             <ng-template #elseLoadingMobileNumber>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
           </div>
           <div fxLayout="row" class="group-info">
             <mat-icon>mail_outline</mat-icon>
-            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingEmail">{{staffUser.email}}</h3>
+            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingEmail">{{userData.email}}</h3>
             <ng-template #elseLoadingEmail>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
@@ -59,28 +59,28 @@
         <div fxLayout="column" class="group-info" fxLayoutAlign="start">
           <div fxLayout="row" class="group-info">
             <mat-icon>location_on</mat-icon>
-            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingAddress">{{staffUser.address}}</h3>
+            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingAddress">{{userData.address}}</h3>
             <ng-template #elseLoadingAddress>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
           </div>
           <div fxLayout="column" class="group-info" fxLayoutAlign="start">
             <h4 class="group-info-text"><b>Gender</b></h4>
-            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingGender">{{staffUser.gender.name}}</h3>
+            <h3 class="group-info-text" *ngIf="!isLoading; else elseLoadingGender">{{userData.gender.name}}</h3>
             <ng-template #elseLoadingGender>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
           </div>
         </div>
       </div>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start" *ngIf="!isLoading && userData.user.userType.userTypeId === '1'">
         <div fxFlex="100" fxLayoutAlign="start">
           <h4 class="group-info-text"><b>Role</b></h4>
         </div>
         <div fxLayout="column" class="group-info" fxLayoutAlign="start">
           <div fxLayout="row" class="group-info">
             <mat-icon>supervisor_account</mat-icon>
-            <h3 class="group-info-text" *ngIf="!isLoading; else isLoadingRoles">{{ staffUser.user.role.name }}</h3>
+            <h3 class="group-info-text" *ngIf="!isLoading; else isLoadingRoles">{{ userData.user.role.name }}</h3>
             <ng-template #isLoadingRoles>
               <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '20%'}"></ngx-skeleton-loader>
             </ng-template>
@@ -88,7 +88,7 @@
         </div>
       </div>
       <br>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <div *ngIf="!isLoading && userData.user.userType.userTypeId === '1'" fxFlex="100" fxLayout="column" fxLayoutAlign="start">
         <div fxFlex="100" fxLayoutAlign="start">
           <h4 class="group-info-text"><b>Page Access</b></h4>
         </div>
@@ -107,9 +107,36 @@
           <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '50%'}"></ngx-skeleton-loader>
         </ng-template>
       </div>
+      <div *ngIf="!isLoading && userData.user.userType.userTypeId === '2'" fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+        <div fxFlex="100" fxLayoutAlign="start">
+          <h4 class="group-info-text"><b>Pet</b></h4>
+        </div>
+        <div fxFlex="100" *ngIf="!isLoading; else elseLoadingPageAccess">
+          <!-- <div *ngIf="pets.length > 0; else noAccessTemp" >
+            <div *ngFor="let row of userData.pets" fxLayout="row" class="group-info">
+              <mat-icon>pets</mat-icon>
+              <h3 class="group-info-text">{{row.name}}</h3>
+              <span>{{row.name}}</span>
+            </div>
+          </div> -->
+          <mat-list *ngIf="pets.length > 0; else noAccessTemp" >
+            <mat-list-item *ngFor="let row of pets">
+              <mat-icon mat-list-icon>pets</mat-icon>
+              <div mat-line><strong>{{row.name}}</strong></div>
+              <div mat-line> {{row.petCategory.name}} </div>
+            </mat-list-item>
+          </mat-list>
+          <ng-template #noAccessTemp>
+            No pet to show
+          </ng-template>
+        </div>
+        <ng-template #elseLoadingPageAccess>
+          <ngx-skeleton-loader fxFlex [theme]="{ height: '20px', width: '50%'}"></ngx-skeleton-loader>
+        </ng-template>
+      </div>
     </mat-card-content>
     <mat-card-actions>
-      <button matTooltip="Back to list" mat-stroked-button routerLink="/security/users" color="primary">Back</button>
+      <button matTooltip="Back to list" mat-stroked-button [routerLink]="!isLoading ? userData.user.userType.userTypeId === '1' ? '/security/users' : '/security/users/clients' : '/security/users'" color="primary">Back</button>
     </mat-card-actions>
   </mat-card>
 </div>

@@ -41,7 +41,7 @@
                     }}</mat-error>
                 </mat-form-field>
               </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.md="row" fxLayout.lg="row">
+              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" >
                 <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
                   <mat-label>Username</mat-label>
                   <input
@@ -53,6 +53,8 @@
                       (getError(formCreateAccount, 'username') && getError(formCreateAccount, 'username').notAvailable ? 'The username entered is not available. Try another one' : '')
                     }}</mat-error>
                 </mat-form-field>
+                <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"></div>
+                <div fxFlex="33.33%" class="cell" ></div>
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
                 <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
@@ -73,7 +75,7 @@
                     }}</mat-error>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline" fxFlex="50%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                <mat-form-field appearance="outline" fxFlex="50%" class="cell" >
                   <mat-label>Confirm password</mat-label>
                   <input
                     matInput

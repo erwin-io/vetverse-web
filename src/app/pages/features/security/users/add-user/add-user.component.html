@@ -274,7 +274,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button matTooltip="Back to list" mat-stroked-button routerLink="/security/users" [disabled]="isProcessing" color="primary">Back</button>
+      <button matTooltip="Back to list" mat-stroked-button [routerLink]="userTypeId === 1 ? '/security/users' : '/security/users/clients'" [disabled]="isProcessing" color="primary">Back</button>
       <button matTooltip="Save" mat-raised-button color="primary" form="userForm" type="submit" [disabled]="isProcessing || !formIsValid">Save</button>
     </mat-card-actions>
   </mat-card>

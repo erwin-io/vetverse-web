@@ -71,7 +71,14 @@
       "create": "payments",
       "void": "payments/void/"
     },
-    "pet": "pet/",
+    "pet": {
+      "get": "pet",
+      "getByClientId": "pet/findByClientId/",
+      "getById": "pet/",
+      "create": "pet",
+      "update": "pet",
+      "delete": "pet/"
+    },
     "petType": "pet-type/",
     "petCategory": "pet-category/"
   }

@@ -268,6 +268,7 @@ export class AddUserComponent implements OnInit {
       closeOnNavigation: true,
       panelClass: 'add-pet-dialog',
     });
+    dialogRef.componentInstance.fromNewClient = true;
     dialogRef.componentInstance.conFirm.subscribe((data: Pet) => {
       if(data){
         console.log(data);
@@ -291,6 +292,7 @@ export class AddUserComponent implements OnInit {
       panelClass: 'add-pet-dialog',
     });
     dialogRef.componentInstance.data = pet;
+    dialogRef.componentInstance.fromNewClient = true;
     dialogRef.componentInstance.conFirm.subscribe((data: Pet) => {
       if(data){
         console.log(data);

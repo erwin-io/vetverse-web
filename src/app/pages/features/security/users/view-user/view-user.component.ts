@@ -12,6 +12,9 @@ import { Staff } from '../../../../../../app/core/model/staff.model';
 import { StorageService } from '../../../../../../app/core/storage/storage.service';
 import { NavItem } from 'src/app/core/model/nav-item';
 import { menu } from 'src/app/core/model/menu';
+import { Client } from 'src/app/core/model/client.model';
+import { Pet } from 'src/app/core/model/appointment.model';
+import { PetService } from 'src/app/core/services/pet.service';
 
 @Component({
   selector: 'app-view-user',
@@ -19,9 +22,9 @@ import { menu } from 'src/app/core/model/menu';
   styleUrls: ['./view-user.component.scss']
 })
 export class ViewUserComponent implements OnInit {
-
   currentUserId:string;
-  staffUser:Staff;
+  userData: Staff | Client;
+  clientUser:Client;
   mediaWatcher: Subscription;
   isLoading = false;
   isProcessing = false;
@@ -30,9 +33,12 @@ export class ViewUserComponent implements OnInit {
   roles:Role[] = [];
   error;
   //access
+  //client;
+  pets: Pet[]= [];
   constructor(
     private userService: UserService,
     private roleService: RoleService,
+    private petService: PetService,
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
@@ -78,7 +84,45 @@ export class ViewUserComponent implements OnInit {
       await this.userService.getById(userId)
       .subscribe(async res => {
         if (res.success) {
-          this.staffUser = res.data;
+          this.userData = res.data;
+          if(res.data.user.userType.userTypeId === '2'){
+            this.getPets(res.data.clientId);
+          }
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.snackbarError(this.error);
+          if(this.error.toLowerCase().includes("not found")){
+            this.router.navigate(['/security/users/']);
+          }
+        }
+      }, async (err) => {
+        this.isLoading = false;
+        this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+        this.snackBar.snackbarError(this.error);
+        if(this.error.toLowerCase().includes("not found")){
+          this.router.navigate(['/security/users/']);
+        }
+      });
+    }
+    catch(e){
+      this.isLoading = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      if(this.error.toLowerCase().includes("not found")){
+        this.router.navigate(['/security/users/']);
+      }
+    }
+  }
+
+  async getPets(clientId: string){
+    this.isLoading = true;
+    try{
+      await this.petService.getByClientId(clientId)
+      .subscribe(async res => {
+        if (res.success) {
+          this.pets = res.data;
           this.isLoading = false;
         } else {
           this.isLoading = false;
@@ -109,7 +153,7 @@ export class ViewUserComponent implements OnInit {
 
   get accessToDisplay():NavItem[] {
     const access: NavItem[] = [];
-    const selectedRole = this.roles.filter(x=>x.roleId === this.staffUser.user.role.roleId);
+    const selectedRole = this.roles.filter(x=>x.roleId === this.userData.user.role.roleId);
     const selectedAccess = selectedRole !== undefined && selectedRole[0] !== undefined && selectedRole[0].access ? selectedRole[0].access.split(",") : [];
     if(selectedAccess.length === 0) {return []};
     menu.forEach(element => {
@@ -128,7 +172,7 @@ export class ViewUserComponent implements OnInit {
   }
 
   toggleEnable(userId:string){
-    const enable = this.staffUser.user.enable ? false : true;
+    const enable = this.userData.user.enable ? false : true;
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
     dialogData.message = enable ? 'Enable user?' : 'Disable user?';
@@ -156,7 +200,7 @@ export class ViewUserComponent implements OnInit {
         this.userService.toggleEnable({ userId, enable})
           .subscribe(async res => {
             if (res.success) {
-              this.staffUser = res.data;
+              this.userData = res.data;
               this.snackBar.snackbarSuccess(enable ? 'User enabled!' : 'User disabled!');
               this.isProcessing = false;
               dialogRef.componentInstance.isProcessing = this.isProcessing;

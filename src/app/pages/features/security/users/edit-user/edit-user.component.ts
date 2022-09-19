@@ -1,4 +1,4 @@
-import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
@@ -17,16 +17,22 @@ import { Staff } from '../../../../../../app/core/model/staff.model';
 import { StorageService } from '../../../../../../app/core/storage/storage.service';
 import { NavItem } from 'src/app/core/model/nav-item';
 import { menu } from 'src/app/core/model/menu';
+import { Client } from 'src/app/core/model/client.model';
+import { Pet } from 'src/app/core/model/appointment.model';
+import { PetService } from 'src/app/core/services/pet.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { AddPetComponent } from 'src/app/component/add-pet/add-pet.component';
 
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.scss']
+  styleUrls: ['./edit-user.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EditUserComponent implements OnInit, AfterViewChecked  {
 
   currentUserId:string;
-  staffUser:Staff;
+  userData: Staff|Client;
   staffUserRoleIds:string[] = [];
   userForm: FormGroup;
   mediaWatcher: Subscription;
@@ -43,6 +49,10 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   filteredRoles: Observable<string[]>;
   //end
   //access
+  //client;
+  displayedPetsColumns: string[] = [];
+  petsDataSource = new MatTableDataSource<Pet>();
+  pets: Pet[]= [];
   allowedAccess:string[] = [];
 
   @ViewChild('roleInput', {static:false}) roleInput: ElementRef<HTMLInputElement>;
@@ -50,6 +60,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
+    private petService: PetService,
     private roleService: RoleService,
     private router: Router,
     private route: ActivatedRoute,
@@ -95,10 +106,15 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       await this.userService.getById(userId)
       .subscribe(async res => {
         if (res.success) {
-          this.staffUser = res.data;
+          this.userData = res.data;
           this.isLoading = false;
           this.isProcessing = false;
-          this.initRoles();
+          if(res.data.user.userType.userTypeId === '1'){
+            this.initRoles();
+          }
+          else if(res.data.user.userType.userTypeId === '2'){
+            this.getPets(res.data.clientId);
+          }
         } else {
           this.isLoading = false;
           this.isProcessing = false;
@@ -132,6 +148,143 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
     }
   }
 
+  async getPets(clientId: string){
+    this.isLoading = true;
+    try{
+      await this.petService.getByClientId(clientId)
+      .subscribe(async res => {
+        if (res.success) {
+          this.pets = res.data;
+          this.displayAddedPet();
+          this.isLoading = false;
+        } else {
+          this.isLoading = false;
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.snackbarError(this.error);
+          if(this.error.toLowerCase().includes("not found")){
+            this.router.navigate(['/security/users/']);
+          }
+        }
+      }, async (err) => {
+        this.isLoading = false;
+        this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+        this.snackBar.snackbarError(this.error);
+        if(this.error.toLowerCase().includes("not found")){
+          this.router.navigate(['/security/users/']);
+        }
+      });
+    }
+    catch(e){
+      this.isLoading = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      if(this.error.toLowerCase().includes("not found")){
+        this.router.navigate(['/security/users/']);
+      }
+    }
+  }
+
+  async addPet(){
+    const dialogRef = this.dialog.open(AddPetComponent, {
+      closeOnNavigation: true,
+      panelClass: 'add-pet-dialog',
+    });
+    const pet = new Pet();
+    pet.client = <Client>this.userData;
+    dialogRef.componentInstance.data = pet;
+    dialogRef.componentInstance.conFirm.subscribe((confirm: boolean) => {
+      if(confirm){
+        const client: any = this.userData;
+        this.getPets(client.clientId);
+        this.displayAddedPet();
+        dialogRef.close();
+      }
+    });
+  }
+
+  async editPet(pet: Pet){
+    const dialogRef = this.dialog.open(AddPetComponent, {
+      closeOnNavigation: true,
+      panelClass: 'add-pet-dialog',
+    });
+    dialogRef.componentInstance.data = pet;
+    dialogRef.componentInstance.fromNewClient = false;
+    dialogRef.componentInstance.conFirm.subscribe((confirm: boolean) => {
+      if(confirm){
+        const client: any = this.userData;
+        this.getPets(client.clientId);
+        this.displayAddedPet();
+        dialogRef.close();
+      }
+    });
+  }
+
+  async removePet(petId: string){
+    const dialogData = new AlertDialogModel();
+    dialogData.title = 'Confirm';
+    dialogData.message = 'Remove pet?';
+    dialogData.confirmButton = {
+      visible: true,
+      text: 'yes',
+      color: 'primary',
+    };
+    dialogData.dismissButton = {
+      visible: true,
+      text: 'cancel',
+    };
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      maxWidth: '400px',
+      closeOnNavigation: true,
+    });
+
+    dialogRef.componentInstance.alertDialogConfig = dialogData;
+    dialogRef.componentInstance.conFirm.subscribe(async (confirmed: boolean) => {
+      if (confirmed) {
+        this.isProcessing = true;
+        dialogRef.componentInstance.isProcessing = this.isProcessing;
+        try {
+          await this.
+          petService
+            .delete(petId)
+            .subscribe(
+              async (res) => {
+                if (res.success) {
+                  this.snackBar.snackbarSuccess("Deleted!");
+                  dialogRef.close();
+                  this.isProcessing = false;
+                  dialogRef.componentInstance.isProcessing = this.isProcessing;
+                } else {
+                  this.isProcessing = false;
+                  this.error = Array.isArray(res.message)
+                    ? res.message[0]
+                    : res.message;
+                  this.snackBar.snackbarError(this.error);
+                  dialogRef.componentInstance.isProcessing = this.isProcessing;
+                }
+              },
+              async (err) => {
+                this.isProcessing = false;
+                this.error = Array.isArray(err.message)
+                  ? err.message[0]
+                  : err.message;
+                this.snackBar.snackbarError(this.error);
+                dialogRef.componentInstance.isProcessing = this.isProcessing;
+              }
+            );
+        } catch (e) {
+          this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+          this.snackBar.snackbarError(this.error);
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+        }
+      }
+    });
+  }
+
+  async displayAddedPet(){
+    this.displayedPetsColumns = ["name", "petCategory", "birthDate", "weight", "gender", "controls"]
+    this.petsDataSource.data = this.pets;
+  }
+
   initRoles(){
     try{
       this.isLoadingRoles = true;
@@ -159,7 +312,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
 
   get f() { return this.userForm.controls; }
   get formIsValid() { return this.userForm.valid }
-  get formData() { return { ...this.userForm.value, userId: this.staffUser.user.userId }  }
+  get formData() { return { ...this.userForm.value, userId: this.userData.user.userId }  }
   get accessToDisplay():NavItem[] {
     const access: NavItem[] = [];
     const selectedRole = this.roles.filter(x=>x.roleId === this.formData.roleId);

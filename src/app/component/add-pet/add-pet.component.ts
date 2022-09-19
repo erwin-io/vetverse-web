@@ -7,6 +7,7 @@ import { Gender } from 'src/app/core/model/gender.model';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { PetCategoryService } from 'src/app/core/services/pet-category.service';
 import { PetTypeService } from 'src/app/core/services/pet-type.service';
+import { PetService } from 'src/app/core/services/pet.service';
 import { Snackbar } from 'src/app/core/ui/snackbar';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
@@ -19,6 +20,7 @@ import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.c
 })
 export class AddPetComponent implements OnInit {
 
+  fromNewClient = false;
   data: Pet = new Pet();
   petForm: FormGroup;
   conFirm = new EventEmitter();
@@ -34,6 +36,7 @@ export class AddPetComponent implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private snackBar: Snackbar,
+    private petService: PetService,
     private petTypeService: PetTypeService,
     private petCategoryService: PetCategoryService,
     private appconfig: AppConfigService,
@@ -90,21 +93,32 @@ export class AddPetComponent implements OnInit {
   get isNew(){ return !this.data || !this.data.petId || this.data.petId === "" }
 
   get formData() {
-    return this.petForm.value;
+    return this.fromNewClient ? this.petForm.value : {
+      name: this.petForm.value.name,
+      birthDate: this.petForm.value.birthDate,
+      weight: this.petForm.value.weight,
+      petTypeId: this.petForm.value.petType ? this.petForm.value.petType.petTypeId : null,
+      petCategoryId: this.petForm.value.petCategory ? this.petForm.value.petCategory.petCategoryId : null,
+      genderId: this.petForm.value.gender ? this.petForm.value.gender.genderId : null
+    };
   }
 
   get f() { return this.petForm.controls; }
 
   get petCategoryFilterArg() {
-    return this.formData.petType;
+    return this.fromNewClient ? this.formData.petType : { petTypeId: this.formData.petTypeId };
   }
 
   onSubmit(): void {
     if (this.petForm.valid) {
       const param = {
-        petId: this.data ? this.data.petId : null,
+        petId: !this.isNew ? this.data.petId : null,
         ...this.formData
-      };
+      }
+      if(this.isNew && !this.fromNewClient){
+        param.clientId = this.data.client.clientId;
+      }
+      console.log(param);
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Confirm';
       if(this.isNew){
@@ -132,10 +146,75 @@ export class AddPetComponent implements OnInit {
           this.isProcessing = true;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           try {
-            this.conFirm.emit(param);
-            dialogRef.close();
-            this.isProcessing = false;
-            dialogRef.componentInstance.isProcessing = this.isProcessing;
+            if(this.fromNewClient){
+              this.conFirm.emit(param);
+              dialogRef.close();
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+            }else{
+              if(this.isNew) {
+                await this.
+                petService
+                  .add(param)
+                  .subscribe(
+                    async (res) => {
+                      if (res.success) {
+                        this.conFirm.emit(true);
+                        this.snackBar.snackbarSuccess("Saved!");
+                        dialogRef.close();
+                        this.isProcessing = false;
+                        dialogRef.componentInstance.isProcessing = this.isProcessing;
+                      } else {
+                        this.isProcessing = false;
+                        this.error = Array.isArray(res.message)
+                          ? res.message[0]
+                          : res.message;
+                        this.snackBar.snackbarError(this.error);
+                        dialogRef.componentInstance.isProcessing = this.isProcessing;
+                      }
+                    },
+                    async (err) => {
+                      this.isLoading = false;
+                      this.error = Array.isArray(err.message)
+                        ? err.message[0]
+                        : err.message;
+                      this.snackBar.snackbarError(this.error);
+                      dialogRef.componentInstance.isProcessing = this.isProcessing;
+                    }
+                  );
+              }
+              else {
+                await this.
+                petService
+                  .udpdate(param)
+                  .subscribe(
+                    async (res) => {
+                      if (res.success) {
+                        this.conFirm.emit(true);
+                        this.snackBar.snackbarSuccess("Saved!");
+                        dialogRef.close();
+                        this.isProcessing = false;
+                        dialogRef.componentInstance.isProcessing = this.isProcessing;
+                      } else {
+                        this.isProcessing = false;
+                        this.error = Array.isArray(res.message)
+                          ? res.message[0]
+                          : res.message;
+                        this.snackBar.snackbarError(this.error);
+                        dialogRef.componentInstance.isProcessing = this.isProcessing;
+                      }
+                    },
+                    async (err) => {
+                      this.isLoading = false;
+                      this.error = Array.isArray(err.message)
+                        ? err.message[0]
+                        : err.message;
+                      this.snackBar.snackbarError(this.error);
+                      dialogRef.componentInstance.isProcessing = this.isProcessing;
+                    }
+                  );
+              }
+            }
           } catch (e) {
             this.isLoading = false;
             this.error = Array.isArray(e.message) ? e.message[0] : e.message;

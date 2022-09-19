@@ -1,4 +1,4 @@
-<div class="page-view-container">
+<div class="page-view-container" fxFlex="100" fxLayout="column" fxLayoutGap="10px">
   <mat-card>
     <mat-card-header>
       <mat-card-subtitle>Edit User</mat-card-subtitle>
@@ -19,7 +19,7 @@
                     matInput
                     placeholder="First name"
                     formControlName="firstName"
-                    [(ngModel)]="staffUser.firstName">
+                    [(ngModel)]="userData.firstName">
                     <mat-error *ngIf="getError('firstName') !== (null || undefined)">{{
                       (getError('firstName') && getError('firstName').required ? 'Please enter your first name' : '')||
                       (getError('firstName') && getError('firstName').pattern ? 'Invalid input' : '')
@@ -32,7 +32,7 @@
                     matInput
                     placeholder="Middle name"
                     formControlName="middleName"
-                    [(ngModel)]="staffUser.middleName">
+                    [(ngModel)]="userData.middleName">
                     <mat-error *ngIf="getError('middleName') !== (null || undefined)">{{
                       (getError('middleName') && getError('middleName').pattern ? 'Invalid input' : '')
                     }}</mat-error>
@@ -43,7 +43,7 @@
                     matInput
                     placeholder="Last name"
                     formControlName="lastName"
-                    [(ngModel)]="staffUser.lastName">
+                    [(ngModel)]="userData.lastName">
                     <mat-error *ngIf="getError('lastName') !== (null || undefined)">{{
                       (getError('lastName') && getError('lastName').required ? 'Please enter your last name' : '')||
                       (getError('firstName') && getError('firstName').pattern ? 'Invalid input' : '')
@@ -55,7 +55,7 @@
                   <mat-label>Select Gender</mat-label>
                   <mat-select [disabled]="isProcessing"
                     formControlName="genderId"
-                    [(ngModel)]="staffUser.gender.genderId">
+                    [(ngModel)]="userData.gender.genderId">
                     <mat-option value="1">Male</mat-option>
                     <mat-option value="2">Female</mat-option>
                     <mat-option value="3">Rather not say</mat-option>
@@ -73,7 +73,7 @@
                     type="email"
                     placeholder="Email"
                     formControlName="email"
-                    [(ngModel)]="staffUser.email">
+                    [(ngModel)]="userData.email">
                     <mat-error *ngIf="getError('email') !== (null || undefined)">{{
                       (getError('email') && getError('email').required ? 'Please enter your email' : '') ||
                       (getError('email') && getError('email').email ? 'Please enter a valid email' : '')
@@ -85,7 +85,7 @@
                     matInput
                     placeholder="Mobile number"
                     formControlName="mobileNumber"
-                    [(ngModel)]="staffUser.mobileNumber">
+                    [(ngModel)]="userData.mobileNumber">
                     <mat-error *ngIf="getError('mobileNumber') !== (null || undefined)">{{
                       (getError('mobileNumber') && getError('mobileNumber').required ? 'Please enter your mobile number' : '') ||
                       (getError('mobileNumber') && getError('mobileNumber').minlength ? 'Please enter a valid mobile number' : '') ||
@@ -103,55 +103,119 @@
                     matInput
                     placeholder="Address"
                     formControlName="address"
-                    [(ngModel)]="staffUser.address">
+                    [(ngModel)]="userData.address">
                   </textarea>
                   <mat-error *ngIf="getError('address') !== (null || undefined)">{{
                     (getError('address') && getError('address').required ? 'Please enter your address' : '')
                   }}</mat-error>
                 </mat-form-field>
               </div>
-              <div fxFlex="100" fxLayout="column">
-                <h3>User Roles  </h3>
-              </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-
-                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
-                  <mat-label>Select Role</mat-label>
-                  <mat-select
-                    formControlName="roleId"
-                    [(ngModel)]="staffUser.user.role.roleId">
-                    <mat-option [value]="role.roleId"
-                    *ngFor="let role of roles">{{role.name}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <ng-template #elseLoadingRoles>
-                  <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
-                    <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
-                  </div>
-                </ng-template>
-              </div>
-              <div fxFlex="100" fxLayout="column">
-                <h3>Access </h3>
-              </div>
-              <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <div *ngIf="accessToDisplay.length > 0; else noAccessTemp" fxLayout="column" class="group-info" fxLayoutAlign="start">
-                  <div *ngFor="let row of accessToDisplay" fxLayout="row" class="group-info">
-                    <mat-icon>{{row.iconName}}</mat-icon>
-                    <h3 class="group-info-text">{{row.displayName}}</h3>
-                  </div>
+              <div fxLayout="column" fxFlex="100" *ngIf="!isLoading && userData.user.userType.userTypeId === '1'" >
+                <div fxFlex="100" fxLayout="column">
+                  <h3>User Roles  </h3>
                 </div>
-                <ng-template #noAccessTemp>
-                  No page access
-                </ng-template>
+                <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+
+                  <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoadingRoles; else elseLoadingRoles" >
+                    <mat-label>Select Role</mat-label>
+                    <mat-select
+                      formControlName="roleId"
+                      [(ngModel)]="userData.user.role.roleId">
+                      <mat-option [value]="role.roleId"
+                      *ngFor="let role of roles">{{role.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <ng-template #elseLoadingRoles>
+                    <div fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}">
+                      <ngx-skeleton-loader fxFlex [theme]="{ height: '30px'}"></ngx-skeleton-loader>
+                    </div>
+                  </ng-template>
+                </div>
+                <div fxFlex="100" fxLayout="column">
+                  <h3>Access </h3>
+                </div>
+                <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
+                  <div *ngIf="accessToDisplay.length > 0; else noAccessTemp" fxLayout="column" class="group-info" fxLayoutAlign="start">
+                    <div *ngFor="let row of accessToDisplay" fxLayout="row" class="group-info">
+                      <mat-icon>{{row.iconName}}</mat-icon>
+                      <h3 class="group-info-text">{{row.displayName}}</h3>
+                    </div>
+                  </div>
+                  <ng-template #noAccessTemp>
+                    No page access
+                  </ng-template>
+                </div>
               </div>
             </fieldset>
           </form>
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button matTooltip="Back to list" mat-stroked-button routerLink="/security/users/details/{{staffUser?.user.userId}}" [disabled]="isProcessing || isLoading" color="primary">Back</button>
+      <button matTooltip="Back to list" mat-stroked-button routerLink="/security/users/details/{{userData?.user.userId}}" [disabled]="isProcessing || isLoading" color="primary">Back</button>
       <button matTooltip="Save" mat-raised-button color="primary" form="userForm" type="submit" [disabled]="isProcessing || !formIsValid ">Save</button>
     </mat-card-actions>
+  </mat-card>
+  <mat-card *ngIf="!isLoading && userData.user.userType.userTypeId === '2'">
+    <mat-card-header>
+      <mat-card-subtitle>Edit Pet</mat-card-subtitle>
+      <div fxFlex></div>
+      <button mat-stroked-button matTooltip="Add" (click)="addPet()" [disabled]="isProcessing">
+        <mat-icon>add</mat-icon>
+        Add pet
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <div fxFlex="100" fxLayout="column" fxLayout="column" style="margin-top: 10px;">
+        <table mat-table [dataSource]="petsDataSource" mat-table [ngClass]="{ 'hidden': petsDataSource.data.length === 0}">
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="petCategory">
+            <th mat-header-cell *matHeaderCellDef> Cetegory </th>
+            <td mat-cell *matCellDef="let element"> {{element.petCategory.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="birthDate">
+            <th mat-header-cell *matHeaderCellDef> Birthdate </th>
+            <td mat-cell *matCellDef="let element"> {{element.birthDate | date: 'yyyy-MM-dd'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="weight">
+            <th mat-header-cell *matHeaderCellDef> Weights </th>
+            <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="gender">
+            <th mat-header-cell *matHeaderCellDef> Gender </th>
+            <td mat-cell *matCellDef="let element"> {{element.gender.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="controls">
+            <th mat-header-cell *matHeaderCellDef>  </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button matTooltip="Edit" (click)="editPet(element)" mat-menu-item >Edit</button>
+                <button matTooltip="Delete" (click)="removePet(element.petId)" mat-menu-item >Delete</button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedPetsColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedPetsColumns;"></tr>
+        </table>
+
+        <div class="table-no-data" *ngIf="petsDataSource.data.length === 0">
+          <span>No pets available</span>
+        </div>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>
 
