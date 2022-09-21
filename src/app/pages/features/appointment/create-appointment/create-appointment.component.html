@@ -72,7 +72,7 @@
           </div>
           <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row" ngStyle.gt-sm="gap: 20px">
             <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
-              <h4>Client detals</h4>
+              <h4>Client details</h4>
               <div fxFlex="100" fxLayout="column">
                 <mat-form-field [style]="{ 'cursor': isWalkIn ? 'default!important': 'pointer!important' }" appearance="outline" fxFlex="100" (click)="isWalkIn? false: openSearchClient()"  >
                   <mat-label>{{isWalkIn ? "Enter client name" : "Click to select client"}}</mat-label>
@@ -85,7 +85,7 @@
               </div>
             </div>
             <div fxFlex="100" fxLayout="column" fxFlex.gt-sm="50%" class="cell">
-              <h4>Pet detals</h4>
+              <h4>Pet details</h4>
               <div fxFlex="100" fxLayout="column">
                 <mat-form-field *ngIf="isWalkIn" appearance="outline" fxFlex="100" >
                   <mat-label>Enter Pet name</mat-label>
