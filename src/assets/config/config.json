@@ -32,7 +32,7 @@
   },
   "apiEndPoints": {
     "auth": {
-      "login": "auth/login",
+      "login": "auth/login/staff",
       "logout": "auth/logout",
       "register": {
         "client": "auth/register/client",
