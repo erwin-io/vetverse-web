@@ -76,9 +76,9 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
         this.router.navigate(['/security/users/']);
       }
       this.userForm = this.formBuilder.group({
-        firstName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
-        middleName: ['', Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")],
-        lastName: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9\\-\\s]+$")]],
+        firstName: ['', Validators.required],
+        middleName: ['', Validators.required],
+        lastName: ['', Validators.required],
         genderId: ['', Validators.required],
         email: ['',
         Validators.compose(
