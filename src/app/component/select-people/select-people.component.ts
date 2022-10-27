@@ -45,7 +45,7 @@ export class SelectPeopleComponent implements OnInit {
     try{
       this.isLoading = true;
       await this.userService.getStaffByAdvanceSearch({
-        isAdvance: false,
+        isAdvance: true,
         keyword: '',
         userId: '',
         email: '',
