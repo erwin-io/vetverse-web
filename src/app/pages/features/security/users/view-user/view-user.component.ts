@@ -15,6 +15,7 @@ import { menu } from 'src/app/core/model/menu';
 import { Client } from 'src/app/core/model/client.model';
 import { Pet } from 'src/app/core/model/appointment.model';
 import { PetService } from 'src/app/core/services/pet.service';
+import { UpdateUserPasswordComponent } from 'src/app/component/update-user-password/update-user-password.component';
 
 @Component({
   selector: 'app-view-user',
@@ -229,4 +230,16 @@ export class ViewUserComponent implements OnInit {
     }
   }
 
+  openUpatePassword(userId) {
+    const dialogRef = this.dialog.open(UpdateUserPasswordComponent, {
+      closeOnNavigation: true,
+      panelClass: 'update-user-password-dialog',
+    });
+    dialogRef.componentInstance.data = { userId };
+    dialogRef.componentInstance.conFirm.subscribe((data: boolean) => {
+      if(data){
+        dialogRef.close();
+      }
+    });
+  }
 }

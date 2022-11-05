@@ -8,6 +8,7 @@
       </button>
       <mat-menu #menu="matMenu" xPosition="before" >
         <button mat-menu-item routerLink="/security/users/edit/{{userData.user.userId}}" *ngIf="!isLoading" >Edit</button>
+        <button mat-menu-item (click)="openUpatePassword(userData.user.userId)" *ngIf="!isLoading && userData.user.userType.userTypeId === '1'" >Update password</button>
         <button mat-menu-item *ngIf="!isLoading" (click)="toggleEnable(userData.user.userId)">{{userData.user.enable ? 'Disable user' : 'Enable user'}}</button>
       </mat-menu>
     </mat-card-header>

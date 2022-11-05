@@ -64,7 +64,7 @@ export class AddPetComponent implements OnInit {
   }
 
   initLookup(){
-    this.isProcessing = true;
+    this.isLoading = true;
     forkJoin(
       this.petTypeService.get(),
       this.petCategoryService.get(),
@@ -85,7 +85,7 @@ export class AddPetComponent implements OnInit {
           this.f['gender'].setValue(this.genderLookup.filter(x=>x.genderId === this.data.gender.genderId)[0]);
           console.log(this.formData);
         }
-        this.isProcessing = false;
+        this.isLoading = false;
       }
   )
   }

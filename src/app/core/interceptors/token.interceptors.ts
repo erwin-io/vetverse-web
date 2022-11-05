@@ -72,7 +72,7 @@ export class TokenInterceptor implements HttpInterceptor {
           }),
           catchError((error) => {
             this.isRefreshing = false;
-            if ((error.error.success !== undefined || error.error.success !== null ) &&error.error.success === false) {
+            if ((error.error.success !== undefined || error.error.success !== null ) && error.error.success === false) {
             } else {
               this.handleLogout();
             }

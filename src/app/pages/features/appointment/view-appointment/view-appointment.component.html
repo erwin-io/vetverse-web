@@ -103,9 +103,47 @@
 
         <mat-card-content fxLayout="column">
           <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+            <!-- Consultation type -->
+            <mat-list
+              *ngIf="!isLoading; else elseLoadinguLoadingConsultationType">
+              <mat-list-item *ngIf="appointment.consultaionType.consultaionTypeId === '1'">
+                <div mat-line>
+                  <strong>{{ appointment.consultaionType.name }}</strong>
+                </div>
+                <div mat-line>Consultation type</div>
+              </mat-list-item>
+              <mat-list-item mat-ripple style="cursor: pointer" *ngIf="appointment.consultaionType.consultaionTypeId === '2'" >
+                <mat-icon mat-list-icon>videocam</mat-icon>
+                <div mat-line>
+                  <strong>{{ appointment.consultaionType.name }}</strong>
+                </div>
+                <div mat-line>Consultation type</div>
+                <mat-icon
+                  style="position: absolute; right: 0 !important"
+                  mat-list-icon
+                  >keyboard_arrow_right</mat-icon>
+              </mat-list-item>
+            </mat-list>
+            <ng-template #elseLoadinguLoadingConsultationType>
+              <mat-list-item>
+                <div mat-line>
+                  <ngx-skeleton-loader
+                    fxFlex
+                    [theme]="{ height: '20px', width: '20%' }"
+                  ></ngx-skeleton-loader>
+                </div>
+                <div mat-line>
+                  <ngx-skeleton-loader
+                    fxFlex
+                    [theme]="{ height: '20px', width: '20%' }"
+                  ></ngx-skeleton-loader>
+                </div>
+              </mat-list-item>
+            </ng-template>
+            <!-- end -->
             <!-- Client info -->
             <mat-list *ngIf="!isLoading; else elseLoadinguLoadingClientInfo">
-              <mat-list-item mat-ripple style="cursor: pointer">
+              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewClientInfo(appointment.clientAppointment.client.user.userId)">
                 <mat-icon mat-list-icon>person</mat-icon>
                 <div mat-line>
                   <strong>{{
@@ -120,8 +158,7 @@
                 <mat-icon
                   style="position: absolute; right: 0 !important"
                   mat-list-icon
-                  >keyboard_arrow_right</mat-icon
-                >
+                  >keyboard_arrow_right</mat-icon>
               </mat-list-item>
               <mat-list-item *ngIf="appointment.isWalkIn">
                 <mat-icon mat-list-icon>notes</mat-icon>
@@ -207,35 +244,6 @@
               </mat-list-item>
             </ng-template>
             <!-- end -->
-            <!-- Consultation type -->
-            <mat-list
-              *ngIf="!isLoading; else elseLoadinguLoadingConsultationType"
-            >
-              <mat-list-item>
-                <mat-icon mat-list-icon>call_to_action</mat-icon>
-                <div mat-line>
-                  <strong>{{ appointment.consultaionType.name }}</strong>
-                </div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingConsultationType>
-              <mat-list-item>
-                <mat-icon mat-list-icon>call_to_action</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
             <mat-divider></mat-divider>
             <!-- Comments -->
             <mat-list *ngIf="!isLoading; else elseLoadinguLoadingComments">
@@ -277,12 +285,16 @@
             <div *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
             <!-- Pet info -->
             <mat-list *ngIf="!appointment.isWalkIn && appointment.petAppointment; else elseIsPetWalkIn">
-              <mat-list-item mat-ripple style="cursor: pointer">
+              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewPetInfo(appointment.petAppointment.pet.petId)">
                 <mat-icon mat-list-icon>pets</mat-icon>
                 <div mat-line>
                   <strong>{{ appointment.petAppointment.pet.name }}</strong>
                 </div>
                 <div mat-line>{{ appointment.petAppointment.pet.petCategory.name }}</div>
+                <mat-icon
+                  style="position: absolute; right: 0 !important"
+                  mat-list-icon
+                  >keyboard_arrow_right</mat-icon>
               </mat-list-item>
             </mat-list>
             <ng-template #elseIsPetWalkIn>
@@ -318,7 +330,7 @@
           <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
             <!-- Vet info -->
             <mat-list *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
-              <mat-list-item mat-ripple style="cursor: pointer">
+              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewVetInfo(appointment.staff.user.userId)">
                 <mat-icon mat-list-icon>how_to_reg</mat-icon>
                 <div mat-line>
                   <strong>{{ appointment.staff.fullName }}</strong>

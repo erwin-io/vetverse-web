@@ -1,0 +1,35 @@
+.group-info {
+  align-items: center;
+  column-gap: 10px;
+  mat-icon {
+
+  }
+  .group-info-text {
+    margin: 0!important;
+  }
+}
+.name {
+  margin: 0!important;
+}
+.disable-label {
+  font-size: 15px!important;
+  color: #f44336!important;
+}
+
+.loader {
+  h3 {
+    margin: 0!important;
+  }
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 4px;
+  background-color: #ffe7e5;
+  h3 {
+    margin: 0!important;
+  }
+}

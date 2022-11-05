@@ -24,6 +24,10 @@ import { AddPaymentComponent } from './component/add-payment/add-payment.compone
 import { SelectPeopleComponent } from './component/select-people/select-people.component';
 import { AddPetComponent } from './component/add-pet/add-pet.component';
 import { PetCategoryByPetTypePipe } from './core/pipe/pet-category-by-pet-type.pipe';
+import { UpdateUserPasswordComponent } from './component/update-user-password/update-user-password.component';
+import { ViewClientInfoComponent } from './component/view-client-info/view-client-info.component';
+import { ViewPetInfoComponent } from './component/view-pet-info/view-pet-info.component';
+import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-info/view-veterinarian-info.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +42,10 @@ import { PetCategoryByPetTypePipe } from './core/pipe/pet-category-by-pet-type.p
     SelectPeopleComponent,
     AddPetComponent,
     PetCategoryByPetTypePipe,
+    UpdateUserPasswordComponent,
+    ViewClientInfoComponent,
+    ViewPetInfoComponent,
+    ViewVeterinarianInfoComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,10 +1,10 @@
-<mat-progress-bar mode="query" *ngIf="isProcessing"></mat-progress-bar>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
 <h4 mat-dialog-title>Add pet</h4>
 
 <div mat-dialog-content>
   <div fxFlex="100" fxLayout="column" fxLayout="column">
     <form [formGroup]="petForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petForm" fxLayoutAlign="center" >
-      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isLoading">
 
         <mat-form-field *ngIf="!isLoadingLookup; else elseLoadingLookup" appearance="outline" appearance="outline" fxFlex="100">
           <mat-label>Select type</mat-label>
@@ -81,7 +81,7 @@
   <div>
     <button
       mat-flat-button
-      [disabled]="isProcessing"
+      [disabled]="isProcessing || isLoading"
       cdkFocusInitial
       (click)="onDismiss()"
     >
@@ -89,7 +89,7 @@
     </button>
     <button
       mat-flat-button
-      [disabled]="isProcessing || !petForm.valid"
+      [disabled]="isLoading || isProcessing || !petForm.valid"
       color="primary"
       form="petForm"
       type="submit"

@@ -5,6 +5,9 @@ import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { AddPaymentComponent } from 'src/app/component/add-payment/add-payment.component';
 import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/schedule-dialog.component';
+import { ViewClientInfoComponent } from 'src/app/component/view-client-info/view-client-info.component';
+import { ViewPetInfoComponent } from 'src/app/component/view-pet-info/view-pet-info.component';
+import { ViewVeterinarianInfoComponent } from 'src/app/component/view-veterinarian-info/view-veterinarian-info.component';
 import { AppointmentStatusEnum } from 'src/app/core/enums/appointment-status.enum';
 import { RoleEnum } from 'src/app/core/enums/role.enum copy';
 import { Appointment, Payment } from 'src/app/core/model/appointment.model';
@@ -283,7 +286,6 @@ export class ViewAppointmentComponent implements OnInit {
     });
   }
 
-
   async pay() {
     const dialogRef = this.dialog.open(AddPaymentComponent, {
       maxWidth: '1000px',
@@ -364,5 +366,32 @@ export class ViewAppointmentComponent implements OnInit {
       }
       // dialogRef.close();
     });
+  }
+
+  async viewClientInfo(userId) {
+    const dialogRef = this.dialog.open(ViewClientInfoComponent, {
+      closeOnNavigation: false,
+      maxWidth: '500px',
+      width: '500px',
+    });
+    dialogRef.componentInstance.userId = userId;
+  }
+
+  async viewPetInfo(petId) {
+    const dialogRef = this.dialog.open(ViewPetInfoComponent, {
+      closeOnNavigation: false,
+      maxWidth: '500px',
+      width: '500px',
+    });
+    dialogRef.componentInstance.petId = petId;
+  }
+
+  async viewVetInfo(userId) {
+    const dialogRef = this.dialog.open(ViewVeterinarianInfoComponent, {
+      closeOnNavigation: false,
+      maxWidth: '500px',
+      width: '500px',
+    });
+    dialogRef.componentInstance.userId = userId;
   }
 }

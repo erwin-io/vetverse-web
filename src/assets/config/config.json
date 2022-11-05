@@ -50,7 +50,8 @@
       "createClient": "users/client",
       "udpdateClient": "users/client",
       "udpdateStaff": "users/staff",
-      "toggleEnable": "users/toggleEnable"
+      "toggleEnable": "users/toggleEnable",
+      "udpdatePassword": "users/udpdatePassword"
     },
     "role": "roles/",
     "serviceType": "service-type/",
