@@ -77,7 +77,7 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       }
       this.userForm = this.formBuilder.group({
         firstName: ['', Validators.required],
-        middleName: ['', Validators.required],
+        middleName: [],
         lastName: ['', Validators.required],
         genderId: ['', Validators.required],
         email: ['',

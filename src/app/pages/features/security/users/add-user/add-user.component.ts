@@ -62,7 +62,7 @@ export class AddUserComponent implements OnInit {
       if(this.userTypeId === 1){
         this.userForm = this.formBuilder.group({
           firstName: ['', Validators.required],
-          middleName: ['', Validators.required],
+          middleName: [''],
           lastName: ['', Validators.required],
           genderId: ['', Validators.required],
           email: ['',
