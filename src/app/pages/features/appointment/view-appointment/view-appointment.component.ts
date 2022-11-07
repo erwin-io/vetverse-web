@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
@@ -11,8 +11,10 @@ import { ViewVeterinarianInfoComponent } from 'src/app/component/view-veterinari
 import { AppointmentStatusEnum } from 'src/app/core/enums/appointment-status.enum';
 import { RoleEnum } from 'src/app/core/enums/role.enum copy';
 import { Appointment, Payment } from 'src/app/core/model/appointment.model';
+import { Messages } from 'src/app/core/model/messages.model';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
+import { MessageService } from 'src/app/core/services/message.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { ServiceTypeService } from 'src/app/core/services/service-type.service';
 import { StorageService } from 'src/app/core/storage/storage.service';
@@ -53,6 +55,12 @@ export class ViewAppointmentComponent implements OnInit {
     cancelation: false,
     reschedule: false,
   };
+  messages: Messages[] = [];
+  currentMessagePage = 0;
+  loadingMessage = false;
+  isSendingMessage = false;
+
+
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
@@ -62,7 +70,8 @@ export class ViewAppointmentComponent implements OnInit {
     private snackBar: Snackbar,
     private dialog: MatDialog,
     private appconfig: AppConfigService,
-    public router: Router
+    public router: Router,
+    private messageService: MessageService
   ) {
     this.initAllowedAction();
   }
@@ -143,6 +152,7 @@ export class ViewAppointmentComponent implements OnInit {
             this.appointment = res.data;
             this.payment = res.data.payments && res.data.payments.length > 0 ? res.data.payments.filter(x=>!x.isVoid)[0] : null;
             this.initAppointmentAction();
+            this.initMessages(appointmentId);
             this.isLoading = false;
           } else {
             this.isLoading = false;
@@ -377,13 +387,13 @@ export class ViewAppointmentComponent implements OnInit {
     dialogRef.componentInstance.userId = userId;
   }
 
-  async viewPetInfo(petId) {
+  async viewPetInfo(pet) {
     const dialogRef = this.dialog.open(ViewPetInfoComponent, {
       closeOnNavigation: false,
       maxWidth: '500px',
       width: '500px',
     });
-    dialogRef.componentInstance.petId = petId;
+    dialogRef.componentInstance.petData = pet;
   }
 
   async viewVetInfo(userId) {
@@ -393,5 +403,127 @@ export class ViewAppointmentComponent implements OnInit {
       width: '500px',
     });
     dialogRef.componentInstance.userId = userId;
+  }
+
+  async initMessages(appointmentId) {
+    this.loadingMessage = true;
+    try {
+      this.messageService.getByAppointmentPage({
+        appointmentId: appointmentId,
+        page: this.currentMessagePage,
+        limit: 40
+      }).subscribe(
+        (res) => {
+          if (res.success) {
+            this.messages = [ ...this.messages, ...res.data.items];
+            this.currentMessagePage = res.data.meta.currentPage;
+            this.loadingMessage = false;
+          } else {
+            this.loadingMessage = false;
+            this.error = Array.isArray(res.message)
+              ? res.message[0]
+              : res.message;
+            this.snackBar.snackbarError(this.error);
+            if (this.error.toLowerCase().includes('not found')) {
+              this.router.navigate(['/appointments/']);
+            }
+          }
+        },
+        async (err) => {
+          this.loadingMessage = false;
+          this.error = Array.isArray(err.message)
+            ? err.message[0]
+            : err.message;
+          this.snackBar.snackbarError(this.error);
+          if (this.error.toLowerCase().includes('not found')) {
+            this.router.navigate(['/appointments/']);
+          }
+        }
+      );
+    } catch (e) {
+      this.loadingMessage = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      if (this.error.toLowerCase().includes('not found')) {
+        this.router.navigate(['/appointments/']);
+      }
+    }
+  }
+  async loadMoreMessage() {
+    this.currentMessagePage = this.currentMessagePage + 1;
+    this.initMessages(this.appointment.appointmentId)
+  }
+
+  async sendMessage(messageInput) {
+    const message = messageInput.value;
+    const param = {
+      message,
+      isClient: false,
+      appointmentId: this.appointment.appointmentId,
+      fromUserId: this.currentUserId,
+      toUserId: this.appointment.clientAppointment.client.user.userId,
+    };
+    try {
+      this.isSendingMessage = true;
+      await this.
+      messageService
+        .add(param)
+        .subscribe(
+          async (res) => {
+            if (res.success) {
+              this.isSendingMessage = false;
+              const message: Messages [] = [];
+              message.push(res.data);
+              this.messages = [...message,...this.messages];
+            } else {
+              this.isSendingMessage = false;
+              this.error = Array.isArray(res.message)
+                ? res.message[0]
+                : res.message;
+              this.snackBar.snackbarError(this.error);
+            }
+          },
+          async (err) => {
+            this.isSendingMessage = false;
+            this.error = Array.isArray(err.message)
+              ? err.message[0]
+              : err.message;
+            this.snackBar.snackbarError(this.error);
+          }
+        );
+    } catch (e) {
+      this.isSendingMessage = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+    }
+    messageInput.value = null;
+  }
+
+  async startVideoConference(){
+    this.popup("/video-conference/" + this.appointment.appointmentId , "Vide conference", "1000", "800");
+  }
+
+  async popup(url, title, w, h) {
+    // Fixes dual-screen position                             Most browsers      Firefox
+    const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+    const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+    const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+    const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    const systemZoom = width / window.screen.availWidth;
+    const left = (width - w) / 2 / systemZoom + dualScreenLeft
+    const top = (height - h) / 2 / systemZoom + dualScreenTop
+    const newWindow = window.open(url, title,
+      `
+      scrollbars=yes,
+      width=${w / systemZoom},
+      height=${h / systemZoom},
+      top=${top},
+      left=${left}
+      `
+    )
+
+    if (window.focus) newWindow.focus();
   }
 }

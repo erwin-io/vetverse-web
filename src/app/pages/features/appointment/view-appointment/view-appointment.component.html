@@ -1,357 +1,408 @@
-<div class="page-view-container">
-  <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="20px">
-    <div fxFlex class="action-section">
-      <div fxFlex="100" fxLayout="column" >
-        <div *ngIf="allowedAction.reschedule || allowedAction.approval || allowedAction.complete || allowedAction.cancelation">
-          <h4 class="action-header-text">Action</h4>
-          <ul fxLayout="column" class="action-menu">
-            <li *ngIf="allowedAction.reschedule">
-              <button [disabled]="!appointmentAction.reschedule" mat-stroked-button (click)="onReschedule()">
-                <div class="button-wrapper">
-                  <mat-icon>today</mat-icon>
-                  <span>Reschedule</span>
-                </div>
-              </button>
-            </li>
-            <li *ngIf="allowedAction.approval">
-              <button [disabled]="!appointmentAction.approval" mat-stroked-button color="primary" (click)="changeStatus(2)">
-                <div class="button-wrapper">
-                  <mat-icon>check</mat-icon>
-                  <span>Approved</span>
-                </div>
-              </button>
-            </li>
-            <li *ngIf="allowedAction.complete">
-              <button [disabled]="!appointmentAction.complete" mat-flat-button color="primary" (click)="changeStatus(3)">
-                <div class="button-wrapper">
-                  <mat-icon>check</mat-icon>
-                  <span>Complete</span>
-                </div>
-              </button>
-            </li>
-            <li *ngIf="allowedAction.cancelation">
-              <button [disabled]="!appointmentAction.cancelation" mat-stroked-button color="warn" (click)="changeStatus(4)">
-                <div class="button-wrapper">
-                  <mat-icon>close</mat-icon>
-                  <span>Cancel</span>
-                </div>
-              </button>
-            </li>
-          </ul>
-          <mat-divider></mat-divider>
-        </div>
-        <div *ngIf="allowedAction.payment" >
-          <div *ngIf="!isLoading; else elseLoadingPayment" fxFlex="100">
-            <h4 class="action-header-text">Payments</h4>
-            <p class="action-header-text">Status: <strong [ngStyle]="{ 'color' : appointment.isPaid ? '#00BFA5;': '#f44336;' }">{{appointment.isPaid ? 'Paid' : 'Unpaid'}}</strong></p>
-            <p *ngIf="appointment.isPaid && appointment.payments.length > 0" class="action-header-text">Payment type: <strong>{{ appointment.payments[0].paymentType.name }}</strong></p>
-            <p class="action-header-text">Amount to pay: <strong>₱{{appointment.isPaid ? 0 : appointment.serviceType.price}}</strong></p>
-            <p class="action-header-text">Total payment: <strong>₱{{appointment.isPaid ? appointment.serviceType.price : 0}}</strong></p>
-            <ul fxLayout="column" class="action-menu">
-              <li>
-                <button mat-flat-button [disabled]="appointment.appointmentStatus.appointmentStatusId === '4'" color="primary" *ngIf="!appointment.isPaid && !payment" (click)="pay()">
+<mat-tab-group>
+  <mat-tab label="Appointment details">
+    <div class="page-view-container details">
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="20px">
+        <div fxFlex class="action-section">
+          <div fxFlex="100" fxLayout="column" >
+            <div *ngIf="allowedAction.reschedule || allowedAction.approval || allowedAction.complete || allowedAction.cancelation">
+              <h4 class="action-header-text">Action</h4>
+              <ul fxLayout="column" class="action-menu">
+                <li *ngIf="allowedAction.reschedule">
+                  <button [disabled]="!appointmentAction.reschedule" mat-stroked-button (click)="onReschedule()">
+                    <div class="button-wrapper">
+                      <mat-icon>today</mat-icon>
+                      <span>Reschedule</span>
+                    </div>
+                  </button>
+                </li>
+                <li *ngIf="allowedAction.approval">
+                  <button [disabled]="!appointmentAction.approval" mat-stroked-button color="primary" (click)="changeStatus(2)">
+                    <div class="button-wrapper">
+                      <mat-icon>check</mat-icon>
+                      <span>Approved</span>
+                    </div>
+                  </button>
+                </li>
+                <li *ngIf="allowedAction.complete">
+                  <button [disabled]="!appointmentAction.complete" mat-flat-button color="primary" (click)="changeStatus(3)">
+                    <div class="button-wrapper">
+                      <mat-icon>check</mat-icon>
+                      <span>Complete</span>
+                    </div>
+                  </button>
+                </li>
+                <li *ngIf="allowedAction.cancelation">
+                  <button [disabled]="!appointmentAction.cancelation" mat-stroked-button color="warn" (click)="changeStatus(4)">
+                    <div class="button-wrapper">
+                      <mat-icon>close</mat-icon>
+                      <span>Cancel</span>
+                    </div>
+                  </button>
+                </li>
+              </ul>
+              <mat-divider></mat-divider>
+            </div>
+            <div *ngIf="allowedAction.payment" >
+              <div *ngIf="!isLoading; else elseLoadingPayment" fxFlex="100">
+                <h4 class="action-header-text">Payments</h4>
+                <p class="action-header-text">Status: <strong [ngStyle]="{ 'color' : appointment.isPaid ? '#00BFA5;': '#f44336;' }">{{appointment.isPaid ? 'Paid' : 'Unpaid'}}</strong></p>
+                <p *ngIf="appointment.isPaid && appointment.payments.length > 0" class="action-header-text">Payment type: <strong>{{ appointment.payments[0].paymentType.name }}</strong></p>
+                <p class="action-header-text">Amount to pay: <strong>₱{{appointment.isPaid ? 0 : appointment.serviceType.price}}</strong></p>
+                <p class="action-header-text">Total payment: <strong>₱{{appointment.isPaid ? appointment.serviceType.price : 0}}</strong></p>
+                <ul fxLayout="column" class="action-menu">
+                  <li>
+                    <button mat-flat-button [disabled]="appointment.appointmentStatus.appointmentStatusId === '4'" color="primary" *ngIf="!appointment.isPaid && !payment" (click)="pay()">
+                      <div class="button-wrapper">
+                        <mat-icon>check</mat-icon>
+                        <span>Pay</span>
+                      </div>
+                    </button>
+                  </li>
+                  <li>
+                    <button mat-stroked-button color="warn" *ngIf="appointment.isPaid && payment" (click)="voidPayment()">
+                      <div class="button-wrapper">
+                        <mat-icon>close</mat-icon>
+                        <span>Void</span>
+                      </div>
+                    </button>
+                  </li>
+                </ul>
+                <mat-divider></mat-divider>
+              </div>
+            </div>
+            <ng-template #elseLoadingPayment>
+              <ngx-skeleton-loader
+                fxFlex
+                [theme]="{ height: '20px', width: '20%' }"
+              ></ngx-skeleton-loader>
+            </ng-template>
+            <ul fxFlex="100" fxLayout="column" class="action-menu">
+              <li style="margin: 0">
+                <button mat-stroked-button routerLink="/appointments">
                   <div class="button-wrapper">
-                    <mat-icon>check</mat-icon>
-                    <span>Pay</span>
-                  </div>
-                </button>
-              </li>
-              <li>
-                <button mat-stroked-button color="warn" *ngIf="appointment.isPaid && payment" (click)="voidPayment()">
-                  <div class="button-wrapper">
-                    <mat-icon>close</mat-icon>
-                    <span>Void</span>
+                    <mat-icon>keyboard_backspace</mat-icon>
+                    <span>Back to list</span>
                   </div>
                 </button>
               </li>
             </ul>
-            <mat-divider></mat-divider>
           </div>
         </div>
-        <ng-template #elseLoadingPayment>
-          <ngx-skeleton-loader
-            fxFlex
-            [theme]="{ height: '20px', width: '20%' }"
-          ></ngx-skeleton-loader>
-        </ng-template>
-        <ul fxFlex="100" fxLayout="column" class="action-menu">
-          <li style="margin: 0">
-            <button mat-stroked-button routerLink="/appointments">
-              <div class="button-wrapper">
-                <mat-icon>keyboard_backspace</mat-icon>
-                <span>Back to list</span>
+        <div fxFlex.gt-xs="65%" fxFlex.gt-md="80%" fxLayout="column" fxLayoutGap="20px">
+          <mat-card fxFlex="100">
+            <mat-card-header>
+              <mat-card-subtitle><strong>Appointment details</strong></mat-card-subtitle>
+              <div fxFlex></div>
+              <div *ngIf="!isLoading">
+                <h4>Status:
+                  <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '1'" style="color: #FFC107;">{{appointment.appointmentStatus.name}}</strong>
+                  <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '2'" style="color: #009688;">{{appointment.appointmentStatus.name}}</strong>
+                  <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '3'" style="color: #03A9F4;">{{appointment.appointmentStatus.name}}</strong>
+                  <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '4'" style="color: #FF5722;">{{appointment.appointmentStatus.name}}</strong>
+                </h4>
               </div>
-            </button>
-          </li>
-        </ul>
+            </mat-card-header>
+
+            <mat-card-content fxLayout="column">
+              <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+                <!-- Consultation type -->
+                <mat-list
+                  *ngIf="!isLoading; else elseLoadinguLoadingConsultationType">
+                  <mat-list-item *ngIf="appointment.consultaionType.consultaionTypeId === '1'">
+                    <div mat-line>
+                      <strong>{{ appointment.consultaionType.name }}</strong>
+                    </div>
+                    <div mat-line>Consultation type</div>
+                  </mat-list-item>
+                  <mat-list-item mat-ripple style="cursor: pointer" *ngIf="appointment.consultaionType.consultaionTypeId === '2'" >
+                    <mat-icon mat-list-icon>videocam</mat-icon>
+                    <div mat-line>
+                      <strong>{{ appointment.consultaionType.name }}</strong>
+                    </div>
+                    <div mat-line>Consultation type</div>
+                    <mat-icon
+                      style="position: absolute; right: 0 !important"
+                      mat-list-icon
+                      >keyboard_arrow_right</mat-icon>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingConsultationType>
+                  <mat-list-item>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+                <!-- Client info -->
+                <mat-list *ngIf="!isLoading; else elseLoadinguLoadingClientInfo">
+                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewClientInfo(appointment.clientAppointment.client.user.userId)">
+                    <mat-icon mat-list-icon>person</mat-icon>
+                    <div mat-line>
+                      <strong>{{
+                        appointment.isWalkIn
+                          ? "Walk in"
+                          : appointment.clientAppointment.client.fullName
+                      }}</strong>
+                    </div>
+                    <div mat-line *ngIf="!appointment.isWalkIn">
+                      {{ appointment.clientAppointment.client.mobileNumber }}
+                    </div>
+                    <mat-icon
+                      style="position: absolute; right: 0 !important"
+                      mat-list-icon
+                      >keyboard_arrow_right</mat-icon>
+                  </mat-list-item>
+                  <mat-list-item *ngIf="appointment.isWalkIn">
+                    <mat-icon mat-list-icon>notes</mat-icon>
+                    <div mat-line>{{ appointment.walkInAppointmentNotes }}</div>
+                    <div mat-line></div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingClientInfo>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>person</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+                <mat-divider></mat-divider>
+                <!-- Appountment schedule -->
+                <mat-list *ngIf="!isLoading; else elseLoadinguLoadingClientInfo">
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>date_range</mat-icon>
+                    <div mat-line>
+                      <strong>{{
+                        appointment.appointmentDate + " " + appointment.timeStart
+                          | date: "hh:mm a"
+                      }}</strong>
+                    </div>
+                    <div mat-line>{{ appointment.appointmentDate }}</div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingClientInfo>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>event_note</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+                <!-- Service -->
+                <mat-list *ngIf="!isLoading; else elseLoadinguLoadingServiceType">
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>card_travel</mat-icon>
+                    <div mat-line>
+                      <strong>{{ appointment.serviceType.name }}</strong>
+                    </div>
+                    <div mat-line>{{ appointment.serviceType.description }}</div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingServiceType>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>card_travel</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+                <mat-divider></mat-divider>
+                <!-- Comments -->
+                <mat-list *ngIf="!isLoading; else elseLoadinguLoadingComments">
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>message</mat-icon>
+                    <div mat-line><strong>Comments</strong></div>
+                    <div mat-line>{{ appointment.comments }}</div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingComments>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>message</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+              </div>
+              <br />
+            </mat-card-content>
+          </mat-card>
+          <mat-card fxFlex="100">
+            <mat-card-header>
+              <mat-card-subtitle><strong>Pet</strong></mat-card-subtitle>
+              <div fxFlex></div>
+            </mat-card-header>
+            <mat-card-content fxLayout="column">
+              <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+                <div *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
+                <!-- Pet info -->
+                <mat-list *ngIf="!appointment.isWalkIn && appointment.petAppointment; else elseIsPetWalkIn">
+                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewPetInfo(appointment.petAppointment.pet)">
+                    <mat-icon mat-list-icon>pets</mat-icon>
+                    <div mat-line>
+                      <strong>{{ appointment.petAppointment.pet.name }}</strong>
+                    </div>
+                    <div mat-line>{{ appointment.petAppointment.pet.petCategory.name }}</div>
+                    <mat-icon
+                      style="position: absolute; right: 0 !important"
+                      mat-list-icon
+                      >keyboard_arrow_right</mat-icon>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseIsPetWalkIn>
+                  <h3 style="
+                  background-color: #ECEFF1;
+                  padding: 20px;
+                  color: #424242 !important;
+                  text-align: left;
+                  font-size: 15px !important;">No pets to show</h3>
+                </ng-template>
+                <!-- end -->
+                </div>
+                <ng-template #elseLoadinguLoadingPetInfo>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>pets</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <mat-card fxFlex="100">
+            <mat-card-header>
+              <mat-card-subtitle><strong>Veterinarian</strong></mat-card-subtitle>
+              <div fxFlex></div>
+            </mat-card-header>
+            <mat-card-content fxLayout="column">
+              <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+                <!-- Vet info -->
+                <mat-list *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
+                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewVetInfo(appointment.staff.user.userId)">
+                    <mat-icon mat-list-icon>how_to_reg</mat-icon>
+                    <div mat-line>
+                      <strong>{{ appointment.staff.fullName }}</strong>
+                    </div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseLoadinguLoadingPetInfo>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>how_to_reg</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
       </div>
     </div>
-    <div fxFlex.gt-xs="65%" fxFlex.gt-md="80%" fxLayout="column" fxLayoutGap="20px">
-      <mat-card fxFlex="100">
-        <mat-card-header>
-          <mat-card-subtitle><strong>Appointment details</strong></mat-card-subtitle>
-          <div fxFlex></div>
-          <div *ngIf="!isLoading">
-            <h4>Status:
-              <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '1'" style="color: #FFC107;">{{appointment.appointmentStatus.name}}</strong>
-              <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '2'" style="color: #009688;">{{appointment.appointmentStatus.name}}</strong>
-              <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '3'" style="color: #03A9F4;">{{appointment.appointmentStatus.name}}</strong>
-              <strong *ngIf="appointment.appointmentStatus.appointmentStatusId === '4'" style="color: #FF5722;">{{appointment.appointmentStatus.name}}</strong>
-            </h4>
-          </div>
-        </mat-card-header>
 
-        <mat-card-content fxLayout="column">
-          <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-            <!-- Consultation type -->
-            <mat-list
-              *ngIf="!isLoading; else elseLoadinguLoadingConsultationType">
-              <mat-list-item *ngIf="appointment.consultaionType.consultaionTypeId === '1'">
-                <div mat-line>
-                  <strong>{{ appointment.consultaionType.name }}</strong>
-                </div>
-                <div mat-line>Consultation type</div>
-              </mat-list-item>
-              <mat-list-item mat-ripple style="cursor: pointer" *ngIf="appointment.consultaionType.consultaionTypeId === '2'" >
-                <mat-icon mat-list-icon>videocam</mat-icon>
-                <div mat-line>
-                  <strong>{{ appointment.consultaionType.name }}</strong>
-                </div>
-                <div mat-line>Consultation type</div>
-                <mat-icon
-                  style="position: absolute; right: 0 !important"
-                  mat-list-icon
-                  >keyboard_arrow_right</mat-icon>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingConsultationType>
-              <mat-list-item>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-            <!-- Client info -->
-            <mat-list *ngIf="!isLoading; else elseLoadinguLoadingClientInfo">
-              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewClientInfo(appointment.clientAppointment.client.user.userId)">
-                <mat-icon mat-list-icon>person</mat-icon>
-                <div mat-line>
-                  <strong>{{
-                    appointment.isWalkIn
-                      ? "Walk in"
-                      : appointment.clientAppointment.client.fullName
-                  }}</strong>
-                </div>
-                <div mat-line *ngIf="!appointment.isWalkIn">
-                  {{ appointment.clientAppointment.client.mobileNumber }}
-                </div>
-                <mat-icon
-                  style="position: absolute; right: 0 !important"
-                  mat-list-icon
-                  >keyboard_arrow_right</mat-icon>
-              </mat-list-item>
-              <mat-list-item *ngIf="appointment.isWalkIn">
-                <mat-icon mat-list-icon>notes</mat-icon>
-                <div mat-line>{{ appointment.walkInAppointmentNotes }}</div>
-                <div mat-line></div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingClientInfo>
-              <mat-list-item>
-                <mat-icon mat-list-icon>person</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-            <mat-divider></mat-divider>
-            <!-- Appountment schedule -->
-            <mat-list *ngIf="!isLoading; else elseLoadinguLoadingClientInfo">
-              <mat-list-item>
-                <mat-icon mat-list-icon>date_range</mat-icon>
-                <div mat-line>
-                  <strong>{{
-                    appointment.appointmentDate + " " + appointment.timeStart
-                      | date: "hh:mm a"
-                  }}</strong>
-                </div>
-                <div mat-line>{{ appointment.appointmentDate }}</div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingClientInfo>
-              <mat-list-item>
-                <mat-icon mat-list-icon>event_note</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-            <!-- Service -->
-            <mat-list *ngIf="!isLoading; else elseLoadinguLoadingServiceType">
-              <mat-list-item>
-                <mat-icon mat-list-icon>card_travel</mat-icon>
-                <div mat-line>
-                  <strong>{{ appointment.serviceType.name }}</strong>
-                </div>
-                <div mat-line>{{ appointment.serviceType.description }}</div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingServiceType>
-              <mat-list-item>
-                <mat-icon mat-list-icon>card_travel</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-            <mat-divider></mat-divider>
-            <!-- Comments -->
-            <mat-list *ngIf="!isLoading; else elseLoadinguLoadingComments">
-              <mat-list-item>
-                <mat-icon mat-list-icon>message</mat-icon>
-                <div mat-line><strong>Comments</strong></div>
-                <div mat-line>{{ appointment.comments }}</div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingComments>
-              <mat-list-item>
-                <mat-icon mat-list-icon>message</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-          </div>
-          <br />
-        </mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="100">
-        <mat-card-header>
-          <mat-card-subtitle><strong>Pet</strong></mat-card-subtitle>
-          <div fxFlex></div>
-        </mat-card-header>
-        <mat-card-content fxLayout="column">
-          <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-            <div *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
-            <!-- Pet info -->
-            <mat-list *ngIf="!appointment.isWalkIn && appointment.petAppointment; else elseIsPetWalkIn">
-              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewPetInfo(appointment.petAppointment.pet.petId)">
-                <mat-icon mat-list-icon>pets</mat-icon>
-                <div mat-line>
-                  <strong>{{ appointment.petAppointment.pet.name }}</strong>
-                </div>
-                <div mat-line>{{ appointment.petAppointment.pet.petCategory.name }}</div>
-                <mat-icon
-                  style="position: absolute; right: 0 !important"
-                  mat-list-icon
-                  >keyboard_arrow_right</mat-icon>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseIsPetWalkIn>
-              <h3 style="
-              background-color: #ECEFF1;
-              padding: 20px;
-              color: #424242 !important;
-              text-align: left;
-              font-size: 15px !important;">No pets to show</h3>
-            </ng-template>
-            <!-- end -->
+  </mat-tab>
+  <mat-tab label="Conference" *ngIf="isLoading ? false : appointment.consultaionType.consultaionTypeId === '2'">
+    <div class="page-view-container conference" fxLayout="column">
+      <div class="conference-action-header">
+        <button mat-raised-button color="primary" [disabled]="loadingMessage" (click)="startVideoConference()">
+          <mat-icon>videocam</mat-icon>
+          Start video conference
+        </button>
+      </div>
+      <div class="convo-section" fxLayoutGap="20px">
+        <ul class="message-list">
+          <li *ngFor="let message of messages" [ngClass]="{ 'from-me' : message.fromUser.userId === currentUserId, 'is-client' : message.isClient }">
+            <span class="from-label" *ngIf="message.fromUser.userId !== currentUserId">{{ message.fromUser.username}}</span>
+            <div class="chat-item-box">
+              <span>{{ message.message }}</span>
             </div>
-            <ng-template #elseLoadinguLoadingPetInfo>
-              <mat-list-item>
-                <mat-icon mat-list-icon>pets</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card fxFlex="100">
-        <mat-card-header>
-          <mat-card-subtitle><strong>Veterinarian</strong></mat-card-subtitle>
-          <div fxFlex></div>
-        </mat-card-header>
-        <mat-card-content fxLayout="column">
-          <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-            <!-- Vet info -->
-            <mat-list *ngIf="!isLoading; else elseLoadinguLoadingPetInfo">
-              <mat-list-item mat-ripple style="cursor: pointer" (click)="viewVetInfo(appointment.staff.user.userId)">
-                <mat-icon mat-list-icon>how_to_reg</mat-icon>
-                <div mat-line>
-                  <strong>{{ appointment.staff.fullName }}</strong>
-                </div>
-              </mat-list-item>
-            </mat-list>
-            <ng-template #elseLoadinguLoadingPetInfo>
-              <mat-list-item>
-                <mat-icon mat-list-icon>how_to_reg</mat-icon>
-                <div mat-line>
-                  <ngx-skeleton-loader
-                    fxFlex
-                    [theme]="{ height: '20px', width: '20%' }"
-                  ></ngx-skeleton-loader>
-                </div>
-              </mat-list-item>
-            </ng-template>
-            <!-- end -->
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </li>
+          <li class="load-more">
+            <button mat-flat-button *ngIf="!loadingMessage && messages.length > 39" (click)="loadMoreMessage()">
+              <mat-icon>keyboard_arrow_up</mat-icon>
+              Click here to load more message
+            </button>
+            <div class="message-loader-indicator" *ngIf="loadingMessage" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10">
+              <mat-spinner diameter="30"></mat-spinner>
+              <h3>Loading in please wait...</h3>
+            </div>
+          </li>
+        </ul>
+
+      </div>
+      <div fxFlex class="action-section" >
+        <div class="chat-input">
+          <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>Message</mat-label>
+            <input
+              matInput
+              #messageInput
+              placeholder="Message"
+              (keydown.enter)="sendMessage(messageInput)">
+          </mat-form-field>
+          <button [disabled]="!messageInput.value || messageInput.value === ''" mat-icon-button color="primary" aria-label="Send" (click)="sendMessage(messageInput)">
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+  </mat-tab>
+</mat-tab-group>

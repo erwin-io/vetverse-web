@@ -1,0 +1,66 @@
+app-video-conference {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+.container {
+  display: flex;
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  background: #424242;
+  .remote-video-holder {
+    margin-top: 40px;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    .video-placeholder {
+      display: flex;
+      margin: auto 0;
+      max-width: 1000px;
+      height: 100%;
+      flex-grow: 1;
+      background-color: #757575;
+      border-radius: 5px;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      h2 {
+        color: #ffffff;
+      }
+    }
+  }
+  .controls {
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px;
+    justify-content: center;
+    height: 150px;
+    column-gap: 20px;
+    .btn-default {
+      color: #ffffff!important;
+      background-color: #616161!important;
+    }
+  }
+  .local-video-holder {
+    display: flex;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    min-width: 200px;
+    width: 200px;
+    height: auto;
+    padding: 20px;
+    flex-direction: column;
+    video {
+      display: flex;
+    }
+  }
+  video {
+    border-radius: 5px;
+  }
+}

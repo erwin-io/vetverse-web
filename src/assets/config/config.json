@@ -64,7 +64,8 @@
       "createOnsiteAppointment": "appointment/createOnsiteAppointment",
       "createWalkInAppointment": "appointment/createWalkInAppointment",
       "rescheduleAppointment": "appointment/rescheduleAppointment",
-      "updateAppointmentStatus": "appointment/updateAppointmentStatus"
+      "updateAppointmentStatus": "appointment/updateAppointmentStatus",
+      "updateAppointmentConferencePeer": "appointment/updateAppointmentConferencePeer"
     },
     "payment": {
       "get": "payments",
@@ -81,6 +82,10 @@
       "delete": "pet/"
     },
     "petType": "pet-type/",
-    "petCategory": "pet-category/"
+    "petCategory": "pet-category/",
+    "message": {
+      "findByAppointmentPage": "message/findByAppointmentPage",
+      "create": "message/"
+    }
   }
 }

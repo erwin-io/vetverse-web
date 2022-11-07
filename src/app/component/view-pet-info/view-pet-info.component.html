@@ -1,40 +1,32 @@
 <h4 *ngIf="!isLoading" mat-dialog-title>Pet</h4>
 
 <div mat-dialog-content>
-  <div *ngIf="!hasError; else elseError" fxLayout="column">
-    <div *ngIf="!isLoading; else elseLoading" fxLayout="column">
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <strong>Name</strong>
-        <h3 class="group-info-text">{{petData.name}}</h3>
-      </div>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <strong>Category</strong>
-        <h3 class="group-info-text">{{petData.petCategory.name}}</h3>
-      </div>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <strong>Gender</strong>
-        <h3 class="group-info-text">{{petData.gender.name}}</h3>
-      </div>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <strong>Birthdate</strong>
-        <h3 class="group-info-text">{{petData.birthDate | date: 'MMMM d, y'}}</h3>
-      </div>
-      <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
-        <strong>Weight</strong>
-        <h3 class="group-info-text">{{petData.weight}}(kg)</h3>
-      </div>
+  <div *ngIf="!hasError; else elseError" fxLayout="column" fxLayoutGap="10px">
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <strong>Name</strong>
+      <h3 class="group-info-text">{{petData.name}}</h3>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <strong>Category</strong>
+      <h3 class="group-info-text">{{petData.petCategory.name}}</h3>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <strong>Gender</strong>
+      <h3 class="group-info-text">{{petData.gender.name}}</h3>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <strong>Birthdate</strong>
+      <h3 class="group-info-text">{{petData.birthDate | date: 'MMMM d, y'}}</h3>
+    </div>
+    <div fxFlex="100" fxLayout="column" fxLayoutAlign="start">
+      <strong>Weight</strong>
+      <h3 class="group-info-text">{{petData.weight}}(kg)</h3>
     </div>
   </div>
-  <ng-template #elseLoading>
-    <div class="loader" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10">
-      <mat-spinner diameter="30"></mat-spinner>
-      <h3>Loading in please wait...</h3>
-    </div>
-  </ng-template>
 
   <ng-template #elseError>
     <div class="error">
-      <h3>Unable to view client. please try again</h3>
+      <h3>Unable to view pet. please try again</h3>
     </div>
   </ng-template>
 </div>

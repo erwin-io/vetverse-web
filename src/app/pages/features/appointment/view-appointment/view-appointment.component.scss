@@ -1,43 +1,172 @@
-.page-view-container {
-  .action-section {
-    mat-divider {
-      margin: 10px 0!important;
-    }
-    .action-header-text {
-      margin: 0!important;
-    }
-    .action-menu {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      &:first-child {
-        li {
-          &:first-child {
-            margin-top: 0;
-          }
-        }
-
-      }
-      li {
+app-view-appointment {
+  display: flex;
+  flex-direction: column;
+  height: 100%!important;
+  .mat-tab-group {
+    display: flex;
+    flex-direction: column;
+    height: 100%!important;
+    flex-grow: 1;
+    .mat-tab-body-wrapper {
+      display: flex;
+      flex-grow: 1;
+      flex-grow: 1;
+      height: 100%!important;
+      .mat-tab-body {
         display: flex;
+        flex-grow: 1;
+        height: 100%;
         flex-direction: column;
-        margin-bottom: 10px;
-        &:first-child {
-          margin-top: 10px;
-        }
-        button {
-          .button-wrapper {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            span {
+        .mat-tab-body-content {
+          display: flex;
+          flex-grow: 1;
+          height: 100%;
+          flex-direction: column;
+          .page-view-container {
+            &.details {
+              .action-section {
+                mat-divider {
+                  margin: 10px 0!important;
+                }
+                .action-header-text {
+                  margin: 0!important;
+                }
+                .action-menu {
+                  margin: 0;
+                  padding: 0;
+                  list-style: none;
+                  &:first-child {
+                    li {
+                      &:first-child {
+                        margin-top: 0;
+                      }
+                    }
+
+                  }
+                  li {
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 10px;
+                    &:first-child {
+                      margin-top: 10px;
+                    }
+                    button {
+                      .button-wrapper {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        span {
+                          flex-grow: 1;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            &.conference {
+              height: 100%;
+              flex-direction: row;
+              display: flex;
               flex-grow: 1;
+              overflow: hidden;
+              margin-bottom: 90px !important;
+              .conference-action-header {
+                display: flex;
+                width: 100%;
+                flex-grow: 1;
+                padding: 10px;
+                background-color: #FFFFFF;
+                box-sizing: border-box;
+                justify-content: flex-end;
+              }
+              .convo-section {
+                display: flex;
+                height: 100%;
+                flex-direction: column-reverse;
+                overflow: auto;
+                margin-top: 20px;
+                .message-list {
+                  margin: 0 10px 20px 0!important;
+                  padding: 0;
+                  display: flex;
+                  row-gap: 10px;
+                  flex-direction: column-reverse;
+                  li {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    .chat-item-box {
+                      display: flex;
+                      padding: 8px 12px!important;
+                      margin: 0!important;
+                      background-color: #E4E6EB;
+                      border-radius: 18px;
+                      max-width: 500px;
+                    }
+                    .from-label {
+                      font-size: 80%!important;
+                    }
+                    &.from-me {
+                      align-items: flex-end;
+                      .chat-item-box {
+                        background: #009688!important;
+                        color:#FFFFFF!important;
+                      }
+                    }
+                    &.load-more {
+                      display: flex;
+                      align-items: center;
+                      .message-loader-indicator {
+                        position: absolute;
+                        top: 20px;
+                        display: flex;
+                        h3 {
+                          margin: 0!important;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+              .action-section {
+                display: flex;
+                position: absolute;
+                bottom: 20px;
+                padding-right: 60px;
+                width: 100%;
+                button {
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  .mat-button-wrapper {
+                    display: flex;
+                    mat-icon {
+                      display: flex;
+                      font-size: 30px!important;
+                      width: 100%;
+                      flex-grow: 1;
+                    }
+                  }
+                }
+                .chat-input {
+                  width: 100%;
+                  display: flex;
+                  align-items: center;
+                  .mat-form-field-wrapper {
+                    padding: 0!important;
+                    margin: 0!important;
+                  }
+                }
+              }
             }
           }
         }
       }
     }
   }
+}
+.page-view-container {
 }
 
 .schedule-dialog {
@@ -49,4 +178,9 @@
 .payment-dialog {
   max-width: 500px!important;
   width: 500px!important;
+}
+
+
+.mat-tab-content-0-1 {
+
 }

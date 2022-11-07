@@ -28,6 +28,8 @@ import { UpdateUserPasswordComponent } from './component/update-user-password/up
 import { ViewClientInfoComponent } from './component/view-client-info/view-client-info.component';
 import { ViewPetInfoComponent } from './component/view-pet-info/view-pet-info.component';
 import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-info/view-veterinarian-info.component';
+import { MessageComponent } from './component/message/message.component';
+import { CallService } from './core/services/call.service';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,7 @@ import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-inf
     ViewClientInfoComponent,
     ViewPetInfoComponent,
     ViewVeterinarianInfoComponent,
+    MessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +64,7 @@ import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-inf
     MatTimepickerModule,
   ],
   providers: [
+    CallService,
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500} },
     {

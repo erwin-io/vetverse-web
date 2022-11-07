@@ -10,7 +10,6 @@ import { Snackbar } from 'src/app/core/ui/snackbar';
   styleUrls: ['./view-pet-info.component.scss']
 })
 export class ViewPetInfoComponent implements OnInit {
-  petId;
   petData: Pet;
   isLoading = false;
   error;
@@ -20,38 +19,37 @@ export class ViewPetInfoComponent implements OnInit {
     private snackBar: Snackbar) { }
 
   ngOnInit(): void {
-    this.initPet(this.petId);
   }
 
   get hasError() {
     return this.error && this.error !== undefined;
   }
 
-  async initPet(userId:string) {
-    this.error = false;
-    this.isLoading = true;
-    try{
-      await this.petService.getById(userId)
-      .subscribe(async res => {
-        if (res.success) {
-          this.petData = res.data;
-          console.log(res.data);
-          this.isLoading = false;
-        } else {
-          this.isLoading = false;
-          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-          this.snackBar.snackbarError(this.error);
-        }
-      }, async (err) => {
-        this.isLoading = false;
-        this.error = Array.isArray(err.message) ? err.message[0] : err.message;
-        this.snackBar.snackbarError(this.error);
-      });
-    }
-    catch(e){
-      this.isLoading = false;
-      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-      this.snackBar.snackbarError(this.error);
-    }
-  }
+  // async initPet(userId:string) {
+  //   this.error = false;
+  //   this.isLoading = true;
+  //   try{
+  //     await this.petService.getById(userId)
+  //     .subscribe(async res => {
+  //       if (res.success) {
+  //         this.petData = res.data;
+  //         console.log(res.data);
+  //         this.isLoading = false;
+  //       } else {
+  //         this.isLoading = false;
+  //         this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+  //         this.snackBar.snackbarError(this.error);
+  //       }
+  //     }, async (err) => {
+  //       this.isLoading = false;
+  //       this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+  //       this.snackBar.snackbarError(this.error);
+  //     });
+  //   }
+  //   catch(e){
+  //     this.isLoading = false;
+  //     this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+  //     this.snackBar.snackbarError(this.error);
+  //   }
+  // }
 }

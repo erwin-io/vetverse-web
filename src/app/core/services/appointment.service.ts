@@ -128,6 +128,19 @@ export class AppointmentService implements IServices {
       );
   }
 
+  updateAppointmentConferencePeer(data: any): Observable<ApiResponse<Appointment>> {
+    return this.http
+      .put<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.appointment.updateAppointmentConferencePeer,
+        data
+      )
+      .pipe(
+        tap((_) => this.log('appointment')),
+        catchError(this.handleError('appointment', []))
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(

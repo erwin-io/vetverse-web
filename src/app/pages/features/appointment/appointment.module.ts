@@ -9,6 +9,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ViewAppointmentComponent } from './view-appointment/view-appointment.component';
 import { CreateAppointmentComponent } from './create-appointment/create-appointment.component';
 import { MatTimepickerModule } from 'src/app/core/directive/mat-timepicker/src/lib/mat-timepicker.module';
+import { CallService } from 'src/app/core/services/call.service';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,7 @@ export const routes: Routes = [
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     MatTimepickerModule,
-  ]
+  ],providers:[
+    CallService]
 })
 export class AppointmentModule { }

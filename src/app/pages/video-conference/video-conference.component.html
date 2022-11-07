@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="remote-video-holder">
+    <video [style.display]="!(callStarted | async) ? 'none!important' : ''" #remoteVideo autoplay playsinline></video>
+    <div class="video-placeholder" [style.display]="(callStarted | async) ? 'none!important' : ''">
+      <h2>
+        Waiting for client to join the call...
+      </h2>
+    </div>
+  </div>
+  <div class="controls" >
+    <!-- <button mat-fab class="btn-default" (click)="isMicOff = !isMicOff">
+      <mat-icon>{{isMicOff ? 'mic_off' : 'mic'}}</mat-icon>
+    </button> -->
+    <button mat-fab color="warn" (click)="endCall()">
+      <mat-icon>call_end</mat-icon>
+    </button>
+  </div>
+  <div class="local-video-holder">
+    <video #localVideo autoplay playsinline [muted]=true></video>
+  </div>
+</div>
