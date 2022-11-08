@@ -13,6 +13,17 @@ export const routes: Routes = [
     path: '',
     component: VideoConferenceComponent,
     pathMatch: 'full'
+  },
+  {
+    path: ':appointmentId',
+    component: VideoConferenceComponent,
+  },
+  {
+    path: 'accept/:appointmentId',
+    component: VideoConferenceComponent,
+    data: {
+      isClient: true
+    }
   }
 ];
 

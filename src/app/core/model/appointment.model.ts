@@ -18,7 +18,8 @@ export class Appointment {
   appointmentStatus: AppointmentStatus
   payments: Payment[]
   clientAppointment?: ClientAppointment
-  petAppointment?: PetAppointment
+  petAppointment?: PetAppointment;
+  conferencePeerId: string;
 }
 
 export class ConsultaionType {

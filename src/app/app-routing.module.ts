@@ -25,10 +25,9 @@ const routes: Routes = [
     { path: 'auth',
       loadChildren: () => import('./pages/auth/auth.module').then( m => m.AuthModule)
     },
-    { path: 'video-conference/:appointmentId',
+    { path: 'video-conference',
       loadChildren: () => import('./pages/video-conference/video-conference.module').then( m => m.VideoConferenceModule)
-    },
-
+    }
 ];
 
 @NgModule({

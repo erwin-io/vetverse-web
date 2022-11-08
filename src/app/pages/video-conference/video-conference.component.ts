@@ -16,9 +16,11 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   public isCallStarted$: Observable<boolean>;
   private appointmentId: string;
+  private isClient: boolean;
   private peerId: string;
   isMicOff = false;
   error;
+  isLoading = false;
 
   @ViewChild('localVideo') localVideo: ElementRef<HTMLVideoElement>;
   @ViewChild('remoteVideo') remoteVideo: ElementRef<HTMLVideoElement>;
@@ -28,24 +30,33 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
     private snackBar: Snackbar,
     private appointmentService: AppointmentService) {
     this.isCallStarted$ = this.callService.isCallStarted$;
-    this.peerId = this.callService.initPeer();
 
-    window.onbeforeunload = confirmExit;
-    function confirmExit() {
-        return "You have attempted to leave this page. Are you sure?";
-    }
-    console.log(` PeerId ${this.peerId}`);
     this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
+    const isClient = this.route.snapshot.data['isClient'];
+    this.isClient = isClient && isClient !== undefined ? true : false
+    console.log('this.route.snapshot ', this.route.snapshot);
+    console.log('this.isClient ', this.isClient);
+    if(!this.isClient) {
+      this.peerId = this.callService.initPeer();
+      this.setConferencePeer(this.peerId);
+      this.createOnline$().subscribe(isOnline => console.log(isOnline));
+    }else {
+      this.callService.initPeer();
+    }
+    // window.onbeforeunload = confirmExit;
+    // function confirmExit() {
+    //     return "You have attempted to leave this page. Are you sure?";
+    // }
+    // console.log(` PeerId ${this.peerId}`);
+    // this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
 
-    this.setConferencePeer(this.peerId);
-    this.createOnline$().subscribe(isOnline => console.log(isOnline));
 
-    window.addEventListener('onbeforeunload', ()=> {
-      return '';
-    })
-    window.onbeforeunload = function(e) {
-      return 'Dialog text here.';
-    };
+    // window.addEventListener('onbeforeunload', ()=> {
+    //   return '';
+    // })
+    // window.onbeforeunload = function(e) {
+    //   return 'Dialog text here.';
+    // };
   }
 
   get callStarted(){
@@ -59,7 +70,53 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
     this.callService.remoteStream$
       .pipe(filter(res => !!res))
       .subscribe(stream => this.remoteVideo.nativeElement.srcObject = stream);
-      this.callService.enableCallAnswer();
+      if(!this.isClient) {
+        this.callService.enableCallAnswer();
+      }
+      else {
+        this.getPeerIdFromAppointment(this.appointmentId);
+      }
+  }
+
+  getPeerIdFromAppointment(appointmentId) {
+    this.isLoading = true;
+    try {
+      this.appointmentService.getById(appointmentId).subscribe(
+        (res) => {
+          if (res.success) {
+            console.log(res.data);
+            this.peerId = res.data.conferencePeerId;
+            this.callService.establishMediaCall(this.peerId);
+          } else {
+            this.isLoading = false;
+            this.error = Array.isArray(res.message)
+              ? res.message[0]
+              : res.message;
+            this.snackBar.snackbarError(this.error);
+            if (this.error.toLowerCase().includes('not found')) {
+              this.closeWindow();
+            }
+          }
+        },
+        async (err) => {
+          this.isLoading = false;
+          this.error = Array.isArray(err.message)
+            ? err.message[0]
+            : err.message;
+          this.snackBar.snackbarError(this.error);
+          if (this.error.toLowerCase().includes('not found')) {
+            this.closeWindow();
+          }
+        }
+      );
+    } catch (e) {
+      this.isLoading = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+      if (this.error.toLowerCase().includes('not found')) {
+        this.closeWindow();
+      }
+    }
   }
 
   async setConferencePeer(conferencePeerId) {
@@ -95,13 +152,19 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
   }
 
   async endCall() {
-    await this.setConferencePeer('').then(()=> {
-      var callWindow = window.self;
-      callWindow.opener = window.self;
-      callWindow.close();
-    }).catch((err)=> {
-      console.log(err);
-    });
+    if(!this.isClient) {
+      await this.setConferencePeer('').then(()=> {
+        this.closeWindow();
+      }).catch((err)=> {
+        console.log(err);
+      });
+    }
+  }
+
+  closeWindow() {
+    var callWindow = window.self;
+    callWindow.opener = window.self;
+    callWindow.close();
   }
 
   createOnline$() {
@@ -115,12 +178,13 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:beforeunload', ['$event'])
   async handleClose($event) {
-    debugger;
       $event.returnValue = false;
       $event.preventDefault();
       $event.stopPropagation();
       $event.stopImmediatePropagation();
-      await this.setConferencePeer('');
+      if(!this.isClient) {
+        await this.setConferencePeer('');
+      }
       return false;
   }
 
