@@ -1,7 +1,7 @@
 <div class="container">
   <div class="remote-video-holder">
-    <video [style.display]="!connected ? 'none!important' : ''" #remoteVideo autoplay playsinline></video>
-    <div class="video-placeholder" [style.display]="connected ? 'none!important' : ''">
+    <video [style.display]="!(callStarted | async) ? 'none!important' : ''" #remoteVideo autoplay playsinline></video>
+    <div class="video-placeholder" [style.display]="(callStarted | async) ? 'none!important' : ''">
       <h2>
         {{ isClient ? 'Call not started waiting for veterinarian to start the call. please try again later' : 'Waiting for client to join the call...' }}
       </h2>
