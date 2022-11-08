@@ -59,6 +59,7 @@
       "get": "appointment",
       "getByAdvanceSearch": "appointment/getByAdvanceSearch",
       "getById": "appointment/",
+      "getAppointmentConferencePeer": "appointment/getAppointmentConferencePeer/",
       "createClientAppointment": "appointment/createClientAppointment",
       "createClientCashlessAppointment": "appointment/createClientCashlessAppointment",
       "createOnsiteAppointment": "appointment/createOnsiteAppointment",

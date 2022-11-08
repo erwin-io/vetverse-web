@@ -63,7 +63,8 @@ export class LoginComponent implements OnInit {
             this.storageService.saveAccessToken(res.data.refreshToken);
             const userData: LoginResult = res.data;
             this.storageService.saveLoginUser(userData);
-            this.router.navigate(['/'], { replaceUrl: true });
+            console.log(this.authService.redirectUrl);
+            this.router.navigate([this.authService.redirectUrl], { replaceUrl: true });
             this.isProcessing = false;
           } else {
             this.isProcessing = false;

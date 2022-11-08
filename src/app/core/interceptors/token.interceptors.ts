@@ -23,7 +23,8 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(
     private router: Router,
     private storageService: StorageService,
-    private authService: AuthService) {}
+    private authService: AuthService) {
+    }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 

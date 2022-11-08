@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 import { Observable, filter, of, fromEvent, map, merge, Observer } from 'rxjs';
 import { AppointmentService } from 'src/app/core/services/appointment.service';
 import { CallService } from 'src/app/core/services/call.service';
@@ -16,8 +16,8 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   public isCallStarted$: Observable<boolean>;
   private appointmentId: string;
-  private isClient: boolean;
-  private peerId: string;
+  isClient: boolean;
+  peerId: string;
   isMicOff = false;
   error;
   isLoading = false;
@@ -27,6 +27,7 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   constructor(private callService: CallService,
     private route: ActivatedRoute,
+    private router: Router,
     private snackBar: Snackbar,
     private appointmentService: AppointmentService) {
     this.isCallStarted$ = this.callService.isCallStarted$;
@@ -41,26 +42,17 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
       this.setConferencePeer(this.peerId);
       this.createOnline$().subscribe(isOnline => console.log(isOnline));
     }else {
+      this.peerId = this.route.snapshot.paramMap.get('peerId');
       this.callService.initPeer();
     }
-    // window.onbeforeunload = confirmExit;
-    // function confirmExit() {
-    //     return "You have attempted to leave this page. Are you sure?";
-    // }
-    // console.log(` PeerId ${this.peerId}`);
-    // this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
-
-
-    // window.addEventListener('onbeforeunload', ()=> {
-    //   return '';
-    // })
-    // window.onbeforeunload = function(e) {
-    //   return 'Dialog text here.';
-    // };
   }
 
   get callStarted(){
     return this.isCallStarted$;
+  }
+
+  get connected() {
+    return this.remoteVideo ? !this.remoteVideo.nativeElement.paused : false;
   }
 
   ngOnInit(): void {
@@ -74,18 +66,18 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
         this.callService.enableCallAnswer();
       }
       else {
-        this.getPeerIdFromAppointment(this.appointmentId);
+        this.getAppointmentConferencePeer(this.appointmentId);
       }
   }
 
-  getPeerIdFromAppointment(appointmentId) {
+  getAppointmentConferencePeer(appointmentId) {
     this.isLoading = true;
     try {
-      this.appointmentService.getById(appointmentId).subscribe(
+      this.appointmentService.getAppointmentConferencePeer(appointmentId).subscribe(
         (res) => {
           if (res.success) {
             console.log(res.data);
-            this.peerId = res.data.conferencePeerId;
+            this.peerId = res.data;
             this.callService.establishMediaCall(this.peerId);
           } else {
             this.isLoading = false;
@@ -162,9 +154,7 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
   }
 
   closeWindow() {
-    var callWindow = window.self;
-    callWindow.opener = window.self;
-    callWindow.close();
+    this.router.navigate(['appointments/details/'+this.appointmentId])
   }
 
   createOnline$() {

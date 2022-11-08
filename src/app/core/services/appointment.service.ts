@@ -50,6 +50,19 @@ export class AppointmentService implements IServices {
       );
   }
 
+  getAppointmentConferencePeer(appointmentId: string): Observable<ApiResponse<string>> {
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.appointment.getAppointmentConferencePeer +
+          appointmentId
+      )
+      .pipe(
+        tap((_) => this.log('appointment')),
+        catchError(this.handleError('appointment', []))
+      );
+  }
+
   createClientAppointment(data: any): Observable<ApiResponse<Appointment>> {
     return this.http
       .post<any>(

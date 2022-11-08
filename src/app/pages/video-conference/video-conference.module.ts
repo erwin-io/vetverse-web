@@ -6,17 +6,19 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CallService } from 'src/app/core/services/call.service';
 import { MaterialModule } from 'src/app/material/material.module';
+import { AuthGuard } from 'src/app/core/guard/auth.guard';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: VideoConferenceComponent,
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: ':appointmentId',
     component: VideoConferenceComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'accept/:appointmentId',

@@ -41,8 +41,8 @@ export class FeaturesComponent implements OnDestroy {
             this.handleMediaChange();
           });
         })
-
-
+        this.authService.redirectUrl = this.router.url;
+        console.log(this.router.url)
     }
 
     initMenu(){
@@ -116,6 +116,9 @@ export class FeaturesComponent implements OnDestroy {
 
       dialogRef.componentInstance.alertDialogConfig = dialogData;
       dialogRef.componentInstance.conFirm.subscribe((data: any) => {
+        this.authService.redirectUrl = this.router.url;
+        console.log(this.router.url);
+        console.log(this.authService.redirectUrl);
         this.authService.logout();
         this.storageService.saveAccessToken(null);
         this.storageService.saveRefreshToken(null);
