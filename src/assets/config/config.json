@@ -66,7 +66,8 @@
       "createWalkInAppointment": "appointment/createWalkInAppointment",
       "rescheduleAppointment": "appointment/rescheduleAppointment",
       "updateAppointmentStatus": "appointment/updateAppointmentStatus",
-      "updateAppointmentConferencePeer": "appointment/updateAppointmentConferencePeer"
+      "updateAppointmentConferencePeer": "appointment/updateAppointmentConferencePeer",
+      "updateAppointmentDiagnosiAndTreatment": "appointment/updateAppointmentDiagnosiAndTreatment"
     },
     "payment": {
       "get": "payments",
@@ -84,6 +85,12 @@
     },
     "petType": "pet-type/",
     "petCategory": "pet-category/",
+    "dashboard": {
+      "getVetAppointmentSummary": "dashboard/getVetAppointmentSummary",
+      "getVetYearlyAppointmentGraph": "dashboard/getVetYearlyAppointmentGraph",
+      "getYearlyRevenue": "dashboard/getYearlyRevenue",
+      "getYearlyRevenueGraph": "dashboard/getYearlyRevenueGraph"
+    },
     "message": {
       "findByAppointmentPage": "message/findByAppointmentPage",
       "create": "message/"

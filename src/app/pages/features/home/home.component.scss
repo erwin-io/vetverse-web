@@ -1,0 +1,24 @@
+
+.pie-chart-holder  {
+  justify-content: space-between!important;
+  .filter-options {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    align-items: flex-start;
+    column-gap: 10px;
+  }
+}
+.chart-holder  {
+}
+#pieChart {
+  display: flex;
+}
+#areaChart {
+  max-width: 100%;
+}
+.page-view-container {
+  mat-card {
+    margin-bottom: 10px!important;
+  }
+}

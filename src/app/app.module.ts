@@ -30,6 +30,8 @@ import { ViewPetInfoComponent } from './component/view-pet-info/view-pet-info.co
 import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-info/view-veterinarian-info.component';
 import { MessageComponent } from './component/message/message.component';
 import { CallService } from './core/services/call.service';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,7 @@ import { CallService } from './core/services/call.service';
     ViewPetInfoComponent,
     ViewVeterinarianInfoComponent,
     MessageComponent,
+    ViewDiagnosisTreatmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +65,7 @@ import { CallService } from './core/services/call.service';
     FormsModule,
     ReactiveFormsModule,
     MatTimepickerModule,
+    NgApexchartsModule,
   ],
   providers: [
     CallService,

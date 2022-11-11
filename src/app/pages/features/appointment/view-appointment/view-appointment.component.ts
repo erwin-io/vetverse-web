@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { AddPaymentComponent } from 'src/app/component/add-payment/add-payment.component';
 import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/schedule-dialog.component';
 import { ViewClientInfoComponent } from 'src/app/component/view-client-info/view-client-info.component';
+import { ViewDiagnosisTreatmentComponent } from 'src/app/component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { ViewPetInfoComponent } from 'src/app/component/view-pet-info/view-pet-info.component';
 import { ViewVeterinarianInfoComponent } from 'src/app/component/view-veterinarian-info/view-veterinarian-info.component';
 import { AppointmentStatusEnum } from 'src/app/core/enums/appointment-status.enum';
@@ -501,5 +502,19 @@ export class ViewAppointmentComponent implements OnInit {
 
   async startVideoConference(){
     this.router.navigate(['/video-conference/' + this.appointment.appointmentId]);
+  }
+
+  async viewDiagnosiAndTreatment(diagnosiAndTreatment) {
+    const dialogRef = this.dialog.open(ViewDiagnosisTreatmentComponent, {
+      closeOnNavigation: false,
+      maxWidth: '500px',
+      width: '500px',
+    });
+    dialogRef.componentInstance.data = { appointmentId: this.appointment.appointmentId, diagnosiAndTreatment };
+    dialogRef.afterClosed().subscribe(result => {
+      this.initAppointment(this.appointment.appointmentId);
+      dialogRef.close();
+    });
+
   }
 }

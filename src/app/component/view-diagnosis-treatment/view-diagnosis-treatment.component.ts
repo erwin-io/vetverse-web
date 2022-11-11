@@ -1,69 +1,63 @@
-import { Time } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import * as moment from 'moment';
+import { Appointment } from 'src/app/core/model/appointment.model';
+import { AppConfigService } from 'src/app/core/services/app-config.service';
+import { AppointmentService } from 'src/app/core/services/appointment.service';
+import { PetService } from 'src/app/core/services/pet.service';
+import { Snackbar } from 'src/app/core/ui/snackbar';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
-import * as moment from 'moment';
-import { AppointmentService } from 'src/app/core/services/appointment.service';
-import { Snackbar } from 'src/app/core/ui/snackbar';
+
 @Component({
-  selector: 'app-schedule-dialog',
-  templateUrl: './schedule-dialog.component.html',
-  styleUrls: ['./schedule-dialog.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  selector: 'app-view-diagnosis-treatment',
+  templateUrl: './view-diagnosis-treatment.component.html',
+  styleUrls: ['./view-diagnosis-treatment.component.scss']
 })
-export class ScheduleDialogComponent implements OnInit {
-  data: any;
-  time;
-  appointmentDate: FormControl = new FormControl();
-  // time:FormControl = new FormControl([null, Validators.required]);
-  defaultValue: Date;
-  isProcessing = false;
-  appointmentTime;
+export class ViewDiagnosisTreatmentComponent implements OnInit {
+  data: { appointmentId: string; diagnosiAndTreatment: string };
+  diagnosiAndTreatmentForm: FormGroup;
   conFirm = new EventEmitter();
+  isProcessing = false;
   isLoading = false;
+  isLoadingLookup = false;
   error;
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
-    private appointmentService: AppointmentService,
     private snackBar: Snackbar,
-    public dialogRef: MatDialogRef<ScheduleDialogComponent>
-  ) {
-    dialogRef.disableClose = true;
-    this.appointmentDate.addValidators([Validators.required]);
-  }
+    private appointmentService: AppointmentService,
+    private appconfig: AppConfigService,
+    public dialogRef: MatDialogRef<ViewDiagnosisTreatmentComponent>) {
+      this.diagnosiAndTreatmentForm = this.formBuilder.group({
+        diagnosiAndTreatment: ['', Validators.required],
+      });
+      dialogRef.disableClose = true;
+     }
+
   ngOnInit(): void {
-    this.appointmentDate.setValue(this.data.appointmentDate);
-    this.time = this.data.time;
   }
 
-  get formValid() {
-    return (
-      this.appointmentDate.valid &&
-      this.time &&
-      (this.data.appointmentDate != this.appointmentDate.value ||
-        this.time != this.data.time)
-    );
+  get f() { return this.diagnosiAndTreatmentForm.controls; }
+
+  get formData() {
+    return this.diagnosiAndTreatmentForm ? this.diagnosiAndTreatmentForm.value : {
+      appointmentId: this.data.appointmentId,
+      diagnosiAndTreatment: this.diagnosiAndTreatmentForm.value.diagnosiAndTreatment,
+    };
   }
+
 
   onSubmit(): void {
-    console.log(this.appointmentDate.value);
-    if (this.formValid) {
+    if (this.diagnosiAndTreatmentForm.valid) {
+      const param = {
+        ...this.formData,
+        appointmentId: this.data.appointmentId,
+      };
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Save';
-      dialogData.message = 'Are you siure save new schedule?';
+      dialogData.message = 'Are you sure you want to save diagnosis and treatment?';
       dialogData.confirmButton = {
         visible: true,
         text: 'yes',
@@ -83,24 +77,18 @@ export class ScheduleDialogComponent implements OnInit {
         if (confirmed) {
           this.isProcessing = true;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
-          const param = {
-            appointmentId: this.data.appointmentId,
-            appointmentDate: moment(this.appointmentDate.value).format(
-              'YYYY-MM-DD'
-            ),
-            time: moment(this.time).format('hh:mm'),
-          };
           console.log(param);
           try {
             await this.appointmentService
-              .rescheduleAppointment(param)
+              .updateAppointmentDiagnosiAndTreatment(param)
               .subscribe(
                 async (res) => {
                   if (res.success) {
                     this.conFirm.emit(true);
-                    this.snackBar.snackbarSuccess("Appointment rescheduled!");
-                    dialogRef.close();
                     this.isProcessing = false;
+                    this.snackBar.snackbarSuccess("Appointment updated!");
+                    dialogRef.close();
+                    this.dialogRef.close();
                     dialogRef.componentInstance.isProcessing = this.isProcessing;
                   } else {
                     this.isLoading = false;
@@ -129,6 +117,10 @@ export class ScheduleDialogComponent implements OnInit {
         }
       });
     }
+  }
+
+  getError(key:string){
+    return this.f[key].errors;
   }
 
   onDismiss(): void {

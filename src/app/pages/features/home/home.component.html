@@ -1,0 +1,46 @@
+<div class="page-view-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>Summary({{yearFilter}})</mat-card-subtitle>
+      <div fxFlex></div>
+    </mat-card-header>
+    <mat-card-content fxLayout="column">
+      <div
+        fxFlex="100"
+        fxLayout="row"
+        class="pie-chart-holder"
+        *ngIf="!isLoading"
+      >
+        <div id="pieChart">
+          <apx-chart
+            [series]="pieChartOptions.series"
+            [chart]="pieChartOptions.chart"
+            [labels]="pieChartOptions.labels"
+            [responsive]="pieChartOptions.responsive"
+          ></apx-chart>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>Completed Appointments({{yearFilter}})</mat-card-subtitle>
+      <div fxFlex></div>
+    </mat-card-header>
+    <mat-card-content fxLayout="column">
+      <div fxFlex="100" *ngIf="!isLoading">
+        <div id="areaChart">
+          <apx-chart
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [xaxis]="chartOptions.xaxis"
+            [stroke]="chartOptions.stroke"
+            [tooltip]="chartOptions.tooltip"
+            [dataLabels]="chartOptions.dataLabels"
+          ></apx-chart>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

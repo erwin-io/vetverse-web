@@ -16,7 +16,7 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'health-records/pet/:petId',
+    path: 'records/pet/:petId',
     component: ViewRecordsComponent
   }
 ];

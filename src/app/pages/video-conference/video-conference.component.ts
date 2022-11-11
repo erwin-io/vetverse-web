@@ -30,21 +30,22 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
     private router: Router,
     private snackBar: Snackbar,
     private appointmentService: AppointmentService) {
-    this.isCallStarted$ = this.callService.isCallStarted$;
+      this.askPermission();
+      this.isCallStarted$ = this.callService.isCallStarted$;
 
-    this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
-    const isClient = this.route.snapshot.data['isClient'];
-    this.isClient = isClient && isClient !== undefined ? true : false
-    console.log('this.route.snapshot ', this.route.snapshot);
-    console.log('this.isClient ', this.isClient);
-    if(!this.isClient) {
-      this.peerId = this.callService.initPeer();
-      this.setConferencePeer(this.peerId);
-      this.createOnline$().subscribe(isOnline => console.log(isOnline));
-    }else {
-      this.peerId = this.route.snapshot.paramMap.get('peerId');
-      this.callService.initPeer();
-    }
+      this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
+      const isClient = this.route.snapshot.data['isClient'];
+      this.isClient = isClient && isClient !== undefined ? true : false
+      console.log('this.route.snapshot ', this.route.snapshot);
+      console.log('this.isClient ', this.isClient);
+      if(!this.isClient) {
+        this.peerId = this.callService.initPeer();
+        this.setConferencePeer(this.peerId);
+        this.createOnline$().subscribe(isOnline => console.log(isOnline));
+      }else {
+        this.peerId = this.route.snapshot.paramMap.get('peerId');
+        this.callService.initPeer();
+      }
   }
 
   get callStarted(){
@@ -53,6 +54,10 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   get connected() {
     return this.remoteVideo ? !this.remoteVideo.nativeElement.paused : false;
+  }
+
+  async askPermission() {
+    const status = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   }
 
   ngOnInit(): void {

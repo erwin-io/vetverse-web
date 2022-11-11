@@ -273,6 +273,32 @@
                   </mat-list-item>
                 </ng-template>
                 <!-- end -->
+                <!-- Diagnosi And Treatment -->
+                <mat-list *ngIf="!isLoading; else elseDiagnosiAndTreatment">
+                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewDiagnosiAndTreatment(appointment.diagnosiAndTreatment)">
+                    <mat-icon mat-list-icon>library_books</mat-icon>
+                    <div mat-line><strong>Diagnosis And Treatment</strong></div>
+                    <div mat-line>{{ appointment.diagnosiAndTreatment }}</div>
+                  </mat-list-item>
+                </mat-list>
+                <ng-template #elseDiagnosiAndTreatment>
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>library_books</mat-icon>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                    <div mat-line>
+                      <ngx-skeleton-loader
+                        fxFlex
+                        [theme]="{ height: '20px', width: '20%' }"
+                      ></ngx-skeleton-loader>
+                    </div>
+                  </mat-list-item>
+                </ng-template>
+                <!-- end -->
               </div>
               <br />
             </mat-card-content>

@@ -130,9 +130,9 @@ export class AppointmentComponent implements OnInit {
 
   initFilter(){
     this.isLoadingFilter = true;
-    forkJoin(
+    forkJoin([
       this.serviceTypeService.get(),
-  ).subscribe(
+  ]).subscribe(
       ([getServiceData]) => {
           // do things
           this.serviceLookup = getServiceData.data.map((s:ServiceType)=>{

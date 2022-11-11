@@ -45,110 +45,18 @@ export class HealthRecordsComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  // async add(){
-  //   const dialogRef = this.dialog.open(ServiceTypeAddComponent, {
-  //     closeOnNavigation: true,
-  //     panelClass: 'service-type-dialog',
-  //   });
-  //   dialogRef.componentInstance.data = null;
-  //   dialogRef.componentInstance.conFirm.subscribe((data: boolean) => {
-  //     if(data){
-  //       dialogRef.close();
-  //       this.getServiceTypes();
-  //     }
-  //   });
-  // }
-
-  // async edit(serviceTypeId: string){
-
-  //   const dialogRef = this.dialog.open(ServiceTypeAddComponent, {
-  //     closeOnNavigation: true,
-  //     panelClass: 'service-type-dialog',
-  //   });
-  //   dialogRef.componentInstance.data = { serviceTypeId };
-  //   dialogRef.componentInstance.conFirm.subscribe((data: boolean) => {
-  //     if(data){
-  //       dialogRef.close();
-  //       this.getServiceTypes();
-  //     }
-  //   });
-  // }
-
-  // async remove(serviceTypeId: string){
-  //   const dialogData = new AlertDialogModel();
-  //   dialogData.title = 'Confirm';
-  //   dialogData.message = 'Delete service type?';
-  //   dialogData.confirmButton = {
-  //     visible: true,
-  //     text: 'yes',
-  //     color: 'primary',
-  //   };
-  //   dialogData.dismissButton = {
-  //     visible: true,
-  //     text: 'cancel',
-  //   };
-  //   const dialogRef = this.dialog.open(AlertDialogComponent, {
-  //     maxWidth: '400px',
-  //     closeOnNavigation: true,
-  //   });
-
-  //   dialogRef.componentInstance.alertDialogConfig = dialogData;
-  //   dialogRef.componentInstance.conFirm.subscribe(async (confirm: any) => {
-  //     if(confirm) {
-  //       this.isProcessing = true;
-  //       dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //       try {
-  //         this.serviceTypeService
-  //           .delete(serviceTypeId)
-  //           .subscribe(
-  //             async (res) => {
-  //               if (res.success) {
-  //                 this.getServiceTypes();
-  //                 dialogRef.close();
-  //                 this.isProcessing = false;
-  //                 dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //               } else {
-  //                 this.isProcessing = false;
-  //                 dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //                 this.error = Array.isArray(res.message)
-  //                   ? res.message[0]
-  //                   : res.message;
-  //                 this.snackBar.snackbarError(this.error);
-  //               }
-  //             },
-  //             async (err) => {
-  //               this.isProcessing = false;
-  //               dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //               this.error = Array.isArray(err.message)
-  //                 ? err.message[0]
-  //                 : err.message;
-  //               this.snackBar.snackbarError(this.error);
-  //             }
-  //           );
-  //       } catch (e) {
-  //         this.isProcessing = false;
-  //         dialogRef.componentInstance.isProcessing = this.isProcessing;
-  //         this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-  //         this.snackBar.snackbarError(this.error);
-  //       }
-  //     }
-  //   });
-  // }
-
-  // filter() {
-  //   this.isLoading = true;
-  //   const keyword = this.keywordCtrl.value.toLowerCase();
-  //   this.dataSource.data = this.data.length > 0 ?
-  //   this.data.filter(x=>x.serviceTypeId.toLowerCase().includes(keyword) ||
-  //   x.name.toLowerCase().includes(keyword) ||
-  //   (x.description ? x.description.toLowerCase().includes(keyword) : false) ||
-  //   x.price.toString().toLowerCase().includes(keyword) ||
-  //   x.durationInHours.toLowerCase().includes(keyword)) : [];
-  //   this.dataSource.paginator = this.paginator;
-  //   this.isLoading = false;
-  // }
+  filter() {
+    this.isLoading = true;
+    const keyword = this.keywordCtrl.value.toLowerCase();
+    this.dataSource.data = this.data.length > 0 ?
+    this.data.filter(x=>x.name.toLowerCase().includes(keyword) ||
+    x.petCategory.name.toLowerCase().includes(keyword)): [];
+    this.dataSource.paginator = this.paginator;
+    this.isLoading = false;
+  }
 
   view(petId: string) {
+
 
   }
 
