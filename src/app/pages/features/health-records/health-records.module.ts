@@ -16,7 +16,7 @@ export const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'records/pet/:petId',
+    path: 'pet/:petId',
     component: ViewRecordsComponent
   }
 ];

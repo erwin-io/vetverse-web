@@ -1,10 +1,87 @@
 <div class="page-view-container">
   <mat-card>
     <mat-card-header>
-      <mat-card-subtitle>Health records</mat-card-subtitle>
-      <div fxFlex></div>
+      <mat-card-subtitle >Health records</mat-card-subtitle>
+      <div fxFlex fxLayout="row end" style="justify-content: end">
+        <button
+        mat-stroked-button
+        [disabled]="isLoading"
+        cdkFocusInitial
+        mat-dialog-close
+        routerLink="/records/">
+        Back
+      </button>
+      </div>
     </mat-card-header>
     <mat-card-content fxLayout="column">
+      <div fxLayout="column" *ngIf="!isLoading">
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Name:&nbsp;</strong></h3>
+          <h3>{{petDetails.name}}</h3>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Owner:&nbsp;</strong></h3>
+          <h3>{{petDetails.client.fullName}}</h3>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Birthddate:&nbsp;</strong></h3>
+          <h3>{{petDetails.birthDate | date: 'MMMM dd, yyyy'}}</h3>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Weight:&nbsp;</strong></h3>
+          <h3>{{petDetails.weight}}</h3>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Category:&nbsp;</strong></h3>
+          <h3>{{petDetails.petCategory.name}}</h3>
+        </div>
+        <div fxFlex="100" fxLayout="row">
+          <h3><strong>Gender:&nbsp;</strong></h3>
+          <h3>{{petDetails.gender.name}}</h3>
+        </div>
+      </div>
+      <div fxLayout="column" fxFlex="100">
+        <table mat-table class="health-record" [dataSource]="dataSource" mat-table matSort [ngClass]="{ 'hidden': dataSource.data.length === 0}">
+          <ng-container matColumnDef="appointmentId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Appointment </th>
+            <td mat-cell *matCellDef="let element"> {{element.appointmentId}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="appointmentDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.appointmentDate | date: 'MMMM dd, yyyy'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="diagnosiAndTreatment">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostic and treatment </th>
+            <td mat-cell *matCellDef="let element"> {{element.diagnosiAndTreatment && element.diagnosiAndTreatment !== '' ? element.diagnosiAndTreatment : 'NA'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="controls">
+            <th mat-header-cell *matHeaderCellDef>  </th>
+            <td mat-cell *matCellDef="let element">
+              <button matTooltip="More" mat-icon-button [matMenuTriggerFor]="menu" [disabled]="isProcessing">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button matTooltip="View records" (click)="view(element.appointmentId)" mat-menu-item >View records</button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div class="table-no-data" *ngIf="dataSource.data.length === 0">
+          <span>No pets available</span>
+        </div>
+        <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                       showFirstLastButtons
+                       aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
     </mat-card-content>
   </mat-card>
 </div>

@@ -78,6 +78,7 @@
     "pet": {
       "get": "pet",
       "getByClientId": "pet/findByClientId/",
+      "getPetMedicalRecords": "pet/getPetMedicalRecords/",
       "getById": "pet/",
       "create": "pet",
       "update": "pet",

@@ -56,8 +56,7 @@ export class HealthRecordsComponent implements OnInit {
   }
 
   view(petId: string) {
-
-
+    this.router.navigate(['/records/pet/' + petId]);
   }
 
   getPets(){
@@ -73,17 +72,20 @@ export class HealthRecordsComponent implements OnInit {
           this.isLoading = false;
         }
         else{
+          console.log(res)
           this.error = Array.isArray(res.message) ? res.message[0] : res.message;
           this.snackBar.snackbarError(this.error);
           this.isLoading = false;
         }
       }, async (err) => {
+        console.log(err)
         this.error = Array.isArray(err.message) ? err.message[0] : err.message;
         this.snackBar.snackbarError(this.error);
         this.isLoading = false;
       });
     }
     catch(e){
+      console.log(e)
       this.error = Array.isArray(e.message) ? e.message[0] : e.message;
       this.snackBar.snackbarError(this.error);
     }

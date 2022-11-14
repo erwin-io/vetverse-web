@@ -32,6 +32,8 @@ import { MessageComponent } from './component/message/message.component';
 import { CallService } from './core/services/call.service';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-treatment/view-diagnosis-treatment.component';
+import { YearPickerDialogComponent } from './component/year-picker-dialog/year-picker-dialog.component';
+import { CalendarPickerDialogComponent } from './component/calendar-picker-dialog/calendar-picker-dialog.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-trea
     ViewVeterinarianInfoComponent,
     MessageComponent,
     ViewDiagnosisTreatmentComponent,
+    YearPickerDialogComponent,
+    CalendarPickerDialogComponent,
   ],
   imports: [
     BrowserModule,

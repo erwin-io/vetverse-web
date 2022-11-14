@@ -61,6 +61,7 @@ export class AppointmentStatus {
 
 export class PetAppointment {
   appointmentId: string;
+  appointment: Appointment;
   pet: Pet;
 }
 
@@ -73,6 +74,7 @@ export class Pet {
   entityStatusId: string;
   petCategory: PetCategory;
   gender: Gender;
+  petAppointments?: PetAppointment[];
 }
 
 export class PetCategory {
