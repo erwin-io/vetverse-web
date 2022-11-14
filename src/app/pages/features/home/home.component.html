@@ -6,7 +6,7 @@
           <h3>Select filter</h3>
           <mat-form-field appearance="outline" appearance="outline">
             <mat-label>Select filter</mat-label>
-            <mat-select
+            <mat-select [disabled]="isLoading"
               [formControl]="selectFilterTypeCtrl">
               <mat-option value="Yearly">Yearly</mat-option>
               <mat-option value="Monthly">Monthly</mat-option>
@@ -54,7 +54,7 @@
         fxFlex="100"
         fxLayout="row"
         class="pie-chart-holder"
-        *ngIf="!isLoading"
+        *ngIf="!isLoading; else elseLoadingPieChart"
       >
         <div id="pieChart">
           <apx-chart
@@ -65,6 +65,14 @@
           ></apx-chart>
         </div>
       </div>
+
+      <ng-template #elseLoadingPieChart>
+        <ngx-skeleton-loader
+          fxFlex
+          [theme]="{ height: '150px', width: '150px' }"
+        >
+      </ngx-skeleton-loader>
+      </ng-template>
     </mat-card-content>
   </mat-card>
 
@@ -74,7 +82,7 @@
       <div fxFlex></div>
     </mat-card-header>
     <mat-card-content fxLayout="column">
-      <div fxFlex="100" *ngIf="!isLoading">
+      <div fxFlex="100" *ngIf="!isLoading; else elseLoadingChart">
         <div id="areaChart">
           <apx-chart
             [series]="chartOptions.series"
@@ -89,3 +97,10 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+<ng-template #elseLoadingChart>
+  <ngx-skeleton-loader
+    fxFlex
+    [theme]="{ height: '200px', width: '100%' }"
+  >
+</ngx-skeleton-loader>

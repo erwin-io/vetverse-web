@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from 'src/app/material/material.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,7 @@ export const routes: Routes = [
     MaterialModule,
     NgApexchartsModule,
     ReactiveFormsModule,
+    NgxSkeletonLoaderModule,
     RouterModule.forChild(routes)
   ]
 })
