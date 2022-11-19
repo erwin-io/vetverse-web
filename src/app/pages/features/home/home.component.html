@@ -54,8 +54,7 @@
         fxFlex="100"
         fxLayout="row"
         class="pie-chart-holder"
-        *ngIf="!isLoading; else elseLoadingPieChart"
-      >
+        *ngIf="!isLoading; else elseLoadingPieChart">
         <div id="pieChart">
           <apx-chart
             [series]="pieChartOptions.series"
