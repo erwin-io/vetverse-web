@@ -3,7 +3,7 @@
 
 <div mat-dialog-content>
   <div fxFlex="100" fxLayout="column" fxLayout="column">
-    <form [formGroup]="diagnosiAndTreatmentForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petForm" fxLayoutAlign="center" >
+    <form [formGroup]="diagnosisAndTreatmentForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petForm" fxLayoutAlign="center" >
       <fieldset fxFlex="100" fxLayout="column" [disabled]="isLoading">
 
         <mat-form-field appearance="outline">
@@ -11,9 +11,9 @@
           <textarea
             matInput
             placeholder="Diagnosis and treatment"
-            formControlName="diagnosiAndTreatment">
-          </textarea><mat-error *ngIf="getError('diagnosiAndTreatment') !== (null || undefined)">{{
-              (getError('diagnosiAndTreatment') && getError('diagnosiAndTreatment').required ? 'This field is required!' : '')
+            formControlName="diagnosisAndTreatment">
+          </textarea><mat-error *ngIf="getError('diagnosisAndTreatment') !== (null || undefined)">{{
+              (getError('diagnosisAndTreatment') && getError('diagnosisAndTreatment').required ? 'This field is required!' : '')
             }}</mat-error>
         </mat-form-field>
       </fieldset>
@@ -33,7 +33,7 @@
     </button>
     <button
       mat-flat-button
-      [disabled]="isLoading || isProcessing || !diagnosiAndTreatmentForm.valid"
+      [disabled]="isLoading || isProcessing || !diagnosisAndTreatmentForm.valid"
       color="primary"
       form="petForm"
       type="submit"

@@ -52,9 +52,9 @@
             <td mat-cell *matCellDef="let element"> {{element.appointmentDate | date: 'MMMM dd, yyyy'}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="diagnosiAndTreatment">
+          <ng-container matColumnDef="diagnosisAndTreatment">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostic and treatment </th>
-            <td mat-cell *matCellDef="let element"> {{element.diagnosiAndTreatment && element.diagnosiAndTreatment !== '' ? element.diagnosiAndTreatment : 'NA'}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.diagnosisAndTreatment && element.diagnosisAndTreatment !== '' ? element.diagnosisAndTreatment : 'NA'}} </td>
           </ng-container>
 
           <ng-container matColumnDef="controls">

@@ -154,11 +154,11 @@ export class AppointmentService implements IServices {
       );
   }
 
-  updateAppointmentDiagnosiAndTreatment(data: any): Observable<ApiResponse<Appointment>> {
+  updateAppointmentDiagnosisAndTreatment(data: any): Observable<ApiResponse<Appointment>> {
     return this.http
       .put<any>(
         environment.apiBaseUrl +
-          this.appconfig.config.apiEndPoints.appointment.updateAppointmentDiagnosiAndTreatment,
+          this.appconfig.config.apiEndPoints.appointment.updateAppointmentDiagnosisAndTreatment,
         data
       )
       .pipe(

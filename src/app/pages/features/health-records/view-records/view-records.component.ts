@@ -33,7 +33,7 @@ export class ViewRecordsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit(): void {
-    this.displayedColumns = ['appointmentId', 'appointmentDate', 'diagnosiAndTreatment', 'controls'];
+    this.displayedColumns = ['appointmentId', 'appointmentDate', 'diagnosisAndTreatment', 'controls'];
     this.generateLoaderData(this.pageSize);
   }
 
@@ -52,7 +52,7 @@ export class ViewRecordsComponent implements OnInit, AfterViewInit {
             return {
               appointmentId: pa.appointment.appointmentId,
               appointmentDate: pa.appointment.appointmentDate,
-              diagnosiAndTreatment: pa.appointment.diagnosiAndTreatment
+              diagnosisAndTreatment: pa.appointment.diagnosisAndTreatment
             }
           });
           this.dataSource.paginator = this.paginator;

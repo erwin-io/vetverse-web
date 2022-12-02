@@ -67,7 +67,7 @@
       "rescheduleAppointment": "appointment/rescheduleAppointment",
       "updateAppointmentStatus": "appointment/updateAppointmentStatus",
       "updateAppointmentConferencePeer": "appointment/updateAppointmentConferencePeer",
-      "updateAppointmentDiagnosiAndTreatment": "appointment/updateAppointmentDiagnosiAndTreatment"
+      "updateAppointmentDiagnosisAndTreatment": "appointment/updateAppointmentDiagnosisAndTreatment"
     },
     "payment": {
       "get": "payments",

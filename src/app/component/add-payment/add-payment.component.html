@@ -37,6 +37,22 @@
         <mat-option *ngFor="let item of paymentTypeLookup" [value]="item.paymentTypeId">{{item.name}}</mat-option>
       </mat-select>
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Reference number</mat-label>
+      <input
+        matInput
+        placeholder="Reference number"
+        [formControl]="referenceNo">
+        <mat-error
+        *ngIf="referenceNo.errors !== (null || undefined)"
+        >{{
+          referenceNo.errors &&
+          referenceNo.errors.required
+            ? "Please enter Reference number"
+            : ""
+        }}</mat-error>
+    </mat-form-field>
   </div>
 </div>
 

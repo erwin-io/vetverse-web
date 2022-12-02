@@ -20,7 +20,7 @@ export class Appointment {
   clientAppointment?: ClientAppointment
   petAppointment?: PetAppointment;
   conferencePeerId: string;
-  diagnosiAndTreatment: string;
+  diagnosisAndTreatment: string;
 }
 
 export class ConsultaionType {
@@ -47,6 +47,7 @@ export class Payment {
   paymentDate: string;
   isVoid: boolean;
   paymentType: PaymentType;
+  referenceNo: string;
 }
 
 export class PaymentType {

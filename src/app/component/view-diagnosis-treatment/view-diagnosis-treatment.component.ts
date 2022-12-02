@@ -16,8 +16,8 @@ import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.c
   styleUrls: ['./view-diagnosis-treatment.component.scss']
 })
 export class ViewDiagnosisTreatmentComponent implements OnInit {
-  data: { appointmentId: string; diagnosiAndTreatment: string };
-  diagnosiAndTreatmentForm: FormGroup;
+  data: { appointmentId: string; diagnosisAndTreatment: string };
+  diagnosisAndTreatmentForm: FormGroup;
   conFirm = new EventEmitter();
   isProcessing = false;
   isLoading = false;
@@ -30,8 +30,8 @@ export class ViewDiagnosisTreatmentComponent implements OnInit {
     private appointmentService: AppointmentService,
     private appconfig: AppConfigService,
     public dialogRef: MatDialogRef<ViewDiagnosisTreatmentComponent>) {
-      this.diagnosiAndTreatmentForm = this.formBuilder.group({
-        diagnosiAndTreatment: ['', Validators.required],
+      this.diagnosisAndTreatmentForm = this.formBuilder.group({
+        diagnosisAndTreatment: ['', Validators.required],
       });
       dialogRef.disableClose = true;
      }
@@ -39,18 +39,18 @@ export class ViewDiagnosisTreatmentComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  get f() { return this.diagnosiAndTreatmentForm.controls; }
+  get f() { return this.diagnosisAndTreatmentForm.controls; }
 
   get formData() {
-    return this.diagnosiAndTreatmentForm ? this.diagnosiAndTreatmentForm.value : {
+    return this.diagnosisAndTreatmentForm ? this.diagnosisAndTreatmentForm.value : {
       appointmentId: this.data.appointmentId,
-      diagnosiAndTreatment: this.diagnosiAndTreatmentForm.value.diagnosiAndTreatment,
+      diagnosisAndTreatment: this.diagnosisAndTreatmentForm.value.diagnosisAndTreatment,
     };
   }
 
 
   onSubmit(): void {
-    if (this.diagnosiAndTreatmentForm.valid) {
+    if (this.diagnosisAndTreatmentForm.valid) {
       const param = {
         ...this.formData,
         appointmentId: this.data.appointmentId,
@@ -80,7 +80,7 @@ export class ViewDiagnosisTreatmentComponent implements OnInit {
           console.log(param);
           try {
             await this.appointmentService
-              .updateAppointmentDiagnosiAndTreatment(param)
+              .updateAppointmentDiagnosisAndTreatment(param)
               .subscribe(
                 async (res) => {
                   if (res.success) {

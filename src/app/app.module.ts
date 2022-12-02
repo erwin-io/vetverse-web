@@ -34,6 +34,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { YearPickerDialogComponent } from './component/year-picker-dialog/year-picker-dialog.component';
 import { CalendarPickerDialogComponent } from './component/calendar-picker-dialog/calendar-picker-dialog.component';
+import { NumberLeadZeroPipePipe } from './core/pipe/number-lead-zero.pipe.pipe';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { CalendarPickerDialogComponent } from './component/calendar-picker-dialo
     ViewDiagnosisTreatmentComponent,
     YearPickerDialogComponent,
     CalendarPickerDialogComponent,
+    NumberLeadZeroPipePipe,
   ],
   imports: [
     BrowserModule,

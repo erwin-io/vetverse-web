@@ -77,6 +77,19 @@ export class ViewAppointmentComponent implements OnInit {
     this.initAllowedAction();
   }
 
+  get isVideoConferenceAvailable() {
+    if(this.isLoading) {
+      return false;
+    } else {
+      const today: any = new Date();
+      const appointmentDateStr = moment(`${this.appointment.appointmentDate} ${this.appointment.timeStart}`).format('YYYY-MM-DD h:mm a');
+      const date: any = new Date(appointmentDateStr);
+      const diffTime = today - date;
+      console.log(diffTime);
+      return diffTime > 0 ? true : Math.abs(diffTime) <= 600000;
+    }
+  }
+
   ngOnInit(): void {
     this.currentUserId = this.storageService.getLoginUser().userId;
     const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
@@ -213,6 +226,11 @@ export class ViewAppointmentComponent implements OnInit {
     if(!status.includes(appointmentStatusId)){
       return;
     }
+    const params = {
+      appointmentId: this.appointment.appointmentId,
+      appointmentStatusId: appointmentStatusId,
+      isUpdatedByClient: false
+    };
     const dialogData = new AlertDialogModel();
     if(appointmentStatusId === 2) {
       dialogData.title = 'Confirm Approve';
@@ -240,8 +258,6 @@ export class ViewAppointmentComponent implements OnInit {
       closeOnNavigation: true,
     });
 
-    const appointmentId = this.appointment.appointmentId;
-
     dialogRef.componentInstance.alertDialogConfig = dialogData;
     dialogRef.componentInstance.conFirm.subscribe(async (confirm: any) => {
       if(confirm) {
@@ -249,10 +265,7 @@ export class ViewAppointmentComponent implements OnInit {
         dialogRef.componentInstance.isProcessing = this.isProcessing;
         try {
           this.appointmentService
-            .updateAppointmentStatus({
-              appointmentId: appointmentId,
-              appointmentStatusId: appointmentStatusId,
-            })
+            .updateAppointmentStatus(params)
             .subscribe(
               async (res) => {
                 if (res.success) {
@@ -504,13 +517,13 @@ export class ViewAppointmentComponent implements OnInit {
     this.router.navigate(['/video-conference/' + this.appointment.appointmentId]);
   }
 
-  async viewDiagnosiAndTreatment(diagnosiAndTreatment) {
+  async viewDiagnosisAndTreatment(diagnosisAndTreatment) {
     const dialogRef = this.dialog.open(ViewDiagnosisTreatmentComponent, {
       closeOnNavigation: false,
       maxWidth: '500px',
       width: '500px',
     });
-    dialogRef.componentInstance.data = { appointmentId: this.appointment.appointmentId, diagnosiAndTreatment };
+    dialogRef.componentInstance.data = { appointmentId: this.appointment.appointmentId, diagnosisAndTreatment };
     dialogRef.afterClosed().subscribe(result => {
       this.initAppointment(this.appointment.appointmentId);
       dialogRef.close();

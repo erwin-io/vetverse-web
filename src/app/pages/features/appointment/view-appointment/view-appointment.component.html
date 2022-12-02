@@ -47,8 +47,9 @@
                 <h4 class="action-header-text">Payments</h4>
                 <p class="action-header-text">Status: <strong [ngStyle]="{ 'color' : appointment.isPaid ? '#00BFA5;': '#f44336;' }">{{appointment.isPaid ? 'Paid' : 'Unpaid'}}</strong></p>
                 <p *ngIf="appointment.isPaid && appointment.payments.length > 0" class="action-header-text">Payment type: <strong>{{ appointment.payments[0].paymentType.name }}</strong></p>
-                <p class="action-header-text">Amount to pay: <strong>₱{{appointment.isPaid ? 0 : appointment.serviceType.price}}</strong></p>
-                <p class="action-header-text">Total payment: <strong>₱{{appointment.isPaid ? appointment.serviceType.price : 0}}</strong></p>
+                <p class="action-header-text">Amount to pay: <strong>₱{{appointment.isPaid ? 0 : appointment.serviceRate}}</strong></p>
+                <p class="action-header-text">Total payment: <strong>₱{{appointment.isPaid ? appointment.serviceRate : 0}}</strong></p>
+                <p class="action-header-text" *ngIf="appointment.isPaid">Reference Number: <strong>{{payment.referenceNo}}</strong></p>
                 <ul fxLayout="column" class="action-menu">
                   <li>
                     <button mat-flat-button [disabled]="appointment.appointmentStatus.appointmentStatusId === '4'" color="primary" *ngIf="!appointment.isPaid && !payment" (click)="pay()">
@@ -250,7 +251,7 @@
                 <!-- Comments -->
                 <mat-list *ngIf="!isLoading; else elseLoadinguLoadingComments">
                   <mat-list-item>
-                    <mat-icon mat-list-icon>message</mat-icon>
+                    <mat-icon mat-list-icon>comment</mat-icon>
                     <div mat-line><strong>Comments</strong></div>
                     <div mat-line>{{ appointment.comments }}</div>
                   </mat-list-item>
@@ -274,16 +275,16 @@
                 </ng-template>
                 <!-- end -->
                 <!-- Diagnosi And Treatment -->
-                <mat-list *ngIf="!isLoading; else elseDiagnosiAndTreatment">
-                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewDiagnosiAndTreatment(appointment.diagnosiAndTreatment)">
-                    <mat-icon mat-list-icon>library_books</mat-icon>
+                <mat-list *ngIf="!isLoading; else elseDiagnosisAndTreatment">
+                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewDiagnosisAndTreatment(appointment.diagnosisAndTreatment)">
+                    <mat-icon mat-list-icon>receipt</mat-icon>
                     <div mat-line><strong>Diagnosis And Treatment</strong></div>
-                    <div mat-line>{{ appointment.diagnosiAndTreatment }}</div>
+                    <div mat-line>{{ appointment.diagnosisAndTreatment }}</div>
                   </mat-list-item>
                 </mat-list>
-                <ng-template #elseDiagnosiAndTreatment>
+                <ng-template #elseDiagnosisAndTreatment>
                   <mat-list-item>
-                    <mat-icon mat-list-icon>library_books</mat-icon>
+                    <mat-icon mat-list-icon>receipt</mat-icon>
                     <div mat-line>
                       <ngx-skeleton-loader
                         fxFlex
@@ -385,10 +386,10 @@
     </div>
 
   </mat-tab>
-  <mat-tab label="Conference" *ngIf="isLoading ? false : appointment.consultaionType.consultaionTypeId === '2'">
-    <div class="page-view-container conference" fxLayout="column">
-      <div class="conference-action-header">
-        <button mat-raised-button color="primary" [disabled]="loadingMessage" (click)="startVideoConference()">
+  <mat-tab label="Connect with client" *ngIf="isLoading ? false : appointment.consultaionType.consultaionTypeId === '2'">
+    <div class="page-view-container connect" fxLayout="column">
+      <div class="connect-action-header">
+        <button mat-raised-button color="primary" [disabled]="loadingMessage | isVideoConferenceAvailable" (click)="startVideoConference()">
           <mat-icon>videocam</mat-icon>
           Start video conference
         </button>

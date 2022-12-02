@@ -18,6 +18,7 @@ export class AddPaymentComponent  implements OnInit {
   data: { newAppointment?: boolean,appointmentId?:string,paymentDate:Date };
   paymentDate: FormControl = new FormControl();
   paymentTypeId: FormControl = new FormControl();
+  referenceNo: FormControl = new FormControl();
   defaultValue: Date;
   isProcessing = false;
   appointmentTime;
@@ -36,6 +37,7 @@ export class AddPaymentComponent  implements OnInit {
     dialogRef.disableClose = true;
     this.paymentDate.addValidators([Validators.required]);
     this.paymentTypeId.addValidators([Validators.required]);
+    this.referenceNo.addValidators([Validators.required]);
     console.log(this.appconfig.config.lookup.paymentType);
     this.paymentTypeLookup = <any[]>this.appconfig.config.lookup.paymentType;
   }
@@ -48,12 +50,16 @@ export class AddPaymentComponent  implements OnInit {
       appointmentId: this.data.appointmentId,
       paymentDate: this.paymentDate.value,
       paymentTypeId: this.paymentTypeId.value,
+      referenceNo: this.referenceNo.value,
     }
   }
 
   get formValid() {
     return (
-      this.paymentDate.valid && this.paymentTypeId.valid && (this.data.newAppointment ? true : this.data.appointmentId !== undefined)
+      this.paymentDate.valid &&
+      this.paymentTypeId.valid &&
+      this.referenceNo.valid &&
+      (this.data.newAppointment ? true : this.data.appointmentId !== undefined)
     );
   }
 

@@ -64,14 +64,14 @@ app-view-appointment {
                 }
               }
             }
-            &.conference {
+            &.connect {
               height: 100%;
               flex-direction: row;
               display: flex;
               flex-grow: 1;
               overflow: hidden;
               margin-bottom: 90px !important;
-              .conference-action-header {
+              .connect-action-header {
                 display: flex;
                 width: 100%;
                 flex-grow: 1;
