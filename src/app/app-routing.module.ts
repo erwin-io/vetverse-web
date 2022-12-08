@@ -2,11 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from './core/guard/auth.guard';
+import { ProfileComponent } from './pages/profile/profile.component';
 import { FeaturesComponent } from './pages/features/features.component';
 
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+    { path: 'profile', pathMatch: 'full', redirectTo: 'profile/edit-profile' },
     { path: '',
       component: FeaturesComponent,
       canActivate: [AuthGuard],
@@ -18,9 +20,14 @@ const routes: Routes = [
         { path: 'security', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/security/security.module').then(m => m.SecurityModule) },
       ]
     },
-    { path: 'account',
-      loadChildren:  () => import('./pages/accounts/accounts.module').then( m => m.AccountsModule) ,
-      canActivate: [AuthGuard]
+    { path: 'profile',
+      component: ProfileComponent,
+      canActivate: [AuthGuard],
+      children: [
+        { path: 'edit-profile', canActivate: [AuthGuard], loadChildren: () => import('./pages/profile/edit-profile-details/edit-profile-details.module').then(m => m.EditProfileDetailsModule) },
+        { path: 'edit-profile-picture', canActivate: [AuthGuard], loadChildren: () => import('./pages/profile/edit-profile-picture/edit-profile-picture.module').then(m => m.EditProfilePictureModule) },
+        { path: 'password-and-security', canActivate: [AuthGuard], loadChildren: () => import('./pages/profile/password-and-security/password-and-security.module').then(m => m.PasswordAndSecurityModule) },
+      ]
     },
     { path: 'auth',
       loadChildren: () => import('./pages/auth/auth.module').then( m => m.AuthModule)

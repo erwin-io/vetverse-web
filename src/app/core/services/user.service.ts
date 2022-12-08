@@ -65,7 +65,7 @@ export class UserService implements IServices {
     );
   }
 
-  getById(userId: string): Observable<any> {
+  getById(userId: string): Observable<ApiResponse<any>> {
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getById + userId)
     .pipe(
       tap(_ => this.log('user')),
@@ -107,6 +107,14 @@ export class UserService implements IServices {
 
   toggleEnable(data: any): Observable<ApiResponse<Staff>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.toggleEnable, data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
+  changePassword(data: any): Observable<ApiResponse<Staff>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.changePassword, data)
     .pipe(
       tap(_ => this.log('user')),
       catchError(this.handleError('user', []))

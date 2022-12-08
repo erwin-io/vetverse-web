@@ -35,12 +35,14 @@ import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-trea
 import { YearPickerDialogComponent } from './component/year-picker-dialog/year-picker-dialog.component';
 import { CalendarPickerDialogComponent } from './component/calendar-picker-dialog/calendar-picker-dialog.component';
 import { NumberLeadZeroPipePipe } from './core/pipe/number-lead-zero.pipe.pipe';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuListItemComponent,
     FeaturesComponent,
+    ProfileComponent,
     FormFieldErrorComponent,
     SnackbarComponent,
     AlertDialogComponent,

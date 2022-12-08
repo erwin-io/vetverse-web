@@ -3,6 +3,26 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>VetVerse Application</span>
+  <span class="example-spacer"></span>
+  <button mat-button class="user-profile" [matMenuTriggerFor]="popOver" >
+    <img src="https://scontent.fceb1-1.fna.fbcdn.net/v/t39.30808-1/311590673_3123718137939593_8858025194330185411_n.jpg?stp=dst-jpg_p160x160&_nc_cat=107&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=A69GF5i4L_0AX8lPgis&_nc_ht=scontent.fceb1-1.fna&oh=00_AfBUHsH7-bhG-N62v-nGgOvRBzP022IAEG8_RIcKLAcXQA&oe=63971582"/>
+    <span>User</span>
+  </button>
+  <mat-menu #popOver="matMenu" class="user-profile-popover-panel">
+    <div mat-menu-item [disableRipple]="true" class="user-profile-popover-content" (click)="$event.stopPropagation()">
+      <div class="avatar">
+        <img src="https://scontent.fceb1-1.fna.fbcdn.net/v/t39.30808-1/311590673_3123718137939593_8858025194330185411_n.jpg?stp=dst-jpg_p160x160&_nc_cat=107&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=A69GF5i4L_0AX8lPgis&_nc_ht=scontent.fceb1-1.fna&oh=00_AfBUHsH7-bhG-N62v-nGgOvRBzP022IAEG8_RIcKLAcXQA&oe=63971582"/>
+      </div>
+      <div class="info">
+        <p><span class="name">{{currentUser.fullName}}</span></p>
+        <p><span class="username">@{{currentUser.username}}</span></p>
+        <p><i class="role">{{currentUser.role.name}}</i></p>
+      </div>
+    </div>
+    <div mat-menu-item [disableRipple]="true" class="user-profile-popover-content" (click)="$event.stopPropagation()">
+      <button mat-stroked-button routerLink="profile">Manage Profile</button>
+    </div>
+  </mat-menu>
 </mat-toolbar>
 <mat-sidenav-container>
   <mat-sidenav #sidenav mode="side" [opened]="opened" [mode]="!opened ? 'over': 'side'">

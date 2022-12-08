@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { PasswordAndSecurityComponent } from './password-and-security.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../material/material.module';
-import { EditProfileComponent } from './edit-profile.component';
-
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from 'src/app/material/material.module';
 
 export const routes = [
-  { path: '', component: EditProfileComponent }
+  { path: '', component: PasswordAndSecurityComponent }
 ];
-
 
 @NgModule({
   declarations: [
-    EditProfileComponent
+    PasswordAndSecurityComponent
   ],
   imports: [
     CommonModule,
@@ -25,4 +23,4 @@ export const routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class EditProfileModule { }
+export class PasswordAndSecurityModule { }

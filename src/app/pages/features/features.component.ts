@@ -9,6 +9,7 @@ import { AlertDialogComponent } from '../../../app/shared/alert-dialog/alert-dia
 import { AlertDialogModel } from '../../../app/shared/alert-dialog/alert-dialog-model';
 import { NavItem } from 'src/app/core/model/nav-item';
 import { menu } from 'src/app/core/model/menu';
+import { LoginResult } from 'src/app/core/model/loginresult.model';
 
 @Component({
   selector: 'app-features',
@@ -16,7 +17,7 @@ import { menu } from 'src/app/core/model/menu';
   styleUrls: ['./features.component.scss']
 })
 export class FeaturesComponent implements OnDestroy {
-
+  currentUser: LoginResult = {} as LoginResult;
     opened: boolean = true;
     mediaWatcher: Subscription;
     menu: NavItem[] = [];
@@ -35,6 +36,7 @@ export class FeaturesComponent implements OnDestroy {
       private dialog: MatDialog,
       public router: Router,
       private storageService: StorageService) {
+        this.currentUser = this.storageService.getLoginUser();
         this.initMenu();
         this.mediaWatcher = this.media.asObservable().subscribe((change) => {
           change.forEach(() => {
@@ -46,15 +48,15 @@ export class FeaturesComponent implements OnDestroy {
     }
 
     initMenu(){
-      const user = this.storageService.getLoginUser();
-      if(!user || !user.role){
+      this.currentUser = this.storageService.getLoginUser();
+      if(!this.currentUser || !this.currentUser.role){
         this.authService.logout();
         this.storageService.saveAccessToken(null);
         this.storageService.saveRefreshToken(null);
         this.storageService.saveLoginUser(null);
         this.router.navigate(['auth/login'], { replaceUrl: true });
       }
-      const access = user.role.access;
+      const access = this.currentUser.role.access;
       const pageAccess =  access !== null && access !== undefined && access !== "" ? access.split(",") : [];
       menu.forEach((element:NavItem) => {
         if(element.isParent && element.children.length > 0) {

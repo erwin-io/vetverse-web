@@ -4,24 +4,27 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../material/material.module';
-import { ChangeUsernameComponent } from './change-username.component';
+import { EditProfileDetailsComponent } from './edit-profile-details.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
 
 export const routes = [
-  { path: '', component: ChangeUsernameComponent }
+  { path: '', component: EditProfileDetailsComponent }
 ];
 
 
 @NgModule({
   declarations: [
-    ChangeUsernameComponent
+    EditProfileDetailsComponent
   ],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    MaterialModule,
+    NgxSkeletonLoaderModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
     RouterModule.forChild(routes)
   ]
 })
-export class ChangeUsernameModule { }
+export class EditProfileDetailsModule { }

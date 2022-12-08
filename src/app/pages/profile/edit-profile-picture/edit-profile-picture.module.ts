@@ -1,19 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../material/material.module';
-import { ChangePasswordComponent } from './change-password.component';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from 'src/app/material/material.module';
+import { EditProfilePictureComponent } from './edit-profile-picture.component';
 
 export const routes = [
-  { path: '', component: ChangePasswordComponent }
+  { path: '', component: EditProfilePictureComponent }
 ];
-
 
 @NgModule({
   declarations: [
-    ChangePasswordComponent
+    EditProfilePictureComponent
   ],
   imports: [
     CommonModule,
@@ -24,4 +23,4 @@ export const routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class ChangePasswordModule { }
+export class EditProfilePictureModule { }

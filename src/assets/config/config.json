@@ -51,7 +51,8 @@
       "udpdateClient": "users/client",
       "udpdateStaff": "users/staff",
       "toggleEnable": "users/toggleEnable",
-      "udpdatePassword": "users/udpdatePassword"
+      "udpdatePassword": "users/udpdatePassword",
+      "changePassword": "users/changePassword"
     },
     "role": "roles/",
     "serviceType": "service-type/",
