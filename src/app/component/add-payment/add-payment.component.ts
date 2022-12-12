@@ -34,10 +34,16 @@ export class AddPaymentComponent  implements OnInit {
     private appconfig: AppConfigService,
     public dialogRef: MatDialogRef<AddPaymentComponent>
   ) {
+    this.paymentTypeId.valueChanges.subscribe(async (selectedValue: string) => {
+      if(selectedValue === '2') {
+        this.referenceNo = new FormControl('', [Validators.required]);
+      } else {
+        this.referenceNo = new FormControl('');
+      }
+    });
     dialogRef.disableClose = true;
     this.paymentDate.addValidators([Validators.required]);
     this.paymentTypeId.addValidators([Validators.required]);
-    this.referenceNo.addValidators([Validators.required]);
     console.log(this.appconfig.config.lookup.paymentType);
     this.paymentTypeLookup = <any[]>this.appconfig.config.lookup.paymentType;
   }

@@ -134,7 +134,7 @@ export class UsersComponent implements OnInit {
           userId: this.userIdCtrl.value,
           roles: this.selectedRoles.toString(),
           email: this.emailCtrl.value,
-          mobileNumber: Number(this.mobileNumberCtrl.value),
+          mobileNumber: this.mobileNumberCtrl.value,
           name: this.nameCtrl.value,
         })
         .subscribe(async res => {

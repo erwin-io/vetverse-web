@@ -22,7 +22,7 @@ export class UserService implements IServices {
     userId: string,
     roles: string,
     email: string,
-    mobileNumber: number,
+    mobileNumber: string,
     name: string,
   }): Observable<ApiResponse<Staff[]>> {
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.getStaffByAdvanceSearch,

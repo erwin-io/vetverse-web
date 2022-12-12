@@ -49,7 +49,7 @@ export class SelectPeopleComponent implements OnInit {
         keyword: '',
         userId: '',
         email: '',
-        mobileNumber: 0,
+        mobileNumber: '',
         name: '',
         roles: 'Veterinarian'
       })
