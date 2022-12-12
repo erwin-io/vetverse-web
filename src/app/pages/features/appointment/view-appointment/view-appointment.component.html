@@ -386,10 +386,10 @@
     </div>
 
   </mat-tab>
-  <mat-tab label="Connect with client" *ngIf="isLoading ? false : appointment.consultaionType.consultaionTypeId === '2'">
+  <mat-tab label="Connect with client" *ngIf="isLoading ? false : appointment.consultaionType.consultaionTypeId === '2'" [disabled]="!allowedAction.connect">
     <div class="page-view-container connect" fxLayout="column">
       <div class="connect-action-header">
-        <button mat-raised-button color="primary" [disabled]="loadingMessage | isVideoConferenceAvailable" (click)="startVideoConference()">
+        <button mat-raised-button color="primary" [disabled]="loadingMessage || isVideoConferenceAvailable" (click)="startVideoConference()">
           <mat-icon>videocam</mat-icon>
           Start video conference
         </button>

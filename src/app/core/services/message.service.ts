@@ -4,13 +4,16 @@ import { Observable, tap, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ApiResponse } from '../model/api-response.model';
 import { Messages } from '../model/messages.model';
+import { CustomSocket } from '../sockets/custom-socket.sockets';
 import { AppConfigService } from './app-config.service';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
-  constructor(private http: HttpClient, private appconfig: AppConfigService) { }
+  constructor(private http: HttpClient, private appconfig: AppConfigService) {
+   }
 
   getByAppointmentPage(params): Observable<ApiResponse<{ items: Messages[];meta: { totalItems: number;currentPage: number;itemCount: number;}}>> {
     return this.http.get<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.message.findByAppointmentPage,

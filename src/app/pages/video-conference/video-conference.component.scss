@@ -45,19 +45,33 @@ app-video-conference {
       color: #ffffff!important;
       background-color: #616161!important;
     }
+    @media only screen and (max-width: 768px) {
+      height: auto!important;
+      padding: 10px!important;
+    }
   }
   .local-video-holder {
     display: flex;
     position: absolute;
     right: 0px;
     bottom: 0px;
-    min-width: 200px;
+    min-width: 100px!important;
     width: 200px;
     height: auto;
     padding: 20px;
     flex-direction: column;
     video {
       display: flex;
+    }
+    @media only screen and (max-width: 768px) {
+      width: 100px!important;
+      height: 150px!important;
+      bottom: 76px!important;
+      padding: 10px!important;
+      video {
+        object-fit: cover!important;
+        flex-grow: 1!important;
+      }
     }
   }
   video {

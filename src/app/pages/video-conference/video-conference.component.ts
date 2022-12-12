@@ -58,6 +58,7 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   async askPermission() {
     const status = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    console.log(status);
   }
 
   ngOnInit(): void {

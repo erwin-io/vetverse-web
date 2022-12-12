@@ -36,6 +36,8 @@ import { YearPickerDialogComponent } from './component/year-picker-dialog/year-p
 import { CalendarPickerDialogComponent } from './component/calendar-picker-dialog/calendar-picker-dialog.component';
 import { NumberLeadZeroPipePipe } from './core/pipe/number-lead-zero.pipe.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [

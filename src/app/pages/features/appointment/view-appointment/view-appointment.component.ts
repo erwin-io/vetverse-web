@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Subscription } from 'rxjs';
@@ -18,6 +19,7 @@ import { AppointmentService } from 'src/app/core/services/appointment.service';
 import { MessageService } from 'src/app/core/services/message.service';
 import { PaymentService } from 'src/app/core/services/payment.service';
 import { ServiceTypeService } from 'src/app/core/services/service-type.service';
+import { CustomSocket } from 'src/app/core/sockets/custom-socket.sockets';
 import { StorageService } from 'src/app/core/storage/storage.service';
 import { Snackbar } from 'src/app/core/ui/snackbar';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
@@ -47,6 +49,7 @@ export class ViewAppointmentComponent implements OnInit {
     complete: false,
     cancelation: false,
     reschedule: false,
+    connect: false,
   };
   appointmentAction = {
     add: false,
@@ -60,7 +63,8 @@ export class ViewAppointmentComponent implements OnInit {
   currentMessagePage = 0;
   loadingMessage = false;
   isSendingMessage = false;
-
+  connect = false;
+  tabIndex = 1;
 
   constructor(
     private route: ActivatedRoute,
@@ -72,9 +76,14 @@ export class ViewAppointmentComponent implements OnInit {
     private dialog: MatDialog,
     private appconfig: AppConfigService,
     public router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private socket: CustomSocket,
   ) {
     this.initAllowedAction();
+  }
+
+  get getSelectedIndex() {
+    return this.connect ? 1 : 0;
   }
 
   get isVideoConferenceAvailable() {
@@ -85,7 +94,6 @@ export class ViewAppointmentComponent implements OnInit {
       const appointmentDateStr = moment(`${this.appointment.appointmentDate} ${this.appointment.timeStart}`).format('YYYY-MM-DD h:mm a');
       const date: any = new Date(appointmentDateStr);
       const diffTime = today - date;
-      console.log(diffTime);
       return diffTime > 0 ? true : Math.abs(diffTime) <= 600000;
     }
   }
@@ -95,6 +103,11 @@ export class ViewAppointmentComponent implements OnInit {
     const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
     this.initAppointment(appointmentId);
 
+    this.socket.fromEvent('messageAdded').subscribe((message) => {
+      const newMessages: Messages[] = [];
+      newMessages.push(message as Messages);
+      this.messages = [ ...newMessages, ...this.messages ];
+    });
   }
 
   initAllowedAction() {
@@ -142,6 +155,9 @@ export class ViewAppointmentComponent implements OnInit {
           this.roleEnum.FRONTDESK.toString() ||
         this.storageService.getLoginUser().role.roleId ===
           this.roleEnum.MANAGER.toString();
+      this.allowedAction.connect =
+        this.storageService.getLoginUser().role.roleId ===
+          this.roleEnum.VET.toString();
   }
 
   initAppointmentAction() {
@@ -467,6 +483,26 @@ export class ViewAppointmentComponent implements OnInit {
     this.currentMessagePage = this.currentMessagePage + 1;
     this.initMessages(this.appointment.appointmentId)
   }
+  // async sendMessage(messageInput) {
+  //   const message = messageInput.value;
+  //   const param: any = {
+  //     message,
+  //     isClient: false,
+  //     appointmentId: this.appointment.appointmentId,
+  //     fromUserId: this.currentUserId,
+  //     toUserId: this.appointment.clientAppointment.client.user.userId,
+  //   };
+  //   this.isSendingMessage = true;
+  //   this.socket.emit('addMessage', param);
+  //   const newMessage: Messages [] = [];
+  //   newMessage.push({
+  //     message,
+  //     fromUser: { userId: param.fromUserId },
+  //     isClient: false,
+  //     });
+  //   this.messages = [...newMessage,...this.messages];
+  //   messageInput.value = null;
+  // }
 
   async sendMessage(messageInput) {
     const message = messageInput.value;

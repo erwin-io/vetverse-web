@@ -72,6 +72,10 @@ export class CreateAppointmentComponent implements OnInit {
     cancelation: false,
     reschedule: false,
   };
+
+  availableTimeSlot = [];
+
+
   constructor(
     private route: ActivatedRoute,
     private storageService: StorageService,
@@ -99,6 +103,11 @@ export class CreateAppointmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.appointmentDate.valueChanges.subscribe(async (selectedValue) => {
+      const durationInHours = this.serviceType?.value &&
+       this.serviceType?.value !== undefined ? this.serviceType?.value.durationInHours : 1;
+      this.getAppointmentsForADay(moment(selectedValue).format('YYYY-MM-DD'), this.timeSlotOptions(Number(durationInHours)))
+    })
   }
 
   initFilter(){
@@ -270,6 +279,78 @@ export class CreateAppointmentComponent implements OnInit {
     }
   }
 
+  toMinutes = str => str.split(':').reduce((h, m) => h * 60 + +m);
+
+  toString = min => (Math.floor(min / 60) + ':' + (min % 60))
+                         .replace(/\b\d\b/, '0$&');
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  timeSlotOptions(hours = 1) {
+    const notAvailableHours = this.appconfig.config.appointmentConfig.timeSlotNotAvailableHours;
+    const start = this.toMinutes(this.appconfig.config.appointmentConfig.timeSlotHours.start);
+    const end = this.toMinutes(this.appconfig.config.appointmentConfig.timeSlotHours.end);
+    const slotOptions = Array.from({length: Math.floor((end - start) / (60 * Number(hours))) + 1}, (_, i) =>
+    this.toString(start + i * (60 * Number(hours))));
+    return slotOptions.filter(x=> !notAvailableHours.includes(x));
+  }
+
+  tConvert(time) {
+    if(time.toLowerCase().includes('invalid date')) {return;};
+    time = time.split(':')[1].charAt(1) ? time : time + '0';
+    // Check correct time format and split into components
+    time = time.toString().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) { // If time format correct
+      time = time.slice (1);  // Remove full string match value
+      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
+  }
+
+  async getAppointmentsForADay(dateString: string, timeSlotOptions: string[]) {
+    try{
+      this.isLoading = true;
+      await this.appointmentService.getAppointmentsForADay(dateString)
+      .subscribe(async res => {
+        if(res.success){
+          const hSlotTaken = res.data.map((a)=> {
+            const appointmentTimeStart = moment(`${a.appointmentDate} ${a.timeStart}`).format('HH');
+            const appointmentTimeEnd = moment(`${a.appointmentDate} ${a.timeEnd}`).format('HH');
+            return {
+              appointmentTimeStart,
+              appointmentTimeEnd
+            };
+          });
+
+          this.availableTimeSlot = timeSlotOptions.map((t)=> {
+            const h = t.split(':')[0];
+            if(hSlotTaken
+            .filter(x=> Number(h) >= Number(x.appointmentTimeStart) && Number(h) < Number(x.appointmentTimeEnd)).length <= 0) {
+              return t;
+            }else {
+              return null;
+            }
+          }).filter(x=>x !== null && x !== undefined && x !== '');
+          console.log(this.availableTimeSlot);
+          this.isLoading = false;
+        }
+        else{
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+          this.snackBar.snackbarError(this.error);
+          this.isLoading = false;
+        }
+      }, async (e) => {
+        this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+        this.snackBar.snackbarError(this.error);
+        this.isLoading = false;
+      });
+    }
+    catch(e){
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+    }
+  }
 
   async pay() {
     const dialogRef = this.dialog.open(AddPaymentComponent, {

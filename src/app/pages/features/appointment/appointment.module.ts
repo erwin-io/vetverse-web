@@ -22,6 +22,13 @@ export const routes: Routes = [
     component: ViewAppointmentComponent
   },
   {
+    path: 'details/:appointmentId/connect',
+    component: ViewAppointmentComponent,
+    data: {
+      connect:true
+    }
+  },
+  {
     path: 'create',
     component: CreateAppointmentComponent
   },
