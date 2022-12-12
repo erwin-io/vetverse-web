@@ -78,7 +78,7 @@ export class AddPetComponent implements OnInit {
       () => {
         if(!this.isNew){
           this.f['name'].setValue(this.data.name);
-          this.f['birthDate'].setValue(this.data.birthDate);
+          this.f['birthDate'].setValue(new Date(this.data.birthDate));
           this.f['weight'].setValue(this.data.weight);
           this.f['petType'].setValue(this.petTypeLookup.filter(x=>x.petTypeId === this.data.petCategory.petType.petTypeId)[0]);
           this.f['petCategory'].setValue(this.petCategoryLookup.filter(x=>x.petCategoryId === this.data.petCategory.petCategoryId)[0]);
@@ -93,6 +93,8 @@ export class AddPetComponent implements OnInit {
   get isNew(){ return !this.data || !this.data.petId || this.data.petId === "" }
 
   get formData() {
+    console.log(this.petForm);
+    console.log(this.f);
     return this.fromNewClient ? this.petForm.value : {
       name: this.petForm.value.name,
       birthDate: this.petForm.value.birthDate,
