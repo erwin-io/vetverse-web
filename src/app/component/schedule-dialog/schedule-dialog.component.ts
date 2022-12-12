@@ -59,7 +59,6 @@ export class ScheduleDialogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.appointmentDate.value);
     if (this.formValid) {
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Save';
@@ -90,7 +89,6 @@ export class ScheduleDialogComponent implements OnInit {
             ),
             time: moment(this.time).format('hh:mm'),
           };
-          console.log(param);
           try {
             await this.appointmentService
               .rescheduleAppointment(param)

@@ -77,7 +77,6 @@ export class ViewDiagnosisTreatmentComponent implements OnInit {
         if (confirmed) {
           this.isProcessing = true;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
-          console.log(param);
           try {
             await this.appointmentService
               .updateAppointmentDiagnosisAndTreatment(param)

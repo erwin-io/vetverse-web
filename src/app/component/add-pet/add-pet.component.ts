@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import * as moment from 'moment';
 import { forkJoin, startWith, map } from 'rxjs';
 import { Pet, PetCategory, PetType, ServiceType } from 'src/app/core/model/appointment.model';
 import { Gender } from 'src/app/core/model/gender.model';
@@ -32,6 +33,7 @@ export class AddPetComponent implements OnInit {
   petTypeLookup: PetType[]=[];
   petCategoryLookup: PetCategory[]=[];
   genderLookup: Gender[]=[{ genderId: "1", name: "Male" },{ genderId: "2", name: "Female" }];
+  maxDate = moment(new Date().toString()).format("YYYY-MM-DD");
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
@@ -83,7 +85,6 @@ export class AddPetComponent implements OnInit {
           this.f['petType'].setValue(this.petTypeLookup.filter(x=>x.petTypeId === this.data.petCategory.petType.petTypeId)[0]);
           this.f['petCategory'].setValue(this.petCategoryLookup.filter(x=>x.petCategoryId === this.data.petCategory.petCategoryId)[0]);
           this.f['gender'].setValue(this.genderLookup.filter(x=>x.genderId === this.data.gender.genderId)[0]);
-          console.log(this.formData);
         }
         this.isLoading = false;
       }
@@ -93,8 +94,6 @@ export class AddPetComponent implements OnInit {
   get isNew(){ return !this.data || !this.data.petId || this.data.petId === "" }
 
   get formData() {
-    console.log(this.petForm);
-    console.log(this.f);
     return this.fromNewClient ? this.petForm.value : {
       name: this.petForm.value.name,
       birthDate: this.petForm.value.birthDate,
@@ -120,7 +119,6 @@ export class AddPetComponent implements OnInit {
       if(this.isNew && !this.fromNewClient){
         param.clientId = this.data.client.clientId;
       }
-      console.log(param);
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Confirm';
       if(this.isNew){

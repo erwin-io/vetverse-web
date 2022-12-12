@@ -44,7 +44,6 @@ export class AddPaymentComponent  implements OnInit {
     dialogRef.disableClose = true;
     this.paymentDate.addValidators([Validators.required]);
     this.paymentTypeId.addValidators([Validators.required]);
-    console.log(this.appconfig.config.lookup.paymentType);
     this.paymentTypeLookup = <any[]>this.appconfig.config.lookup.paymentType;
   }
   ngOnInit(): void {
@@ -72,7 +71,6 @@ export class AddPaymentComponent  implements OnInit {
   onSubmit(): void {
     const param = this.formData;
     param.paymentDate = moment(param.paymentDate).format('YYYY-MM-DD');
-    console.log(param);
     if (this.formValid) {
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Confirm payment';

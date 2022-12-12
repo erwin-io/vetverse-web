@@ -19,6 +19,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { Pet } from 'src/app/core/model/appointment.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { AddPetComponent } from 'src/app/component/add-pet/add-pet.component';
+import * as moment from 'moment';
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
@@ -40,6 +41,7 @@ export class AddUserComponent implements OnInit {
   petsDataSource = new MatTableDataSource<Pet>();
   petsAdded: Pet[] = [];
   @ViewChild('roleInput', {static:false}) roleInput: ElementRef<HTMLInputElement>;
+  maxDate = moment(new Date().getFullYear() - 18).format("YYYY-MM-DD");
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,6 +52,7 @@ export class AddUserComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private snackBar: Snackbar) {
+      console.log(this.maxDate);
       if (this.router.url.indexOf('staff') > -1) {
         this.userTypeId = 1;
       }

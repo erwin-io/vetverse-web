@@ -36,8 +36,6 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
       this.appointmentId = this.route.snapshot.paramMap.get('appointmentId');
       const isClient = this.route.snapshot.data['isClient'];
       this.isClient = isClient && isClient !== undefined ? true : false
-      console.log('this.route.snapshot ', this.route.snapshot);
-      console.log('this.isClient ', this.isClient);
       if(!this.isClient) {
         this.peerId = this.callService.initPeer();
         this.setConferencePeer(this.peerId);
@@ -58,7 +56,6 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
 
   async askPermission() {
     const status = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    console.log(status);
   }
 
   ngOnInit(): void {
@@ -82,7 +79,6 @@ export class VideoConferenceComponent implements OnInit, OnDestroy {
       this.appointmentService.getAppointmentConferencePeer(appointmentId).subscribe(
         (res) => {
           if (res.success) {
-            console.log(res.data);
             this.peerId = res.data;
             this.callService.establishMediaCall(this.peerId);
           } else {
