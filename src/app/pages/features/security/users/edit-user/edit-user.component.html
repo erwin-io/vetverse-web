@@ -51,7 +51,7 @@
                 </mat-form-field>
               </div>
               <div fxFlex="100" fxLayout="column" fxLayout.gt-sm="row">
-                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}"  *ngIf="!isLoading && this.userData.user.userType.userTypeId === '2'; else elseLoadingGridCol3;" (click)="picker.open()">
+                <mat-form-field appearance="outline" fxFlex="33.33%" class="cell" [ngClass.gt-sm]="{'isLargeScreen': true}" *ngIf="!isLoading && userData.user.userType.userTypeId === '2' ? elseLoadingGridCol3 : null" (click)="picker.open()">
                   <mat-label>Birthdate</mat-label>
                   <input
                     matInput
