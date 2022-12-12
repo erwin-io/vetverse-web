@@ -1,5 +1,5 @@
 import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Snackbar } from '../../../../../../app/core/ui/snackbar';
 import { MyErrorStateMatcher } from '../../../../../core/form-validation/error-state.matcher';
@@ -76,17 +76,18 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
         this.router.navigate(['/security/users/']);
       }
       this.userForm = this.formBuilder.group({
-        firstName: ['', Validators.required],
-        middleName: [],
-        lastName: ['', Validators.required],
-        genderId: ['', Validators.required],
-        email: ['',
+        firstName: new FormControl('', [Validators.required]),
+        middleName: new FormControl(''),
+        lastName: new FormControl('', [Validators.required]),
+        genderId: new FormControl('', [Validators.required]),
+        birthDate: new FormControl(''),
+        email: new FormControl('',
         Validators.compose(
-            [Validators.email, Validators.required])],
+            [Validators.email, Validators.required])),
         mobileNumber: ['',
             [Validators.minLength(11),Validators.maxLength(11), Validators.pattern("^[0-9]*$"), Validators.required]],
         address: ['', Validators.required],
-        roleId : ['', Validators.required],
+        roleId : [''],
       });
       this.initUser(userId);
   }
@@ -110,9 +111,13 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
           this.isLoading = false;
           this.isProcessing = false;
           if(res.data.user.userType.userTypeId === '1'){
+            this.userForm.controls['roleId'] = new FormControl(res.data.user.role.roleId, [Validators.required]);
+            this.userForm.controls['birthDate'] = new FormControl('');
             this.initRoles();
           }
           else if(res.data.user.userType.userTypeId === '2'){
+            this.userForm.controls['birthDate'] = new FormControl(new Date(res.data.birthDate), [Validators.required]);
+            this.userForm.controls['roleId'] = new FormControl('');
             this.getPets(res.data.clientId);
           }
         } else {
@@ -362,28 +367,53 @@ export class EditUserComponent implements OnInit, AfterViewChecked  {
       try{
         this.isProcessing = true;
         const userData = this.formData;
-        await this.userService.udpdateStaff(userData)
-          .subscribe(async res => {
-            if (res.success) {
-              this.snackBar.snackbarSuccess('Saved!');
-              this.router.navigate(['/security/users/details/' + res.data.user.userId]);
+        if(Number(this.userData.user.userType.userTypeId) === 1) {
+          await this.userService.udpdateStaff(userData)
+            .subscribe(async res => {
+              if (res.success) {
+                this.snackBar.snackbarSuccess('Saved!');
+                this.router.navigate(['/security/users/details/' + res.data.user.userId]);
+                this.isProcessing = false;
+                dialogRef.componentInstance.isProcessing = this.isProcessing;
+                dialogRef.close();
+              } else {
+                this.isProcessing = false;
+                dialogRef.componentInstance.isProcessing = this.isProcessing;
+                this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+                this.snackBar.snackbarError(this.error);
+                dialogRef.close();
+              }
+            }, async (err) => {
               this.isProcessing = false;
               dialogRef.componentInstance.isProcessing = this.isProcessing;
-              dialogRef.close();
-            } else {
-              this.isProcessing = false;
-              dialogRef.componentInstance.isProcessing = this.isProcessing;
-              this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+              this.error = Array.isArray(err.message) ? err.message[0] : err.message;
               this.snackBar.snackbarError(this.error);
               dialogRef.close();
-            }
-          }, async (err) => {
-            this.isProcessing = false;
-            dialogRef.componentInstance.isProcessing = this.isProcessing;
-            this.error = Array.isArray(err.message) ? err.message[0] : err.message;
-            this.snackBar.snackbarError(this.error);
-            dialogRef.close();
-          });
+            });
+        } else {
+          await this.userService.udpdateClient(userData)
+            .subscribe(async res => {
+              if (res.success) {
+                this.snackBar.snackbarSuccess('Saved!');
+                this.router.navigate(['/security/users/details/' + res.data.user.userId]);
+                this.isProcessing = false;
+                dialogRef.componentInstance.isProcessing = this.isProcessing;
+                dialogRef.close();
+              } else {
+                this.isProcessing = false;
+                dialogRef.componentInstance.isProcessing = this.isProcessing;
+                this.error = Array.isArray(res.message) ? res.message[0] : res.message;
+                this.snackBar.snackbarError(this.error);
+                dialogRef.close();
+              }
+            }, async (err) => {
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
+              this.error = Array.isArray(err.message) ? err.message[0] : err.message;
+              this.snackBar.snackbarError(this.error);
+              dialogRef.close();
+            });
+        }
       } catch (e){
         this.isProcessing = false;
         dialogRef.componentInstance.isProcessing = this.isProcessing;
