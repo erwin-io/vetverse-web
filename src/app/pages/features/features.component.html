@@ -6,7 +6,7 @@
   <span class="example-spacer"></span>
   <button mat-button class="user-profile" [matMenuTriggerFor]="popOver" >
     <img src="https://img.icons8.com/ios-filled/512/user-male-circle.png"/>
-    <span>{{currentUser.fullName}}</span>
+    <span class="fullname">{{currentUser.fullName}}</span>
   </button>
   <mat-menu #popOver="matMenu" class="user-profile-popover-panel">
     <div mat-menu-item [disableRipple]="true" class="user-profile-popover-content" (click)="$event.stopPropagation()">
