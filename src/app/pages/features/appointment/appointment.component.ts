@@ -256,7 +256,7 @@ export class AppointmentComponent implements OnInit {
               vetUserId: d.staff.staffid,
               consultaionType: d.consultaionType.name,
               service: d.serviceType.name,
-              amountToPay: d.serviceType.price,
+              amountToPay: d.serviceRate,
               isPaid: d.isPaid,
               appointmentStatus: d.appointmentStatus.name
             }

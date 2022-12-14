@@ -4,20 +4,21 @@ import { Gender } from './gender.model';
 import { Staff } from './staff.model';
 
 export class Appointment {
-  appointmentId: string
-  appointmentDate: string
+  appointmentId: string;
+  appointmentDate: string;
   comments: string;
-  timeStart: string
+  timeStart: string;
   timeEnd: string
-  isPaid: boolean
-  isWalkIn: boolean
-  walkInAppointmentNotes?: string
-  staff: Staff
-  serviceType: ServiceType
-  consultaionType: ConsultaionType
-  appointmentStatus: AppointmentStatus
-  payments: Payment[]
-  clientAppointment?: ClientAppointment
+  isPaid: boolean;
+  isWalkIn: boolean;
+  walkInAppointmentNotes?: string;
+  staff: Staff;
+  serviceRate: number;
+  serviceType: ServiceType;
+  consultaionType: ConsultaionType;
+  appointmentStatus: AppointmentStatus;
+  payments: Payment[];
+  clientAppointment?: ClientAppointment;
   petAppointment?: PetAppointment;
   conferencePeerId: string;
   diagnosisAndTreatment: string;
@@ -29,7 +30,7 @@ export class ConsultaionType {
 }
 
 export class ServiceType {
-  serviceTypeId: string
+  serviceTypeId: string;
   name: string;
   description: string;
   price: number;

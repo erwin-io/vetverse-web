@@ -5,7 +5,9 @@
   <div fxFlex="100" fxLayout="column" fxLayout="column">
     <form [formGroup]="serviceTypeForm" (ngSubmit)="onSubmit()" fxLayout="column" id="serviceTypeForm" fxLayoutAlign="center" >
       <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
-        <mat-checkbox fxFlex="100" formControlName="isMedicalServiceType">Medical type of service</mat-checkbox>
+        <div class="hidden">
+          <mat-checkbox fxFlex="100" formControlName="isMedicalServiceType">Medical type of service</mat-checkbox>
+        </div>
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input
