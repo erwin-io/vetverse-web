@@ -1,14 +1,14 @@
-<mat-progress-bar mode="query" *ngIf="isProcessing || isLoading"></mat-progress-bar>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
 <h4 mat-dialog-title>Add Category</h4>
 
 <div mat-dialog-content>
   <div fxFlex="100" fxLayout="column" fxLayout="column">
     <form [formGroup]="petCategoryForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petCategoryForm" fxLayoutAlign="center" >
-      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
 
         <mat-form-field *ngIf="!isLoadingLookup; else elseLoadingLookup" appearance="outline" appearance="outline" fxFlex="100">
           <mat-label>Select type</mat-label>
-          <mat-select formControlName="petTypeId">
+          <mat-select formControlName="petTypeId" [disabled]="isProcessing || isLoading">
             <mat-option *ngFor="let item of petTypeLookup" [value]="item.petTypeId">{{item.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="getError('petTypeId') !== (null || undefined)">{{

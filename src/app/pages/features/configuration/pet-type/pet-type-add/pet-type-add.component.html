@@ -1,10 +1,10 @@
-<mat-progress-bar mode="query" *ngIf="isProcessing"></mat-progress-bar>
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
 <h4 mat-dialog-title>Add pet type</h4>
 
 <div mat-dialog-content>
   <div fxFlex="100" fxLayout="column" fxLayout="column">
     <form [formGroup]="petTypeForm" (ngSubmit)="onSubmit()" fxLayout="column" id="petTypeForm" fxLayoutAlign="center" >
-      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing">
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input

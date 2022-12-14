@@ -48,7 +48,7 @@ export class PetCategoryAddComponent implements OnInit {
   }
 
   initLookup(){
-    this.isProcessing = true;
+    this.isLoading = true;
     forkJoin(
       this.petTypeService.get(),
   ).subscribe(
@@ -62,7 +62,7 @@ export class PetCategoryAddComponent implements OnInit {
           this.getData();
           console.log(this.formData);
         }
-        this.isProcessing = false;
+        this.isLoading = false;
       }
   )
   }
