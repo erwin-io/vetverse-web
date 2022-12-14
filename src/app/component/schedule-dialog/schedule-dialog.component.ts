@@ -62,7 +62,7 @@ export class ScheduleDialogComponent implements OnInit {
     if (this.formValid) {
       const dialogData = new AlertDialogModel();
       dialogData.title = 'Save';
-      dialogData.message = 'Are you siure save new schedule?';
+      dialogData.message = 'Are you sure you want to re schedule appointment?';
       dialogData.confirmButton = {
         visible: true,
         text: 'yes',
