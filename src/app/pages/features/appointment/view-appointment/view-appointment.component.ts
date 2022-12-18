@@ -513,6 +513,14 @@ export class ViewAppointmentComponent implements OnInit {
       fromUserId: this.currentUserId,
       toUserId: this.appointment.clientAppointment.client.user.userId,
     };
+    const messages: Messages [] = [];
+    messages.push({
+      message,
+      dateTime: new Date(),
+      fromUser: { fromUserId: this.currentUserId },
+      isClient: false,
+    });
+    this.messages = [...message,...this.messages];
     try {
       this.isSendingMessage = true;
       await this.
@@ -522,9 +530,6 @@ export class ViewAppointmentComponent implements OnInit {
           async (res) => {
             if (res.success) {
               this.isSendingMessage = false;
-              const message: Messages [] = [];
-              message.push(res.data);
-              this.messages = [...message,...this.messages];
             } else {
               this.isSendingMessage = false;
               this.error = Array.isArray(res.message)

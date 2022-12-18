@@ -59,5 +59,11 @@ export let menu: NavItem[] = [
         isParent: false,
       },
     ]
+  },
+  {
+    displayName: 'Reminders',
+    iconName: 'today',
+    route: 'reminders',
+    isParent: false,
   }
 ];

@@ -1,0 +1,79 @@
+table{
+  width: 100%;
+ }
+
+ mat-table {
+  thead {
+   th {
+    .mat-cell {
+     word-wrap: break-word !important;
+     white-space: unset !important;
+     overflow-wrap: break-word;
+     word-wrap: break-word;
+     word-break: break-word;
+     -ms-hyphens: auto;
+     -moz-hyphens: auto;
+     -webkit-hyphens: auto;
+     hyphens: auto;
+    }
+   }
+  }
+
+  tbody {
+    td {
+     .mat-cell {
+      word-wrap: break-word !important;
+      white-space: unset !important;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+     }
+    }
+   }
+ }
+
+ .mat-column-reminderId {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+ }
+
+ .mat-column-title {
+  flex: 0 0 30% !important;
+  width: 30% !important;
+ }
+
+ .mat-column-description {
+  flex: 0 0 50% !important;
+  width: 50% !important;
+ }
+
+ .mat-column-dueDate {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+ }
+
+ .mat-column-controls {
+   flex: 0 0 1% !important;
+   width: 1% !important;
+   padding-right: 0!important;
+ }
+
+
+ .table-no-data {
+  background-color: #ECEFF1;
+  padding: 20px;
+  color: #424242 !important;
+  span {
+    text-align: left;
+    font-size: 15px!important;
+  }
+}
+
+.pet-type-dialog {
+  max-width: 500px!important;
+  width: 500px!important;
+}

@@ -18,6 +18,7 @@ const routes: Routes = [
         { path: 'records', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/health-records/health-records.module').then(m => m.HealthRecordsModule) },
         { path: 'configurations', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/configuration/configuration.module').then(m => m.ConfigurationModule) },
         { path: 'security', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/security/security.module').then(m => m.SecurityModule) },
+        { path: 'reminders', canActivate: [AuthGuard], loadChildren: () => import('./pages/features/reminder/reminder.module').then(m => m.ReminderModule) },
       ]
     },
     { path: 'profile',

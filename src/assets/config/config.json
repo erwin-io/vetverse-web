@@ -107,6 +107,7 @@
     "message": {
       "findByAppointmentPage": "message/findByAppointmentPage",
       "create": "message/"
-    }
+    },
+    "reminder": "reminder/"
   }
 }

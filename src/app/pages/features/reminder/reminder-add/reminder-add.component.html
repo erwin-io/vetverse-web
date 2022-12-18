@@ -1,0 +1,99 @@
+<mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+<h4 mat-dialog-title>Add pet type</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" fxLayout="column">
+    <form fxLayout="column" fxLayoutAlign="center" >
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
+        <mat-form-field appearance="outline">
+          <mat-label>Title</mat-label>
+          <input
+            matInput
+            placeholder="Title"
+            [formControl]="title"
+            [disabled]="isProcessing">
+            <mat-error *ngIf="title.errors !== (null || undefined)">{{
+              (title.errors && title.errors.required ? 'Please enter title' : '')
+            }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input
+            matInput
+            placeholder="Description"
+            [formControl]="description"
+            [disabled]="isProcessing">
+            <mat-error *ngIf="description.errors !== (null || undefined)">{{
+              (description.errors && description.errors.required ? 'Please enter a description' : '')
+            }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" style="cursor: pointer"
+        (click)="picker.open()">
+          <mat-label>Due date</mat-label>
+          <input
+            matInput
+            placeholder="Due date"
+            [formControl]="dueDate"
+            [matDatepicker]="picker"
+            [disabled]="isProcessing"
+            readonly="true"
+            (keydown)="$event.key === 'Enter' ? true : true"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="dueDate.errors !== (null || undefined)">{{
+            (dueDate.errors && dueDate.errors.required ? 'Please enter due date' : '')
+          }}</mat-error>
+
+        </mat-form-field>
+        <mat-form-field appearance="outline" fxFlex="100" style="cursor: pointer"
+        (click)="t4.showDialog()">
+          <mat-label>Time</mat-label>
+          <input
+            matTimepicker
+            #t4="matTimepicker"
+            #time4="ngModel"
+            id="timepicker-example-4"
+            mode="12h"
+            [(ngModel)]="time"
+            placeholder="Please select time..."
+            name="time-4"
+            autocomplete="new-time"
+            [disableDialogOpenOnClick]="true"
+            [disabled]="isProcessing"
+            readonly="true"
+          />
+          <mat-icon matSuffix>access_time</mat-icon>
+          <mat-error *ngIf="time4.touched && time4.invalid"
+            >Invalid Date</mat-error
+          >
+        </mat-form-field>
+      </fieldset>
+    </form>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || !formIsValid"
+      color="primary"
+      (click)="onSubmit()"
+      type="submit"
+    >
+      Save
+    </button>
+  </div>
+</div>
