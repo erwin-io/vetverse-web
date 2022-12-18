@@ -112,6 +112,9 @@ app-view-appointment {
                       .chat-item-box {
                         background: #009688!important;
                         color:#FFFFFF!important;
+                        &.sending {
+                          background-color: #00968845!important;
+                        }
                       }
                     }
                     &.load-more {

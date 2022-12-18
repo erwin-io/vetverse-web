@@ -59,7 +59,7 @@ export class ViewAppointmentComponent implements OnInit {
     cancelation: false,
     reschedule: false,
   };
-  messages: Messages[] = [];
+  messages: any[] = [];
   currentMessagePage = 0;
   loadingMessage = false;
   isSendingMessage = false;
@@ -513,22 +513,25 @@ export class ViewAppointmentComponent implements OnInit {
       fromUserId: this.currentUserId,
       toUserId: this.appointment.clientAppointment.client.user.userId,
     };
-    const messages: Messages [] = [];
+    this.isSendingMessage = true;
+    const messages: any [] = [];
     messages.push({
       message,
       dateTime: new Date(),
-      fromUser: { fromUserId: this.currentUserId },
+      fromUser: { userId: this.currentUserId },
       isClient: false,
+      isSending: true
     });
-    this.messages = [...message,...this.messages];
+    this.messages = [...messages,...this.messages];
+    messageInput.value = null;
     try {
-      this.isSendingMessage = true;
       await this.
       messageService
         .add(param)
         .subscribe(
           async (res) => {
             if (res.success) {
+              this.messages.filter(x=> Number(x.fromUser.userId) === Number(this.currentUserId))[0].isSending = false;
               this.isSendingMessage = false;
             } else {
               this.isSendingMessage = false;
@@ -551,7 +554,6 @@ export class ViewAppointmentComponent implements OnInit {
       this.error = Array.isArray(e.message) ? e.message[0] : e.message;
       this.snackBar.snackbarError(this.error);
     }
-    messageInput.value = null;
   }
 
   async startVideoConference(){

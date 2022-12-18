@@ -398,9 +398,10 @@
         <ul class="message-list">
           <li *ngFor="let message of messages" [ngClass]="{ 'from-me' : message.fromUser.userId === currentUserId, 'is-client' : message.isClient }">
             <span class="from-label" *ngIf="message.fromUser.userId !== currentUserId">{{ message.fromUser.username}}</span>
-            <div class="chat-item-box">
+            <div class="chat-item-box" [class]="{ 'sending': message.isSending }">
               <span>{{ message.message }}</span>
             </div>
+            <span *ngIf="message.isSending">Sending...</span>
           </li>
           <li class="load-more">
             <button mat-flat-button *ngIf="!loadingMessage && messages.length > 39" (click)="loadMoreMessage()">
@@ -425,7 +426,7 @@
               placeholder="Message"
               (keydown.enter)="sendMessage(messageInput)">
           </mat-form-field>
-          <button [disabled]="!messageInput.value || messageInput.value === ''" mat-icon-button color="primary" aria-label="Send" (click)="sendMessage(messageInput)">
+          <button [disabled]="!messageInput.value || messageInput.value === '' || isSendingMessage " mat-icon-button color="primary" aria-label="Send" (click)="sendMessage(messageInput)">
             <mat-icon>send</mat-icon>
           </button>
         </div>
