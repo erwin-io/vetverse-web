@@ -1,0 +1,68 @@
+<h4 mat-dialog-title>Select time slot</h4>
+
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" >
+    <form [formGroup]="selectTimeSlotForm" (ngSubmit)="onSubmit()" fxLayout="column" id="selectTimeSlotForm" fxLayoutAlign="center" >
+      <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
+        <mat-form-field appearance="outline" fxFlex="100">
+          <mat-label>Appointment date</mat-label>
+          <input
+            matInput
+            placeholder="Appointment date"
+            formControlName="appointmentDate"
+            autocomplete="new-appointmentDate"
+            [matDatepicker]="picker"
+            (click)="picker.open()"
+            [min]="data.minDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="getError('appointmentDate') !== (null || undefined)">{{
+            (getError('appointmentDate') && getError('appointmentDate').required ? 'Please enter pet type name' : '')
+          }}</mat-error>
+        </mat-form-field>
+        <div fxLayout="column" fxFlex="100" class="time-slot" *ngIf="!isLoading; else elseLoadingTimeSlot">
+          <mat-radio-group formControlName="selectTime" *ngIf="availableTimeSlot.length>0 else elseNoTimeslot">
+            <mat-radio-button [value]="timeSlot" *ngFor="let timeSlot of availableTimeSlot">{{tConvert(timeSlot)}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <ng-template #elseLoadingTimeSlot>
+          <div class="time-slot">
+            <span>Loading time slot please wait...</span>
+            <mat-progress-bar mode="query" *ngIf="isLoading"></mat-progress-bar>
+          </div>
+        </ng-template>
+        <ng-template #elseNoTimeslot>
+          <div class="time-slot no-time-slot-available">
+            <span>Sorry!<br>No available time slot to show, <br>try another date</span>
+          </div>
+        </ng-template>
+      </fieldset>
+    </form>
+
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || isLoading"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || isLoading || !selectTimeSlotForm.valid"
+      color="primary"
+      form="selectTimeSlotForm"
+      type="submit">
+      Confirm
+    </button>
+  </div>
+</div>

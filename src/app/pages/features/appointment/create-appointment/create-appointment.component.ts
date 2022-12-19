@@ -8,6 +8,7 @@ import { forkJoin, map, Observable, startWith, Subscription, switchMap } from 'r
 import { AddPaymentComponent } from 'src/app/component/add-payment/add-payment.component';
 import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/schedule-dialog.component';
 import { SelectPeopleComponent } from 'src/app/component/select-people/select-people.component';
+import { SelectTimeslotComponent } from 'src/app/component/select-timeslot/select-timeslot.component';
 import { AppointmentStatusEnum } from 'src/app/core/enums/appointment-status.enum';
 import { RoleEnum } from 'src/app/core/enums/role.enum copy';
 import { Appointment, ConsultaionType, Payment, Pet, ServiceType } from 'src/app/core/model/appointment.model';
@@ -73,7 +74,8 @@ export class CreateAppointmentComponent implements OnInit {
     reschedule: false,
   };
 
-  availableTimeSlot = [];
+  today = new Date();
+  minDate = new Date(this.today.setDate(this.today.getDate() + 1));
 
 
   constructor(
@@ -103,11 +105,6 @@ export class CreateAppointmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.appointmentDate.valueChanges.subscribe(async (selectedValue) => {
-      const durationInHours = this.serviceType?.value &&
-       this.serviceType?.value !== undefined ? this.serviceType?.value.durationInHours : 1;
-      this.getAppointmentsForADay(moment(selectedValue).format('YYYY-MM-DD'), this.timeSlotOptions(Number(durationInHours)))
-    })
   }
 
   initFilter(){
@@ -138,7 +135,6 @@ export class CreateAppointmentComponent implements OnInit {
 
   get formIsValid() {
     return this.appointmentDate.valid &&
-    (this.time && this.time !== "") &&
     this.serviceType.valid &&
     (this.isWalkIn ? this.clientName.valid : (this.clientId && this.clientId !== "")) &&
     (this.isWalkIn ? this.petName.valid : this.petId.valid) &&
@@ -149,8 +145,8 @@ export class CreateAppointmentComponent implements OnInit {
 
   get formData() {
     return this.isWalkIn ? {
-      appointmentDate: moment(this.appointmentDate.value.toString()).format("YYYY-MM-DD"),
-      time: moment(this.time.toString()).format("hh:mm"),
+      appointmentDate: this.appointmentDate.value ? moment(this.appointmentDate.value.toString()).format("YYYY-MM-DD") : null,
+      time: this.time,
       veterenarianId: this.veterinarianId,
       serviceTypeId: this.serviceType.value?.serviceTypeId,
       comments: this.comments.value,
@@ -159,8 +155,8 @@ export class CreateAppointmentComponent implements OnInit {
       clientName: this.clientName.value,
       petName: this.petName.value,
     } : {
-      appointmentDate: moment(this.appointmentDate.value.toString()).format("YYYY-MM-DD"),
-      time: moment(this.time.toString()).format("hh:mm"),
+      appointmentDate: this.appointmentDate.value ? moment(this.appointmentDate.value.toString()).format("YYYY-MM-DD") : null,
+      time: this.time,
       veterenarianId: this.veterinarianId,
       serviceTypeId: this.serviceType.value?.serviceTypeId,
       comments: this.comments.value,
@@ -279,77 +275,30 @@ export class CreateAppointmentComponent implements OnInit {
     }
   }
 
-  toMinutes = str => str.split(':').reduce((h, m) => h * 60 + +m);
-
-  toString = min => (Math.floor(min / 60) + ':' + (min % 60))
-                         .replace(/\b\d\b/, '0$&');
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  timeSlotOptions(hours = 1) {
-    const notAvailableHours = this.appconfig.config.appointmentConfig.timeSlotNotAvailableHours;
-    const start = this.toMinutes(this.appconfig.config.appointmentConfig.timeSlotHours.start);
-    const end = this.toMinutes(this.appconfig.config.appointmentConfig.timeSlotHours.end);
-    const slotOptions = Array.from({length: Math.floor((end - start) / (60 * Number(hours))) + 1}, (_, i) =>
-    this.toString(start + i * (60 * Number(hours))));
-    return slotOptions.filter(x=> !notAvailableHours.includes(x));
-  }
-
-  tConvert(time) {
-    if(time.toLowerCase().includes('invalid date')) {return;};
-    time = time.split(':')[1].charAt(1) ? time : time + '0';
-    // Check correct time format and split into components
-    time = time.toString().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
-    if (time.length > 1) { // If time format correct
-      time = time.slice (1);  // Remove full string match value
-      time[5] = +time[0] < 12 ? ' AM' : ' PM'; // Set AM/PM
-      time[0] = +time[0] % 12 || 12; // Adjust hours
-    }
-    return time.join(''); // return adjusted time or original string
-  }
-
-  async getAppointmentsForADay(dateString: string, timeSlotOptions: string[]) {
-    try{
-      this.isLoading = true;
-      await this.appointmentService.getAppointmentsForADay(dateString)
-      .subscribe(async res => {
-        if(res.success){
-          const hSlotTaken = res.data.map((a)=> {
-            const appointmentTimeStart = moment(`${a.appointmentDate} ${a.timeStart}`).format('HH');
-            const appointmentTimeEnd = moment(`${a.appointmentDate} ${a.timeEnd}`).format('HH');
-            return {
-              appointmentTimeStart,
-              appointmentTimeEnd
-            };
-          });
-
-          this.availableTimeSlot = timeSlotOptions.map((t)=> {
-            const h = t.split(':')[0];
-            if(hSlotTaken
-            .filter(x=> Number(h) >= Number(x.appointmentTimeStart) && Number(h) < Number(x.appointmentTimeEnd)).length <= 0) {
-              return t;
-            }else {
-              return null;
-            }
-          }).filter(x=>x !== null && x !== undefined && x !== '');
-          console.log(this.availableTimeSlot);
-          this.isLoading = false;
-        }
-        else{
-          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
-          this.snackBar.snackbarError(this.error);
-          this.isLoading = false;
-        }
-      }, async (e) => {
-        this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-        this.snackBar.snackbarError(this.error);
-        this.isLoading = false;
-      });
-    }
-    catch(e){
-      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
-      this.snackBar.snackbarError(this.error);
-    }
+  async openSelectTimeSlot() {
+    const params = {
+      appointmentDate: this.appointmentDate.value,
+      serviceType: this.serviceType.value,
+    };
+    console.log(params);
+    const dialogRef = this.dialog.open(SelectTimeslotComponent, {
+      closeOnNavigation: true,
+      panelClass: 'select-timeslot-dialog',
+    });
+    dialogRef.componentInstance.data = {
+      appointmentDate: this.appointmentDate.value ? new Date(moment(this.appointmentDate.value).format("YYYY-MM-DD")) : this.minDate,
+      selectTime: this.time,
+      durationInHours: this.serviceType.value?.durationInHours && this.serviceType.value?.durationInHours !== "" ? Number(this.serviceType.value?.durationInHours) : 1,
+      minDate: this.minDate
+    };
+    dialogRef.componentInstance.conFirm.subscribe(async (data: { appointmentDate: Date; selectTime: string}) => {
+      if(data){
+        console.log(data);
+        this.time = data.selectTime;
+        this.appointmentDate.setValue(moment(new Date(`${moment(data.appointmentDate).format("YYYY-MM-DD")} ${data.selectTime}`)).format('MMMM DD, YYYY hh:mm a'));
+      }
+      dialogRef.close();
+    });
   }
 
   async pay() {

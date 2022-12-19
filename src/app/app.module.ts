@@ -38,6 +38,7 @@ import { NumberLeadZeroPipePipe } from './core/pipe/number-lead-zero.pipe.pipe';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { SelectTimeslotComponent } from './component/select-timeslot/select-timeslot.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { environment } from 'src/environments/environment';
     YearPickerDialogComponent,
     CalendarPickerDialogComponent,
     NumberLeadZeroPipePipe,
+    SelectTimeslotComponent,
   ],
   imports: [
     BrowserModule,

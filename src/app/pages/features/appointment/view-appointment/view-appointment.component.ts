@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { Subscription } from 'rxjs';
 import { AddPaymentComponent } from 'src/app/component/add-payment/add-payment.component';
 import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/schedule-dialog.component';
+import { SelectTimeslotComponent } from 'src/app/component/select-timeslot/select-timeslot.component';
 import { ViewClientInfoComponent } from 'src/app/component/view-client-info/view-client-info.component';
 import { ViewDiagnosisTreatmentComponent } from 'src/app/component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { ViewPetInfoComponent } from 'src/app/component/view-pet-info/view-pet-info.component';
@@ -217,23 +218,44 @@ export class ViewAppointmentComponent implements OnInit {
   }
 
   async onReschedule() {
-    const dialogRef = this.dialog.open(ScheduleDialogComponent, {
-      maxWidth: '1000px',
+    // const dialogRef = this.dialog.open(ScheduleDialogComponent, {
+    //   maxWidth: '1000px',
+    //   closeOnNavigation: true,
+    //   panelClass: 'schedule-dialog',
+    // });
+    // dialogRef.componentInstance.data = {
+    //   appointmentId: this.appointment.appointmentId,
+    //   appointmentDate: new Date(this.appointment.appointmentDate),
+    //   time: new Date(
+    //     `${this.appointment.appointmentDate} ${this.appointment.timeStart}`
+    //   ),
+    // };
+    // dialogRef.componentInstance.conFirm.subscribe((data: any) => {
+    //   dialogRef.close();
+    //   this.currentUserId = this.storageService.getLoginUser().userId;
+    //   const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
+    //   this.initAppointment(appointmentId);
+    // });
+
+    const dialogRef = this.dialog.open(SelectTimeslotComponent, {
       closeOnNavigation: true,
-      panelClass: 'schedule-dialog',
+      panelClass: 'select-timeslot-dialog',
     });
     dialogRef.componentInstance.data = {
+      appointmentDate: new Date(moment(this.appointment.appointmentDate).format("YYYY-MM-DD")),
+      selectTime: moment(new Date(
+            `${this.appointment.appointmentDate} ${this.appointment.timeStart}`
+          )).format("HH:mm"),
+      durationInHours: Number(this.appointment.serviceType.durationInHours),
+      minDate: new Date(new Date().setDate(new Date().getDate() + 1)),
       appointmentId: this.appointment.appointmentId,
-      appointmentDate: new Date(this.appointment.appointmentDate),
-      time: new Date(
-        `${this.appointment.appointmentDate} ${this.appointment.timeStart}`
-      ),
+      reschedule: true
     };
-    dialogRef.componentInstance.conFirm.subscribe((data: any) => {
+    dialogRef.componentInstance.conFirm.subscribe(async (data: { appointmentDate: Date; selectTime: string}) => {
+        this.currentUserId = this.storageService.getLoginUser().userId;
+        const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
+        this.initAppointment(appointmentId);
       dialogRef.close();
-      this.currentUserId = this.storageService.getLoginUser().userId;
-      const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
-      this.initAppointment(appointmentId);
     });
   }
 

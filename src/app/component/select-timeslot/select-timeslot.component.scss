@@ -1,0 +1,26 @@
+
+.mat-dialog-content {
+  overflow: visible!important;
+}
+.time-slot {
+  &.no-time-slot-available {
+    flex-grow: 1;
+    display: flex!important;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #EEEEEE;
+  }
+}
+
+mat-radio-group {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  row-gap: 15px!important;
+  mat-radio-button {
+    margin: 0!important;
+  }
+}
