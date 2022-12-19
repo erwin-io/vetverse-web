@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,7 +15,8 @@ import { ReminderAddComponent } from './reminder-add/reminder-add.component';
 @Component({
   selector: 'app-reminder',
   templateUrl: './reminder.component.html',
-  styleUrls: ['./reminder.component.scss']
+  styleUrls: ['./reminder.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ReminderComponent implements OnInit {
 
