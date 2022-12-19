@@ -18,11 +18,11 @@
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Description</mat-label>
-          <input
+          <textarea
             matInput
             placeholder="Description"
             [formControl]="description"
-            [disabled]="isProcessing">
+            [disabled]="isProcessing"></textarea>
             <mat-error *ngIf="description.errors !== (null || undefined)">{{
               (description.errors && description.errors.required ? 'Please enter a description' : '')
             }}</mat-error>
