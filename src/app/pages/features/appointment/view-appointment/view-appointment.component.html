@@ -60,6 +60,14 @@
                     </button>
                   </li>
                   <li>
+                    <button mat-stroked-button color="primary" *ngIf="appointment.isPaid && payment" (click)="uppdateReference()">
+                      <div class="button-wrapper">
+                        <mat-icon>edit</mat-icon>
+                        <span>Update reference no</span>
+                      </div>
+                    </button>
+                  </li>
+                  <li>
                     <button mat-stroked-button color="warn" *ngIf="appointment.isPaid && payment" (click)="voidPayment()">
                       <div class="button-wrapper">
                         <mat-icon>close</mat-icon>

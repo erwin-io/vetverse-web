@@ -5,7 +5,8 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpResponse,
-  HttpErrorResponse
+  HttpErrorResponse,
+  HttpContextToken
 } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, filter, switchMap, take } from 'rxjs/operators';
@@ -14,7 +15,7 @@ import {
 } from '@angular/router';
 import { StorageService } from '../storage/storage.service';
 import { AuthService } from '../../../app/core/services/auth.service';
-
+export const BYPASS_LOG = new HttpContextToken(() => false);
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
@@ -27,7 +28,9 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
+    if (request.context.get(BYPASS_LOG) === true){
+      return next.handle(request);
+    }
     const token = this.storageService.getAccessToken();
 
     if (token) {

@@ -1,0 +1,38 @@
+<h4 mat-dialog-title>Update reference number</h4>
+<div mat-dialog-content>
+  <div fxFlex="100" fxLayout="column" fxLayout="column">
+    <mat-form-field appearance="outline">
+      <mat-label>Reference No</mat-label>
+      <input
+        matInput
+        placeholder="Reference No"
+        [formControl]="referenceNo">
+        <mat-error *ngIf="referenceNo.errors !== (null || undefined)">{{
+          (referenceNo.errors && referenceNo.errors.required ? 'Please enter reference number' : '')
+        }}</mat-error>
+    </mat-form-field>
+  </div>
+</div>
+
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing"
+      cdkFocusInitial
+      (click)="onDismiss()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="isProcessing || !formIsValid"
+      color="primary"
+      (click)="onSubmit()"
+      type="submit"
+    >
+      Save
+    </button>
+  </div>
+</div>

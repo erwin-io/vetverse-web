@@ -39,6 +39,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
 import { SelectTimeslotComponent } from './component/select-timeslot/select-timeslot.component';
+import { ReportsComponent } from './pages/features/reports/reports.component';
+import { UpdateReferenceNumberComponent } from './component/update-reference-number/update-reference-number.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { SelectTimeslotComponent } from './component/select-timeslot/select-time
     CalendarPickerDialogComponent,
     NumberLeadZeroPipePipe,
     SelectTimeslotComponent,
+    UpdateReferenceNumberComponent,
   ],
   imports: [
     BrowserModule,

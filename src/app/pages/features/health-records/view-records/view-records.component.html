@@ -75,7 +75,7 @@
         </table>
 
         <div class="table-no-data" *ngIf="dataSource.data.length === 0">
-          <span>No pets available</span>
+          <span>No data available</span>
         </div>
         <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
                        showFirstLastButtons

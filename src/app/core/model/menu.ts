@@ -65,5 +65,11 @@ export let menu: NavItem[] = [
     iconName: 'today',
     route: 'reminders',
     isParent: false,
+  },
+  {
+    displayName: 'Reports',
+    iconName: 'poll',
+    route: 'reports',
+    isParent: false,
   }
 ];

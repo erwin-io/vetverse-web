@@ -41,7 +41,7 @@ export class SelectTimeslotComponent implements OnInit {
     private dialog: MatDialog,
     private appointmentService: AppointmentService,
     private snackBar: Snackbar,
-    public dialogRef: MatDialogRef<ScheduleDialogComponent>
+    public dialogRef: MatDialogRef<SelectTimeslotComponent>
   ) {
     dialogRef.disableClose = true;
   }

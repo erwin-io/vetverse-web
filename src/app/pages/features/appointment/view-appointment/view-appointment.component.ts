@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { AddPaymentComponent } from 'src/app/component/add-payment/add-payment.component';
 import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/schedule-dialog.component';
 import { SelectTimeslotComponent } from 'src/app/component/select-timeslot/select-timeslot.component';
+import { UpdateReferenceNumberComponent } from 'src/app/component/update-reference-number/update-reference-number.component';
 import { ViewClientInfoComponent } from 'src/app/component/view-client-info/view-client-info.component';
 import { ViewDiagnosisTreatmentComponent } from 'src/app/component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { ViewPetInfoComponent } from 'src/app/component/view-pet-info/view-pet-info.component';
@@ -367,6 +368,23 @@ export class ViewAppointmentComponent implements OnInit {
     });
   }
 
+  uppdateReference() {
+    const dialogRef = this.dialog.open(UpdateReferenceNumberComponent, {
+      closeOnNavigation: false,
+      maxWidth: '500px',
+      width: '500px',
+    });
+    dialogRef.componentInstance.data = {
+      paymentId: this.payment.paymentId
+    };
+    dialogRef.componentInstance.conFirm.subscribe((data: any) => {
+      dialogRef.close();
+      this.currentUserId = this.storageService.getLoginUser().userId;
+      const appointmentId = this.route.snapshot.paramMap.get('appointmentId');
+      this.initAppointment(appointmentId);
+    });
+  }
+
   async voidPayment() {
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm void';
@@ -505,26 +523,6 @@ export class ViewAppointmentComponent implements OnInit {
     this.currentMessagePage = this.currentMessagePage + 1;
     this.initMessages(this.appointment.appointmentId)
   }
-  // async sendMessage(messageInput) {
-  //   const message = messageInput.value;
-  //   const param: any = {
-  //     message,
-  //     isClient: false,
-  //     appointmentId: this.appointment.appointmentId,
-  //     fromUserId: this.currentUserId,
-  //     toUserId: this.appointment.clientAppointment.client.user.userId,
-  //   };
-  //   this.isSendingMessage = true;
-  //   this.socket.emit('addMessage', param);
-  //   const newMessage: Messages [] = [];
-  //   newMessage.push({
-  //     message,
-  //     fromUser: { userId: param.fromUserId },
-  //     isClient: false,
-  //     });
-  //   this.messages = [...newMessage,...this.messages];
-  //   messageInput.value = null;
-  // }
 
   async sendMessage(messageInput) {
     const message = messageInput.value;

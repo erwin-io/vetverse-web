@@ -64,6 +64,19 @@ export class PaymentService implements IServices {
       );
   }
 
+  updateReferenceNumber(data: any): Observable<ApiResponse<Payment>> {
+    return this.http
+      .put<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.payment.updateReferenceNumber,
+        data
+      )
+      .pipe(
+        tap((_) => this.log('payment')),
+        catchError(this.handleError('payment', []))
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(

@@ -85,7 +85,8 @@
       "get": "payments",
       "getById": "payments/",
       "create": "payments",
-      "void": "payments/void/"
+      "void": "payments/void/",
+      "updateReferenceNumber": "payments/updateReferenceNumber/"
     },
     "pet": {
       "get": "pet",
