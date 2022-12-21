@@ -32,6 +32,46 @@ export class ReportsService {
       );
   }
 
+  generateAppointmentsReport(params: any): Observable<any> {
+    const config: any = {params, responseType: 'blob'};
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getAppointmentsReport,
+          config,
+      );
+  }
+
+  generateClientsReport(): Observable<any> {
+    const config: any = { responseType: 'blob' };
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getClientsReport,
+          config,
+      );
+  }
+
+  generatePetsReport(): Observable<any> {
+    const config: any = { responseType: 'blob' };
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getPetsReport,
+          config,
+      );
+  }
+
+  generateStaffReport(): Observable<any> {
+    const config: any = { responseType: 'blob' };
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getStaffReport,
+          config,
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(

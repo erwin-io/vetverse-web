@@ -112,7 +112,11 @@
     "reminder": "reminder/",
     "reports": {
       "getServiceReport": "reports/getServiceReport",
-      "getPaymentsReport": "reports/getPaymentsReport"
+      "getPaymentsReport": "reports/getPaymentsReport",
+      "getAppointmentsReport": "reports/getAppointmentsReport",
+      "getClientsReport": "reports/getClientsReport",
+      "getPetsReport": "reports/getPetsReport",
+      "getStaffReport": "reports/getStaffReport"
     }
   }
 }
