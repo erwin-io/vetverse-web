@@ -146,6 +146,8 @@ export class ReportsComponent implements OnInit {
             break;
             default:
               this.snackBar.snackbarError('report not available');
+              this.isProcessing = false;
+              dialogRef.componentInstance.isProcessing = this.isProcessing;
             break;
           }
         } catch (e) {
