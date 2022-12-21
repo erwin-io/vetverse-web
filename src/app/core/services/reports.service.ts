@@ -11,53 +11,24 @@ import { AppConfigService } from './app-config.service';
 })
 export class ReportsService {
   constructor(private http: HttpClient, private appconfig: AppConfigService) {}
-  generateReport() {
-    const username = 'erwinramirez220@gmail.com',
-      password = 'kingofcrossover';
-    const httpOptions: any = {
-      responseType: 'blob',
-      observe: 'response',
-      context: new HttpContext().set(BYPASS_LOG, true),
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: 'Basic ' + btoa(username + ':' + password),
-      }),
-    };
+
+  generateServiceReport(params: any): Observable<any> {
+    const config: any = {params, responseType: 'blob'};
     return this.http
-      .post<any>(
-        'https://sample.jsreportonline.net/api/report',
-        JSON.stringify({
-          template: {
-            name: 'invoice-main',
-          },
-          data: {
-            number: '123',
-            seller: {
-              name: 'Next Step Webs, Inc.',
-              road: '12345 Sunny Road',
-              country: 'Sunnyville, TX 12345',
-            },
-            buyer: {
-              name: 'Acme Corp.',
-              road: '16 Johnson Road',
-              country: 'Paris, France 8060',
-            },
-            items: [
-              {
-                name: 'Website design',
-                price: 300,
-              },
-              {
-                name: 'Website implementation',
-                price: 1500,
-              },
-            ],
-          },
-        }),
-        httpOptions
-      ).pipe(
-        tap(_ => this.log('reports')),
-        catchError(this.handleError('reports', []))
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getServiceReport,
+          config,
+      );
+  }
+
+  generatePaymentsReport(params: any): Observable<any> {
+    const config: any = {params, responseType: 'blob'};
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getPaymentsReport,
+          config,
       );
   }
 

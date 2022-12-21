@@ -109,6 +109,10 @@
       "findByAppointmentPage": "message/findByAppointmentPage",
       "create": "message/"
     },
-    "reminder": "reminder/"
+    "reminder": "reminder/",
+    "reports": {
+      "getServiceReport": "reports/getServiceReport",
+      "getPaymentsReport": "reports/getPaymentsReport"
+    }
   }
 }

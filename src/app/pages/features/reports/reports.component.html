@@ -5,6 +5,46 @@
       <div fxFlex></div>
     </mat-card-header>
     <mat-card-content fxLayout="column" >
+      <div fxFlex="100">
+        <div fxFlex="20" fxFlex.xs="100" fxFlex.sm="40" fxLayoutGap="10" fxFlex.md="40" fxLayout="column" fxLayout.gt-sm="row">
+          <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>From</mat-label>
+            <input
+              matInput
+              placeholder="From"
+              [formControl]="from"
+              autocomplete="new-appointmentDate"
+              [matDatepicker]="pickerFrom"
+              (click)="pickerFrom.open()"
+              [max]="maxDate"
+              readonly="true"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="pickerFrom"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #pickerFrom></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline" fxFlex="100">
+            <mat-label>To</mat-label>
+            <input
+              matInput
+              placeholder="To"
+              [formControl]="to"
+              autocomplete="new-appointmentDate"
+              [matDatepicker]="pickerTo"
+              (click)="pickerTo.open()"
+              [max]="maxDate"
+              readonly="true"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="pickerTo"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #pickerTo></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
       <table mat-table [dataSource]="dataSource" [ngClass]="{ 'hidden': dataSource.data.length === 0}">
 
         <ng-container matColumnDef="reportId">
