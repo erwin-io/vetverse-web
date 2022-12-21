@@ -147,7 +147,7 @@ export class ReminderComponent implements OnInit {
   }
 
   getReminders(){
-    this.displayedColumns = ['reminderId', 'title', 'description', 'dueDate', 'controls'];
+    this.displayedColumns = ['title', 'description', 'dueDate', 'controls'];
     try{
       this.isLoading = true;
       this.reminderService.get()
