@@ -61,3 +61,14 @@ table{
   max-width: 500px!important;
   width: 500px!important;
 }
+::ng-deep .report-controls {
+  .mat-form-field-wrapper {
+    padding-bottom: 0!important;
+  }
+  .generate-button-holder {
+    display: flex;
+    button {
+      margin: 5px 0!important;
+    }
+  }
+}

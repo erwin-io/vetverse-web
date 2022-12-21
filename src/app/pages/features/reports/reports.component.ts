@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectionList } from '@angular/material/list';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -22,6 +23,7 @@ export class ReportsComponent implements OnInit {
   data: Report[] = [];
   displayedColumns = [];
   @ViewChild('paginator', { static: false }) paginator: MatPaginator;
+  @ViewChild('reports', { static: false }) reports: MatSelectionList;
   pageSize = 10;
   isProcessing = false;
   maxDate = new Date();
@@ -41,35 +43,54 @@ export class ReportsComponent implements OnInit {
       {
         reportId: 'service-report',
         reportName: 'Services report',
+        canFilterByDate: true,
       },
       {
         reportId: 'payments-report',
         reportName: 'Payments report',
+        canFilterByDate: true,
       },
       {
         reportId: 'appointments-report',
         reportName: 'Appointments report',
+        canFilterByDate: true,
       },
       {
         reportId: 'client-report',
         reportName: 'Client report',
+        canFilterByDate: false,
       },
       {
         reportId: 'pet-report',
         reportName: 'Pet report',
+        canFilterByDate: false,
       },
       {
         reportId: 'staff-report',
         reportName: 'Staff report',
+        canFilterByDate: false,
       },
       {
         reportId: 'veterinarian-report',
         reportName: 'Veterinarian report',
+        canFilterByDate: false,
       },
     ];
     this.dataSource.data = this.data;
     this.dataSource.paginator = this.paginator;
-    }
+  }
+
+  get selectedReport() {
+    return this.reports && this.reports.selectedOptions.hasValue() ? this.reports.selectedOptions.selected[0].value.reportId : '';
+  }
+
+  get hasSelectedReport() {
+    return this.reports && this.reports.selectedOptions.hasValue();
+  }
+
+  get selectedFilterByDateReport() {
+    return this.reports && this.reports.selectedOptions.hasValue() && this.reports.selectedOptions.selected[0].value.canFilterByDate;
+  }
 
   get reportParams() {
     return {
@@ -78,7 +99,8 @@ export class ReportsComponent implements OnInit {
     }
   }
 
-  generateReport(reportId) {
+  generateReport() {
+    const reportId = this.selectedReport;
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
     dialogData.message = 'Generate report?';
