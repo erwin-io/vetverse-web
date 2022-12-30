@@ -116,7 +116,8 @@
       "getAppointmentsReport": "reports/getAppointmentsReport",
       "getClientsReport": "reports/getClientsReport",
       "getPetsReport": "reports/getPetsReport",
-      "getStaffReport": "reports/getStaffReport"
+      "getStaffReport": "reports/getStaffReport",
+      "getVetReport": "reports/getVetReport"
     }
   }
 }

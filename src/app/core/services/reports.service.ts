@@ -72,6 +72,16 @@ export class ReportsService {
       );
   }
 
+  generateVetReport(params: any): Observable<any> {
+    const config: any = { params, responseType: 'blob' };
+    return this.http
+      .get<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.reports.getVetReport,
+          config,
+      );
+  }
+
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       this.log(

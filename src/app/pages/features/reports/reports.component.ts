@@ -71,9 +71,9 @@ export class ReportsComponent implements OnInit {
         canFilterByDate: false,
       },
       {
-        reportId: 'veterinarian-report',
+        reportId: 'vet-report',
         reportName: 'Veterinarian report',
-        canFilterByDate: false,
+        canFilterByDate: true,
       },
     ];
     this.dataSource.data = this.data;
@@ -228,6 +228,26 @@ export class ReportsComponent implements OnInit {
             break;
             case 'staff-report':
               this.reportsService.generateStaffReport().subscribe(
+                async (res: any) => {
+                  let file = new Blob([res], { type: 'application/pdf' });
+                  const fileURL = URL.createObjectURL(file);
+                  window.open(fileURL, '_blank');
+                  dialogRef.close();
+                  this.isProcessing = false;
+                  dialogRef.componentInstance.isProcessing = this.isProcessing;
+                },
+                async (err) => {
+                  this.isProcessing = false;
+                  dialogRef.componentInstance.isProcessing = this.isProcessing;
+                  this.error = Array.isArray(err.message)
+                    ? err.message[0]
+                    : err.message;
+                  this.snackBar.snackbarError(this.error);
+                }
+              );
+            break;
+            case 'vet-report':
+              this.reportsService.generateVetReport(params).subscribe(
                 async (res: any) => {
                   let file = new Blob([res], { type: 'application/pdf' });
                   const fileURL = URL.createObjectURL(file);
