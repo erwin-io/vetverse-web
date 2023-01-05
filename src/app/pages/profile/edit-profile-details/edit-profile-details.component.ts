@@ -30,7 +30,6 @@ export class EditProfileDetailsComponent implements OnInit {
   isProcessing = false;
   error;
   userProfilePic;
-  profilePicSource;
   //access
   //client;
 
@@ -45,7 +44,6 @@ export class EditProfileDetailsComponent implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef
     ) {
       this.currentUser = this.storageService.getLoginUser();
-      this.profilePicSource = `${environment.apiBaseUrl}file/${this.currentUser.userProfilePic}`;
       this.userForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         middleName: [],
@@ -177,7 +175,7 @@ export class EditProfileDetailsComponent implements OnInit {
               this.currentUser.mobileNumber = res.data.mobileNumber;
               this.currentUser.email = res.data.email;
               this.currentUser.address = res.data.address;
-              this.currentUser.userProfilePic = res.data.user.userProfilePic.file.fileName;
+              this.currentUser.userProfilePic = res.data.user.userProfilePic.file.url;
               this.storageService.saveLoginUser(this.currentUser);
               this.snackBar.snackbarSuccess('Saved!');
               this.isProcessing = false;

@@ -15,7 +15,7 @@
                   <span>Change picture</span>
                 </label>
                 <input id="profilePictureInput" type="file" (change)="loadProfilePicture($event)" accept="image/bmp, image/jpeg, image/x-png, image/png"/>
-                <img [src]="profilePicSource" (error)="profilePicErrorHandler($event)" id="profilePicture" width="200" />
+                <img [src]="currentUser.userProfilePic" (error)="profilePicErrorHandler($event)" id="profilePicture" width="200" />
               </div>
               <div fxFlex="100" fxLayout="column">
                 <h3>Account details</h3>

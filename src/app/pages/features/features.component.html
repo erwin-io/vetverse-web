@@ -5,13 +5,13 @@
   <span>VetVerse Application</span>
   <span class="example-spacer"></span>
   <button mat-button class="user-profile" [matMenuTriggerFor]="popOver" >
-    <img [src]="profilePicSource" (error)="profilePicErrorHandler($event)"/>
+    <img [src]="currentUser.userProfilePic" (error)="profilePicErrorHandler($event)"/>
     <span class="fullname">{{currentUser.fullName}}</span>
   </button>
   <mat-menu #popOver="matMenu" class="user-profile-popover-panel">
     <div mat-menu-item [disableRipple]="true" class="user-profile-popover-content" (click)="$event.stopPropagation()">
       <div class="avatar">
-        <img [src]="profilePicSource" (error)="profilePicErrorHandler($event)"/>
+        <img [src]="currentUser.userProfilePic" (error)="profilePicErrorHandler($event)"/>
       </div>
       <div class="info">
         <p><span class="name">{{currentUser.fullName}}</span></p>

@@ -31,7 +31,6 @@ export class FeaturesComponent implements OnDestroy {
     displayName: 'Sign Out',
     iconName: 'exit_to_app',
   } as NavItem;
-  profilePicSource;
 
   constructor(
     private media: MediaObserver,
@@ -41,8 +40,6 @@ export class FeaturesComponent implements OnDestroy {
     private storageService: StorageService
   ) {
     this.currentUser = this.storageService.getLoginUser();
-    this.profilePicSource = `${environment.apiBaseUrl}file/${this.currentUser.userProfilePic}`;
-    console.log(this.profilePicSource);
     this.initMenu();
     this.mediaWatcher = this.media.asObservable().subscribe((change) => {
       change.forEach(() => {
