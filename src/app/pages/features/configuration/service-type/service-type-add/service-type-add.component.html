@@ -5,9 +5,9 @@
   <div fxFlex="100" fxLayout="column" fxLayout="column">
     <form [formGroup]="serviceTypeForm" (ngSubmit)="onSubmit()" fxLayout="column" id="serviceTypeForm" fxLayoutAlign="center" >
       <fieldset fxFlex="100" fxLayout="column" [disabled]="isProcessing || isLoading">
-        <div class="hidden">
+        <!-- <div class="hidden">
           <mat-checkbox fxFlex="100" formControlName="isMedicalServiceType">Medical type of service</mat-checkbox>
-        </div>
+        </div> -->
         <mat-form-field appearance="outline">
           <mat-label>Name</mat-label>
           <input
@@ -37,6 +37,9 @@
               <mat-error *ngIf="getError('price') !== (null || undefined)">{{
                 (getError('price') && getError('price').required ? 'Please enter rate' : '')
               }}</mat-error>
+              <mat-error *ngIf="getError('durationInHours') !== (null || undefined)">{{
+                (getError('durationInHours') && getError('durationInHours').pattern ? 'Please enter valid duration' : '')
+              }}</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" fxFlex="50%" class="cell">
             <mat-label>Duration in hours</mat-label>
@@ -47,6 +50,9 @@
               formControlName="durationInHours">
               <mat-error *ngIf="getError('durationInHours') !== (null || undefined)">{{
                 (getError('durationInHours') && getError('durationInHours').required ? 'Please enter duration' : '')
+              }}</mat-error>
+              <mat-error *ngIf="getError('durationInHours') !== (null || undefined)">{{
+                (getError('durationInHours') && getError('durationInHours').pattern ? 'Please enter valid duration' : '')
               }}</mat-error>
           </mat-form-field>
         </div>

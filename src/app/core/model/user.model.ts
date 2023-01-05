@@ -7,4 +7,5 @@ import { UserType } from "./usertype.model";
       userType: UserType;
       role: Role;
       enable:boolean;
+      userProfilePic: any;
   }

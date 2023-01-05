@@ -16,4 +16,5 @@ export class LoginResult {
   gender: Gender;
   role:Role;
   userTypeIdentityId:string;
+  userProfilePic:any;
 }

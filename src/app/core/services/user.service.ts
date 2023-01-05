@@ -97,7 +97,7 @@ export class UserService implements IServices {
     );
   }
 
-  udpdateStaff(data: any): Observable<ApiResponse<Staff>> {
+  udpdateStaff(data: any): Observable<any> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.udpdateStaff, data)
     .pipe(
       tap(_ => this.log('user')),

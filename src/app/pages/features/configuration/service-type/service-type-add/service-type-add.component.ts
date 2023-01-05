@@ -36,9 +36,9 @@ export class ServiceTypeAddComponent implements OnInit {
     this.serviceTypeForm = this.formBuilder.group({
         name: ['', Validators.required],
         description: [''],
-        price: ['', Validators.required],
-        durationInHours: ['', Validators.required],
-        isMedicalServiceType: [false, Validators.required]
+        price: ['', [Validators.required, Validators.pattern(/^[1-9]*$/)]],
+        durationInHours: ['', [Validators.required, Validators.pattern(/^[1-9]*$/)]],
+        // isMedicalServiceType: [false, Validators.required]
     });
   }
   ngOnInit(): void {
@@ -61,7 +61,6 @@ export class ServiceTypeAddComponent implements OnInit {
               this.serviceTypeForm.controls["description"].setValue(res.data.description);
               this.serviceTypeForm.controls["price"].setValue(res.data.price);
               this.serviceTypeForm.controls["durationInHours"].setValue(res.data.durationInHours);
-              this.serviceTypeForm.controls["isMedicalServiceType"].setValue(res.data.isMedicalServiceType);
               this.isLoading = false;
             } else {
               this.isLoading = false;

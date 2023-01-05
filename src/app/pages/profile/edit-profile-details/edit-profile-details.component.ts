@@ -12,6 +12,7 @@ import { StorageService } from 'src/app/core/storage/storage.service';
 import { Snackbar } from 'src/app/core/ui/snackbar';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-edit-profile-details',
@@ -28,6 +29,8 @@ export class EditProfileDetailsComponent implements OnInit {
   isLoading = false;
   isProcessing = false;
   error;
+  userProfilePic;
+  profilePicSource;
   //access
   //client;
 
@@ -42,6 +45,7 @@ export class EditProfileDetailsComponent implements OnInit {
     private readonly changeDetectorRef: ChangeDetectorRef
     ) {
       this.currentUser = this.storageService.getLoginUser();
+      this.profilePicSource = `${environment.apiBaseUrl}file/${this.currentUser.userProfilePic}`;
       this.userForm = this.formBuilder.group({
         firstName: ['', Validators.required],
         middleName: [],
@@ -110,9 +114,28 @@ export class EditProfileDetailsComponent implements OnInit {
     return {
       ...this.userForm.value,
       userId: this.userData.user.userId,
-      roleId: this.currentUser.role.roleId
+      roleId: this.currentUser.role.roleId,
+      userProfilePic: this.userProfilePic,
     }
   }
+
+  loadProfilePicture (event) {
+    const image: any = document.getElementById("profilePicture");
+    const file = event.target.files[0];
+    console.log(file);
+    image.src = URL.createObjectURL(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+        this.userProfilePic = {
+          fileName: file.name,
+          data: reader.result
+        };
+        console.log(this.formData);
+    };
+  };
+  
+
   async onSubmit(){
     if (this.userForm.invalid) {
         return;
@@ -141,10 +164,11 @@ export class EditProfileDetailsComponent implements OnInit {
       dialogRef.componentInstance.isProcessing = this.isProcessing;
       try{
         this.isProcessing = true;
-        const userData = this.formData;
-        await this.userService.udpdateStaff(userData)
+        const formData = this.formData;
+        await this.userService.udpdateStaff(formData)
           .subscribe(async res => {
             if (res.success) {
+              console.log(res.data);
               this.currentUser.fullName = res.data.fullName;
               this.currentUser.firtstName = res.data.firstName;
               this.currentUser.middleName = res.data.middleName;
@@ -153,12 +177,14 @@ export class EditProfileDetailsComponent implements OnInit {
               this.currentUser.mobileNumber = res.data.mobileNumber;
               this.currentUser.email = res.data.email;
               this.currentUser.address = res.data.address;
+              this.currentUser.userProfilePic = res.data.user.userProfilePic.file.fileName;
               this.storageService.saveLoginUser(this.currentUser);
               this.snackBar.snackbarSuccess('Saved!');
               this.isProcessing = false;
               dialogRef.componentInstance.isProcessing = this.isProcessing;
               dialogRef.close();
             } else {
+              console.log(res);
               this.isProcessing = false;
               dialogRef.componentInstance.isProcessing = this.isProcessing;
               this.error = Array.isArray(res.message) ? res.message[0] : res.message;
@@ -166,6 +192,7 @@ export class EditProfileDetailsComponent implements OnInit {
               dialogRef.close();
             }
           }, async (err) => {
+            console.log(err);
             this.isProcessing = false;
             dialogRef.componentInstance.isProcessing = this.isProcessing;
             this.error = Array.isArray(err.message) ? err.message[0] : err.message;
@@ -173,6 +200,7 @@ export class EditProfileDetailsComponent implements OnInit {
             dialogRef.close();
           });
       } catch (e){
+        console.log(e);
         this.isProcessing = false;
         dialogRef.componentInstance.isProcessing = this.isProcessing;
         this.error = Array.isArray(e.message) ? e.message[0] : e.message;
@@ -183,5 +211,9 @@ export class EditProfileDetailsComponent implements OnInit {
   }
   getError(key:string){
     return this.f[key].errors;
+  }
+
+  profilePicErrorHandler(event) {
+    event.target.src = '../../../../assets/img/vector/profile-not-found.png';
   }
 }

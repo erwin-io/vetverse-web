@@ -28,6 +28,7 @@ export class TokenInterceptor implements HttpInterceptor {
     }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    
     if (request.context.get(BYPASS_LOG) === true){
       return next.handle(request);
     }
