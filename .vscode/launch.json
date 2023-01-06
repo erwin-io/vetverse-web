@@ -1,10 +1,17 @@
 {
   "version": "0.2.0",
   "configurations": [
+    {
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}"
+    },
     // Based on: https://github.com/microsoft/vscode-recipes/tree/master/Angular-CLI
     {
       "name": "Launch ng serve & Chrome",
-      "type": "chrome",
+      "type": "pwa-chrome",
       "request": "launch",
       "preLaunchTask": "npm: start_dev",
       "url": "http://localhost:4200/#",

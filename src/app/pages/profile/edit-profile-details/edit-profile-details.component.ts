@@ -127,7 +127,7 @@ export class EditProfileDetailsComponent implements OnInit {
     reader.onload = () => {
         this.userProfilePic = {
           fileName: file.name,
-          data: reader.result
+          data: reader.result.toString().split(',')[1]
         };
         console.log(this.formData);
     };

@@ -39,7 +39,6 @@
 
 $circleSize: 165px;
 $radius: 100px;
-$shadow: 0 0 10px 0 rgba(255,255,255,.35);
 $fontColor: rgb(250,250,250);
 
 .profile-pic {
@@ -55,12 +54,13 @@ $fontColor: rgb(250,250,250);
   
   img {
     position: absolute;
-    object-fit: cover;
     width: $circleSize;
     height: $circleSize;
-    box-shadow: $shadow;
     border-radius: $radius;
     z-index: 0;
+    object-position: center;
+    object-fit: contain;
+    box-shadow: 0 0 10px 0 rgb(122 122 122 / 46%);
   }
   
   .-label {
