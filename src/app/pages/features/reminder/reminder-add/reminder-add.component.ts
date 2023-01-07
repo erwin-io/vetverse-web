@@ -95,7 +95,6 @@ export class ReminderAddComponent implements OnInit {
   }
 
   get formIsValid() {
-    console.log(this.title.errors);
     return this.title.valid &&
     this.description.valid &&
     this.dueDate.valid &&
