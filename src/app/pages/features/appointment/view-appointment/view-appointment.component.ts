@@ -163,6 +163,8 @@ export class ViewAppointmentComponent implements OnInit {
       this.allowedAction.connect =
         this.storageService.getLoginUser().role.roleId ===
           this.roleEnum.VET.toString();
+
+      console.log(this.allowedAction);
   }
 
   initAppointmentAction() {
