@@ -22,6 +22,8 @@ export class Appointment {
   petAppointment?: PetAppointment;
   conferencePeerId: string;
   diagnosisAndTreatment: string;
+  appointmentAttachments: AppointmentAttachments[];
+  diagnosisAttachments: DiagnosisAttachments[];
 }
 
 export class ConsultaionType {
@@ -90,4 +92,23 @@ export class PetType {
   petTypeId: string;
   name: string;
   entityStatusId: string;
+}
+export class PetProfilePic {
+  petId: string;
+  file: Files;
+}
+export class Files {
+  fileId?: string;
+  fileName?: string;
+  url?: string;
+}
+
+export class AppointmentAttachments {
+  appointmentAttachmentId: string;
+  file: Files;
+}
+
+export class DiagnosisAttachments {
+  diagnosisAttachmentsId?: string;
+  file?:Files;
 }

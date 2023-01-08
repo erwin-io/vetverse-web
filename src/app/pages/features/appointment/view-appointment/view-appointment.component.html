@@ -282,32 +282,6 @@
                   </mat-list-item>
                 </ng-template>
                 <!-- end -->
-                <!-- Diagnosi And Treatment -->
-                <mat-list *ngIf="!isLoading; else elseDiagnosisAndTreatment">
-                  <mat-list-item mat-ripple style="cursor: pointer" (click)="viewDiagnosisAndTreatment(appointment.diagnosisAndTreatment)">
-                    <mat-icon mat-list-icon>receipt</mat-icon>
-                    <div mat-line><strong>Diagnosis And Treatment</strong></div>
-                    <div mat-line>{{ appointment.diagnosisAndTreatment }}</div>
-                  </mat-list-item>
-                </mat-list>
-                <ng-template #elseDiagnosisAndTreatment>
-                  <mat-list-item>
-                    <mat-icon mat-list-icon>receipt</mat-icon>
-                    <div mat-line>
-                      <ngx-skeleton-loader
-                        fxFlex
-                        [theme]="{ height: '20px', width: '20%' }"
-                      ></ngx-skeleton-loader>
-                    </div>
-                    <div mat-line>
-                      <ngx-skeleton-loader
-                        fxFlex
-                        [theme]="{ height: '20px', width: '20%' }"
-                      ></ngx-skeleton-loader>
-                    </div>
-                  </mat-list-item>
-                </ng-template>
-                <!-- end -->
               </div>
               <br />
             </mat-card-content>
@@ -437,6 +411,105 @@
           <button [disabled]="!messageInput.value || messageInput.value === '' || isSendingMessage " mat-icon-button color="primary" aria-label="Send" (click)="sendMessage(messageInput)">
             <mat-icon>send</mat-icon>
           </button>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Client attachments" *ngIf="isLoading ? false : !appointment.isWalkIn">
+    <div class="page-view-container attachments">
+      <div 
+      fxLayout="row wrap" 
+      fxLayout.lt-sm="column" 
+      fxLayoutGap.gt-sm="32px" 
+      fxLayoutAlign="flex-start"
+      style="row-gap: 20px;">
+        <mat-card
+        *ngFor="let attachment of appointment.appointmentAttachments"
+        fxFlex="0 1 calc(20% - 32px)"
+        fxFlex.lt-lg="0 1 calc(25% - 32px)"
+        fxFlex.lt-md="0 1 calc(33.3% - 32px)"
+        fxFlex.lt-sm="50%"
+        (click)="onAttachmentThumbnailClick(attachment.file.url)"
+        >
+          <mat-card-content fxLayout="column">
+            <img [src]="attachment.file.url">
+            <div class="thumb-overlay">
+              <span>Open new tab</span>
+              <div class="thumb-overlay-background"></div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Diagnosis" *ngIf="!isLoading">
+    <div class="page-view-container diagnosis">
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="20px">
+        <mat-card fxFlex style="height: 100%!important">
+          <mat-card-content >
+            <form fxLayout="column" fxLayoutAlign="center" >
+              <fieldset fxFlex="100" fxLayout="column" [disabled]="isLoading">
+                <mat-form-field appearance="outline">
+                  <mat-label>Diagnosis and treatment</mat-label>
+                  <textarea
+                    matInput
+                    [(ngModel)]="appointment.diagnosisAndTreatment"
+                    placeholder="Diagnosis and treatment"
+                    [formControl]="diagnosisAndTreatment">
+                  </textarea>
+                </mat-form-field>
+              </fieldset>
+            </form>
+            <button
+              mat-flat-button
+              [disabled]="isLoading || isProcessing || !diagnosisAndTreatment.valid"
+              color="primary"
+              (click)="saveDiagnosisAndTreatment()">
+              Save
+            </button>
+          </mat-card-content>
+        </mat-card>
+        <div fxFlex="100%" fxFlex.gt-xs="30%">
+          <h3>Attachments</h3>
+          <button [disabled]="isUploading" mat-stroked-button color="primary" [matMenuTriggerFor]="menu">
+            <mat-icon>add_photo_alternate</mat-icon>
+            Add photo
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openWebCamAttachment()">
+              <mat-icon>camera_alt</mat-icon>
+              <span>Open web cam</span>
+            </button>
+            <button mat-menu-item (click)="uploadAttachmentFile.click()">
+              <mat-icon>collections</mat-icon>
+              <span>Select image</span>
+            </button>
+          </mat-menu>
+          <input #uploadAttachmentFile style="display: none;" type="file" (change)="loadDiagnosisAndTreatmentAttachment($event)" accept="image/bmp, image/jpeg, image/x-png, image/png"/>
+          <div 
+            fxLayout="row wrap" 
+            fxLayout.lt-sm="column" 
+            fxLayoutAlign="flex-start"
+            style="margin-top: 10px;">
+            <mat-card
+            class="attachment"
+              *ngFor="let attachment of appointment.diagnosisAttachments"
+              fxFlex="100%"
+              style="margin-top: 10px;"
+              >
+              <mat-card-content fxLayout="column">
+                <button [disabled]="isUploading" class="close" (click)="removeDiagnosisAttachmentFile(attachment.diagnosisAttachmentsId)">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <img [src]="attachment && attachment.file ? attachment.file.url : ''">
+                <div class="thumb-overlay" 
+                (click)="onAttachmentThumbnailClick(attachment.diagnosisAttachmentsId && attachment.diagnosisAttachmentsId !== '' ? attachment.file.url : attachment.source)">
+                  <span>Open new tab</span>
+                  <div class="thumb-overlay-background"></div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
         </div>
       </div>
     </div>

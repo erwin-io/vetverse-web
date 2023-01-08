@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, tap, catchError, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ApiResponse } from '../model/api-response.model';
-import { Appointment } from '../model/appointment.model';
+import { Appointment, DiagnosisAttachments } from '../model/appointment.model';
 import { AppConfigService } from './app-config.service';
 import { IServices } from './interface/iservices';
 
@@ -178,6 +178,27 @@ export class AppointmentService implements IServices {
         tap((_) => this.log('appointment')),
         catchError(this.handleError('appointment', []))
       );
+  }
+
+  addDiagnosisAttachmentFile(data: any): Observable<ApiResponse<DiagnosisAttachments[]>> {
+    return this.http
+      .post<any>(
+        environment.apiBaseUrl +
+          this.appconfig.config.apiEndPoints.appointment.addDiagnosisAttachmentFile,
+        data
+      )
+      .pipe(
+        tap((_) => this.log('appointment')),
+        catchError(this.handleError('appointment', []))
+      );
+  }
+
+  removeDiagnosisAttachmentFile(diagnosisAttachmentsId: string): Observable<ApiResponse<DiagnosisAttachments[]>> {
+    return this.http.delete<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.appointment.removeDiagnosisAttachmentFile + diagnosisAttachmentsId)
+    .pipe(
+      tap(_ => this.log('appointment')),
+      catchError(this.handleError('appointment', []))
+    );
   }
 
   handleError<T>(operation = 'operation', result?: T) {

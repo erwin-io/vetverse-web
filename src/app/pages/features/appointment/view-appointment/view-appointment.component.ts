@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTabGroup } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,9 +10,9 @@ import { ScheduleDialogComponent } from 'src/app/component/schedule-dialog/sched
 import { SelectTimeslotComponent } from 'src/app/component/select-timeslot/select-timeslot.component';
 import { UpdateReferenceNumberComponent } from 'src/app/component/update-reference-number/update-reference-number.component';
 import { ViewClientInfoComponent } from 'src/app/component/view-client-info/view-client-info.component';
-import { ViewDiagnosisTreatmentComponent } from 'src/app/component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { ViewPetInfoComponent } from 'src/app/component/view-pet-info/view-pet-info.component';
 import { ViewVeterinarianInfoComponent } from 'src/app/component/view-veterinarian-info/view-veterinarian-info.component';
+import { WebcamCaptureComponent } from 'src/app/component/webcam-capture/webcam-capture.component';
 import { AppointmentStatusEnum } from 'src/app/core/enums/appointment-status.enum';
 import { RoleEnum } from 'src/app/core/enums/role.enum copy';
 import { Appointment, Payment } from 'src/app/core/model/appointment.model';
@@ -40,6 +41,7 @@ export class ViewAppointmentComponent implements OnInit {
   mediaWatcher: Subscription;
   isLoading = false;
   isProcessing = false;
+  isUploading = false;
   isLoadingRoles = false;
   error;
   statusEnum = AppointmentStatusEnum;
@@ -67,6 +69,7 @@ export class ViewAppointmentComponent implements OnInit {
   isSendingMessage = false;
   connect = false;
   tabIndex = 1;
+  diagnosisAndTreatment: FormControl = new FormControl(null, [Validators.required]);
 
   constructor(
     private route: ActivatedRoute,
@@ -580,17 +583,232 @@ export class ViewAppointmentComponent implements OnInit {
     this.router.navigate(['/video-conference/' + this.appointment.appointmentId]);
   }
 
-  async viewDiagnosisAndTreatment(diagnosisAndTreatment) {
-    const dialogRef = this.dialog.open(ViewDiagnosisTreatmentComponent, {
-      closeOnNavigation: false,
-      maxWidth: '500px',
-      width: '500px',
+  async saveDiagnosisAndTreatment() {
+    if (this.diagnosisAndTreatment.valid) {
+      const param = {
+        appointmentId: this.appointment.appointmentId,
+        diagnosisAndTreatment: this.diagnosisAndTreatment.value,
+      };
+      const dialogData = new AlertDialogModel();
+      dialogData.title = 'Save';
+      dialogData.message = 'Are you sure you want to save diagnosis and treatment?';
+      dialogData.confirmButton = {
+        visible: true,
+        text: 'yes',
+        color: 'primary',
+      };
+      dialogData.dismissButton = {
+        visible: true,
+        text: 'cancel',
+      };
+      const dialogRef = this.dialog.open(AlertDialogComponent, {
+        maxWidth: '400px',
+        closeOnNavigation: true,
+      });
+
+      dialogRef.componentInstance.alertDialogConfig = dialogData;
+      dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
+        if (confirmed) {
+          this.isProcessing = true;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          try {
+            await this.appointmentService
+              .updateAppointmentDiagnosisAndTreatment(param)
+              .subscribe(
+                async (res) => {
+                  if (res.success) {
+                    this.isProcessing = false;
+                    this.snackBar.snackbarSuccess("Saved!");
+                    dialogRef.close();
+                    dialogRef.componentInstance.isProcessing = this.isProcessing;
+                  } else {
+                    this.isLoading = false;
+                    this.error = Array.isArray(res.message)
+                      ? res.message[0]
+                      : res.message;
+                    this.snackBar.snackbarError(this.error);
+                    dialogRef.componentInstance.isProcessing = this.isProcessing;
+                  }
+                },
+                async (err) => {
+                  this.isProcessing = false;
+                  this.error = Array.isArray(err.message)
+                    ? err.message[0]
+                    : err.message;
+                  this.snackBar.snackbarError(this.error);
+                  dialogRef.componentInstance.isProcessing = this.isProcessing;
+                }
+              );
+          } catch (e) {
+            this.isProcessing = false;
+            this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+            this.snackBar.snackbarError(this.error);
+            dialogRef.componentInstance.isProcessing = this.isProcessing;
+          }
+        }
+      });
+    }
+  }
+
+  
+  async openWebCamAttachment(){
+    const dialogRef = this.dialog.open(WebcamCaptureComponent, {
+      closeOnNavigation: true,
+      panelClass: 'webcam-capture-dialog',
     });
-    dialogRef.componentInstance.data = { appointmentId: this.appointment.appointmentId, diagnosisAndTreatment };
-    dialogRef.afterClosed().subscribe(result => {
-      this.initAppointment(this.appointment.appointmentId);
+    dialogRef.componentInstance.conFirm.subscribe(async (data: any) => {
+      if(data){
+        console.log(data);
+        const base64 = data._imageAsDataUrl.toString();
+        const attachment = {
+          appointmentId: this.appointment.appointmentId,
+          fileName: `sample-file.${data._mimeType.split('/')[1]}`,
+          data: base64.split(',')[1]
+        };
+        this.appointment.diagnosisAttachments.push({
+          file: {
+            url: base64,
+          },
+        });
+        await this.uploadDiagnosisAttachmentFile(attachment);
+      }
       dialogRef.close();
     });
+  }
 
+  async loadDiagnosisAndTreatmentAttachment(event) {
+    try{
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const base64 = reader.result.toString();
+        const attachment = {
+          appointmentId: this.appointment.appointmentId,
+          fileName: file.name,
+          data: base64.split(',')[1]
+        };
+        this.appointment.diagnosisAttachments.push({
+          file: {
+            url: base64,
+          }
+        });
+
+        await this.uploadDiagnosisAttachmentFile(attachment);
+      };
+      reader.onerror = (err) => {
+        console.log(err);
+      };
+    }
+    catch(ex) {
+      console.log(ex);
+    }
+  };
+
+  async uploadDiagnosisAttachmentFile(param) {
+    try {
+      this.isUploading = true;
+      await this.appointmentService
+        .addDiagnosisAttachmentFile(param)
+        .subscribe(
+          async (res) => {
+            if (res.success) {
+              this.appointment.diagnosisAttachments = res.data;
+              this.isUploading = false;
+              this.snackBar.snackbarSuccess("Uploaded!");
+            } else {
+              this.isLoading = false;
+              this.error = Array.isArray(res.message)
+                ? res.message[0]
+                : res.message;
+              this.snackBar.snackbarError(this.error);
+            }
+          },
+          async (err) => {
+            this.isUploading = false;
+            this.error = Array.isArray(err.message)
+              ? err.message[0]
+              : err.message;
+            this.snackBar.snackbarError(this.error);
+          }
+        );
+    } catch (e) {
+      this.isUploading = false;
+      this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+      this.snackBar.snackbarError(this.error);
+    }
+  }
+
+  async removeDiagnosisAttachmentFile(diagnosisAttachmentsId) {
+      const dialogData = new AlertDialogModel();
+      dialogData.title = 'Remove';
+      dialogData.message = 'Are you sure you want to remove attachment?';
+      dialogData.confirmButton = {
+        visible: true,
+        text: 'yes',
+        color: 'primary',
+      };
+      dialogData.dismissButton = {
+        visible: true,
+        text: 'cancel',
+      };
+      const dialogRef = this.dialog.open(AlertDialogComponent, {
+        maxWidth: '400px',
+        closeOnNavigation: true,
+      });
+
+      dialogRef.componentInstance.alertDialogConfig = dialogData;
+      dialogRef.componentInstance.conFirm.subscribe(async (confirmed: any) => {
+        if (confirmed) {
+          try {
+          this.isUploading = true;
+          dialogRef.componentInstance.isProcessing = this.isUploading;
+          await this.appointmentService
+            .removeDiagnosisAttachmentFile(diagnosisAttachmentsId)
+            .subscribe(
+              async (res) => {
+                if (res.success) {
+                  this.appointment.diagnosisAttachments = res.data;
+                  this.isUploading = false;
+                  this.snackBar.snackbarSuccess("Success!");
+                  dialogRef.close();
+                  dialogRef.componentInstance.isProcessing = this.isUploading;
+                } else {
+                  dialogRef.close();
+                  this.isLoading = false;
+                  dialogRef.componentInstance.isProcessing = this.isUploading;
+                  this.error = Array.isArray(res.message)
+                    ? res.message[0]
+                    : res.message;
+                  this.snackBar.snackbarError(this.error);
+                }
+              },
+              async (err) => {
+                dialogRef.close();
+                this.isUploading = false;
+                dialogRef.componentInstance.isProcessing = this.isUploading;
+                this.error = Array.isArray(err.message)
+                  ? err.message[0]
+                  : err.message;
+                this.snackBar.snackbarError(this.error);
+              }
+            );
+        } catch (e) {
+          dialogRef.close();
+          this.isUploading = false;
+          dialogRef.componentInstance.isProcessing = this.isUploading;
+          this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+          this.snackBar.snackbarError(this.error);
+        }
+      }
+    });
+  }
+
+  async onAttachmentThumbnailClick(url) {
+    if(this.isUploading){
+      return;
+    }
+    console.log(url);
+    window.open(url, "_blank")
   }
 }

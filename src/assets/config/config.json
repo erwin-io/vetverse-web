@@ -79,7 +79,9 @@
       "rescheduleAppointment": "appointment/rescheduleAppointment",
       "updateAppointmentStatus": "appointment/updateAppointmentStatus",
       "updateAppointmentConferencePeer": "appointment/updateAppointmentConferencePeer",
-      "updateAppointmentDiagnosisAndTreatment": "appointment/updateAppointmentDiagnosisAndTreatment"
+      "updateAppointmentDiagnosisAndTreatment": "appointment/updateAppointmentDiagnosisAndTreatment",
+      "addDiagnosisAttachmentFile": "appointment/addDiagnosisAttachmentFile",
+      "removeDiagnosisAttachmentFile": "appointment/removeDiagnosisAttachmentFile/"
     },
     "payment": {
       "get": "payments",

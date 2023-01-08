@@ -31,7 +31,6 @@ import { ViewVeterinarianInfoComponent } from './component/view-veterinarian-inf
 import { MessageComponent } from './component/message/message.component';
 import { CallService } from './core/services/call.service';
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { ViewDiagnosisTreatmentComponent } from './component/view-diagnosis-treatment/view-diagnosis-treatment.component';
 import { YearPickerDialogComponent } from './component/year-picker-dialog/year-picker-dialog.component';
 import { CalendarPickerDialogComponent } from './component/calendar-picker-dialog/calendar-picker-dialog.component';
 import { NumberLeadZeroPipePipe } from './core/pipe/number-lead-zero.pipe.pipe';
@@ -41,6 +40,8 @@ import { environment } from 'src/environments/environment';
 import { SelectTimeslotComponent } from './component/select-timeslot/select-timeslot.component';
 import { ReportsComponent } from './pages/features/reports/reports.component';
 import { UpdateReferenceNumberComponent } from './component/update-reference-number/update-reference-number.component';
+import { WebcamCaptureComponent } from './component/webcam-capture/webcam-capture.component';
+import { WebcamModule } from 'ngx-webcam';
 
 @NgModule({
   declarations: [
@@ -61,12 +62,12 @@ import { UpdateReferenceNumberComponent } from './component/update-reference-num
     ViewPetInfoComponent,
     ViewVeterinarianInfoComponent,
     MessageComponent,
-    ViewDiagnosisTreatmentComponent,
     YearPickerDialogComponent,
     CalendarPickerDialogComponent,
     NumberLeadZeroPipePipe,
     SelectTimeslotComponent,
     UpdateReferenceNumberComponent,
+    WebcamCaptureComponent,
   ],
   imports: [
     BrowserModule,
@@ -81,6 +82,7 @@ import { UpdateReferenceNumberComponent } from './component/update-reference-num
     ReactiveFormsModule,
     MatTimepickerModule,
     NgApexchartsModule,
+    WebcamModule,
   ],
   providers: [
     CallService,

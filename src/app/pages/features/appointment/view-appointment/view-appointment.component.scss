@@ -163,6 +163,137 @@ app-view-appointment {
                 }
               }
             }
+            &.attachments {
+              mat-card {
+                padding: 0!important;
+                box-sizing: border-box;
+                overflow: hidden;
+                img {
+                  width: 100%;
+                  height: 100%;
+                  box-sizing: border-box;
+                  border-radius: 100%!important;
+                }
+                .thumb-overlay {
+                  cursor: pointer;
+                  width: 100%;
+                  height: 100%;
+                  position: absolute;
+                  display: flex;
+                  span {
+                    flex-grow: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    color: #FFFFFF;
+                    z-index: 100;
+                  }
+                  .thumb-overlay-background {
+                    flex-grow: 1;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #000000;
+                    transition: 0.2s;
+                    opacity: 0;
+                    display: flex;
+                    position: absolute;
+                    z-index: 1;
+                  }
+                  &:hover {
+                    .thumb-overlay-background {
+                      opacity: 0.5;
+                    }
+                    span {
+                      opacity: 1;
+                    }
+                  }
+                  &:focus {
+                    .thumb-overlay-background {
+                      opacity: 0.5;
+                    }
+                    span {
+                      opacity: 1;
+                    }
+                  }
+                }
+              }
+            }
+            &.diagnosis {
+              mat-card {
+                &.attachment {
+                  padding: 0!important;
+                  box-sizing: border-box;
+                  overflow: hidden;
+                  .close {
+                    z-index: 200;
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    cursor: pointer;
+                    outline: none;
+                    border: none;
+                    border-radius: 100%;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                  }
+                }
+                img {
+                  width: 100%;
+                  height: 100%;
+                  box-sizing: border-box;
+                  object-position: center;
+                  object-fit: contain;
+                }
+                .thumb-overlay {
+                  cursor: pointer;
+                  width: 100%;
+                  height: 100%;
+                  position: absolute;
+                  display: flex;
+                  span {
+                    flex-grow: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    color: #FFFFFF;
+                    z-index: 100;
+                  }
+                  .thumb-overlay-background {
+                    flex-grow: 1;
+                    width: 100%;
+                    height: 100%;
+                    background-color: #000000;
+                    transition: 0.2s;
+                    opacity: 0;
+                    display: flex;
+                    position: absolute;
+                    z-index: 1;
+                  }
+                  &:hover {
+                    .thumb-overlay-background {
+                      opacity: 0.5;
+                    }
+                    span {
+                      opacity: 1;
+                    }
+                  }
+                  &:focus {
+                    .thumb-overlay-background {
+                      opacity: 0.5;
+                    }
+                    span {
+                      opacity: 1;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

@@ -30,6 +30,7 @@
     "ng-apexcharts": "^1.7.4",
     "ngx-skeleton-loader": "^5.0.0",
     "ngx-socket-io": "^4.4.0",
+    "ngx-webcam": "^0.4.1",
     "path": "^0.12.7",
     "peerjs": "^1.4.7",
     "rxjs": "~7.5.0",
