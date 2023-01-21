@@ -75,7 +75,7 @@ export class ReminderComponent implements OnInit {
   async remove(reminderId: string){
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
-    dialogData.message = 'Delete reminder?';
+    dialogData.message = 'Delete announcement?';
     dialogData.confirmButton = {
       visible: true,
       text: 'yes',

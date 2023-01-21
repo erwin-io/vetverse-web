@@ -1,7 +1,7 @@
 <div class="page-view-container">
   <mat-card [ngClass]="{ 'hidden': isLoading }">
     <mat-card-header>
-      <mat-card-subtitle>Reminders</mat-card-subtitle>
+      <mat-card-subtitle>Announcements</mat-card-subtitle>
       <div fxFlex></div>
       <button mat-icon-button matTooltip="Add" (click)="add()" [disabled]="isProcessing">
         <mat-icon>add</mat-icon>
@@ -60,7 +60,7 @@
       </table>
 
       <div class="table-no-data" *ngIf="dataSource.data.length === 0">
-        <span>No reminders available</span>
+        <span>No announcement available</span>
       </div>
       <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
                      showFirstLastButtons
